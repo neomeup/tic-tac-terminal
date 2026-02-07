@@ -169,13 +169,13 @@ def main(stdscr):
         if player_1_turn is False: # Isolate movement by player turn for player 2
             ## Player 2 movement (arrows)
             if key == curses.KEY_UP: #key up
-                player_1_pos[0] = max((0, player_1_pos[0] - 1))
+                player_2_pos[0] = max((0, player_2_pos[0] - 1))
             elif key == curses.KEY_DOWN: #key down
-                player_1_pos[0] = min(((size-1), player_1_pos[0] + 1))
+                player_2_pos[0] = min(((size-1), player_2_pos[0] + 1))
             elif key == curses.KEY_LEFT: #key left
-                player_1_pos[1] = max((0, player_1_pos[1] - 1))
+                player_2_pos[1] = max((0, player_2_pos[1] - 1))
             elif key == curses.KEY_RIGHT: #key right
-                player_1_pos[1] = min(((size-1), player_1_pos[1] + 1))
+                player_2_pos[1] = min(((size-1), player_2_pos[1] + 1))
 
 
         ## Send action keys
