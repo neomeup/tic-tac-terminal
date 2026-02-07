@@ -68,6 +68,15 @@ def draw_board(
     stdscr.addstr(1, 10, "Players can choose either X or O and one player will be randomly chosen to go first.")
     stdscr.addstr(2, 10, "The board will update after moves and declare a winner/loser or a draw once a win or draw condition is met.")
     
+
+    # Display player turn
+    if player_1_turn is True:
+        active_player_message = "Player 1's turn!"
+    elif player_1_turn is False:
+        active_player_message = "Player 2's turn!"
+    
+    stdscr.addstr(3, 10, f"{active_player_message}")
+    
     
     
     
