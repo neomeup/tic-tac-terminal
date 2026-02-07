@@ -132,9 +132,9 @@ def main(stdscr):
     # Set Variables
     x_character,o_character,empty_character,size = grab_globals(x_char,o_char,empty_char, board_size)
 
-    # Player position coordinates are in contrary graph notation [y axis,x axis]
-    player_1_pos = [5,30]    # start position player 1
-    player_2_pos = [5,(30+((size*2)-2))]    # start position player 2
+    # Player position coordinates are in graph notation [x axis,y axis] to match board list
+    player_1_pos = [0,0]        # start position player 1
+    player_2_pos = [0,(size-1)] # start position player 2
     
     player_1_turn = whose_turn()        # bool flag to mark whose turn it is
     
@@ -188,8 +188,6 @@ def main(stdscr):
 
         else:
             continue
-
-        
 
 
 
