@@ -178,14 +178,34 @@ def main(stdscr):
 
         ## Send action keys
         elif key == ord("e"): # Player 1 select
-            p1_selected = True
+            board_lst = board_list_select(player_1_turn,player_1_pos,board_lst)
             player_1_turn = False
         elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
-            p2_selected = True
+            board_lst = board_list_select(player_1_turn,player_2_pos,board_lst)
             player_1_turn = True
 
         else:
             continue
+
+
+def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list[tuple[bool, bool, int]]]) -> list :
+    if player_1_turn is True:
+        non_active_player = 1 # Player two is inactive
+        active_player = 0 # Player one is active - corresponds to bool flags within board list
+    elif player_1_turn is False:
+        non_active_player = 0 # Player one is inactive
+        active_player = 1 # Player two is active - corresponds to bool flags within board list
+
+    for row in board_lst:
+        if row == board_lst[player_coordinates[0]]: # Identify selected row
+            for column in row:
+                if column == row[player_coordinates[1]]: # Identify selected column
+                    if column[non_active_player] is True: # Prevent double true selections
+                        pass  ## Possible addition of a separate flag to denote errors/impossible selection
+                    else:
+                        column[active_player] = True # Change selected square to show as marked
+
+    return board_lst
 
 
 
