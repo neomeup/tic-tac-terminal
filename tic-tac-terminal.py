@@ -132,7 +132,7 @@ def main(stdscr):
     # Set Variables
     x_character,o_character,empty_character,size = grab_globals(x_char,o_char,empty_char, board_size)
 
-    # Player position coordinates are in graph notation [x axis,y axis] to match board list
+    # Player position coordinates are in inverse graph notation [y axis,x axis] to match board list
     player_1_pos = [0,0]        # start position player 1
     player_2_pos = [0,(size-1)] # start position player 2
     
@@ -153,29 +153,27 @@ def main(stdscr):
             break
         
 
-        ### Possibly tie player movement to movement within the board list logical position not within the rendered space
-        ### This would more resemble current player 1 movement (changing the 2's to 1's) and not rendered space like player two currently is
+        ### Player movement tied to structure of board list - moves with the coordinates of board list
 
-        
         ## Player 1 movement (wasd)
         elif key == ord("w"): #key up
-            player_1_pos[0] = max((0, player_1_pos[0] - 2))
+            player_1_pos[0] = max((0, player_1_pos[0] - 1))
         elif key == ord("s"): #key down
-            player_1_pos[0] = min((size, player_1_pos[0] + 2))
+            player_1_pos[0] = min(((size-1), player_1_pos[0] + 1))
         elif key == ord("a"): #key left
-            player_1_pos[1] = max((0, player_1_pos[1] - 2))
+            player_1_pos[1] = max((0, player_1_pos[1] - 1))
         elif key == ord("d"): #key right
-            player_1_pos[1] = min((size, player_1_pos[1] + 2))
+            player_1_pos[1] = min(((size-1), player_1_pos[1] + 1))
         
         ## Player 2 movement (arrows)
         elif key == curses.KEY_UP: #key up
-            player_1_pos[0] = max((30, player_1_pos[0] - 2))
+            player_1_pos[0] = max((0, player_1_pos[0] - 1))
         elif key == curses.KEY_DOWN: #key down
-            player_1_pos[0] = min(((5+size), player_1_pos[0] + 2))
+            player_1_pos[0] = min(((size-1), player_1_pos[0] + 1))
         elif key == curses.KEY_LEFT: #key left
-            player_1_pos[1] = max((30, player_1_pos[1] - 2))
+            player_1_pos[1] = max((0, player_1_pos[1] - 1))
         elif key == curses.KEY_RIGHT: #key right
-            player_1_pos[1] = min(((5+((size*2)-1)), player_1_pos[1] + 2))
+            player_1_pos[1] = min(((size-1), player_1_pos[1] + 1))
 
 
         ## Send action keys
