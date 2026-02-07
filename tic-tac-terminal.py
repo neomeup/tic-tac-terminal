@@ -85,7 +85,7 @@ def draw_board(
     row_start = 5   # Readability - row is read on the 1st position [row, col] in addstr - inverse to mathematical graphs but matching addstr
 
     
-    #Handling of spacer character |
+    #Handling of vertical spacing character |
     space_char_lst = []
     for x in range((size*2)-1):
         if x % 2 == 1:
@@ -145,7 +145,7 @@ def main(stdscr):
     player_1_pos = [0,0]        # start position player 1
     player_2_pos = [0,(size-1)] # start position player 2
     
-    player_1_turn = whose_turn()        # bool flag to mark whose turn it is
+    player_1_turn = whose_turn()        # bool flag to mark whose turn it is - whose_turn() sets this randomly
     
     board_lst = board_lst_build(size)   # board initializer
     
@@ -206,6 +206,8 @@ def main(stdscr):
                 board_lst, changed_flag = board_list_select(player_1_turn,player_2_pos,board_lst)
                 if changed_flag is True:
                     player_1_turn = not player_1_turn
+        
+        # Continue on non action key presses
         else:
             continue
 
