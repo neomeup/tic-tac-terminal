@@ -197,17 +197,18 @@ def main(stdscr):
 
         ## Send action keys
         elif key == ord("e"): # Player 1 select
-            board_lst = board_list_select(player_1_turn,player_1_pos,board_lst)
-            player_1_turn = False
+            board_lst, changed_flag = board_list_select(player_1_turn,player_1_pos,board_lst)
+            if changed_flag is True:
+                player_1_turn = not player_1_turn
         elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
-            board_lst = board_list_select(player_1_turn,player_2_pos,board_lst)
-            player_1_turn = True
-
+            board_lst, changed_flag = board_list_select(player_1_turn,player_2_pos,board_lst)
+            if changed_flag is True:
+                player_1_turn = not player_1_turn
         else:
             continue
 
 
-def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list[tuple[bool, bool, int]]]) -> list :
+def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[list, bool] :
     if player_1_turn is True:
         non_active_player = 1 # Player two is inactive
         active_player = 0 # Player one is active - corresponds to bool flags within board list
@@ -215,16 +216,19 @@ def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: 
         non_active_player = 0 # Player one is inactive
         active_player = 1 # Player two is active - corresponds to bool flags within board list
 
+    changed_flag = False
+
     for row in board_lst:
         if row == board_lst[player_coordinates[0]]: # Identify selected row
             for column in row:
                 if column == row[player_coordinates[1]]: # Identify selected column
                     if column[non_active_player] is True: # Prevent double true selections
                         pass  ## Possible addition of a separate flag to denote errors/impossible selection
-                    else:
+                    elif column[active_player] is False:
                         column[active_player] = True # Change selected square to show as marked
+                        changed_flag = True
 
-    return board_lst
+    return board_lst, changed_flag
 
 
 
