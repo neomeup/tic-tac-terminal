@@ -197,13 +197,15 @@ def main(stdscr):
 
         ## Send action keys
         elif key == ord("e"): # Player 1 select
-            board_lst, changed_flag = board_list_select(player_1_turn,player_1_pos,board_lst)
-            if changed_flag is True:
-                player_1_turn = not player_1_turn
+            if player_1_turn is True:
+                board_lst, changed_flag = board_list_select(player_1_turn,player_1_pos,board_lst)
+                if changed_flag is True:
+                    player_1_turn = not player_1_turn
         elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
-            board_lst, changed_flag = board_list_select(player_1_turn,player_2_pos,board_lst)
-            if changed_flag is True:
-                player_1_turn = not player_1_turn
+            if player_1_turn is False:
+                board_lst, changed_flag = board_list_select(player_1_turn,player_2_pos,board_lst)
+                if changed_flag is True:
+                    player_1_turn = not player_1_turn
         else:
             continue
 
