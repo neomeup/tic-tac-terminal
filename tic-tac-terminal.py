@@ -164,26 +164,34 @@ def main(stdscr):
 
         ### Player movement tied to structure of board list - moves with the coordinates of board list
 
-        if player_1_turn is True: # Isolate movement by player turn for player 1
-            ## Player 1 movement (wasd)
-            if key == ord("w"): #key up
+
+        ## Player 1 movement (wasd)
+        elif key == ord("w"): #key up
+            if player_1_turn is True: # Isolate movement by player turn for player 1
                 player_1_pos[0] = max((0, player_1_pos[0] - 1))
-            elif key == ord("s"): #key down
+        elif key == ord("s"): #key down
+            if player_1_turn is True:
                 player_1_pos[0] = min(((size-1), player_1_pos[0] + 1))
-            elif key == ord("a"): #key left
+        elif key == ord("a"): #key left
+            if player_1_turn is True:
                 player_1_pos[1] = max((0, player_1_pos[1] - 1))
-            elif key == ord("d"): #key right
+        elif key == ord("d"): #key right
+            if player_1_turn is True:
                 player_1_pos[1] = min(((size-1), player_1_pos[1] + 1))
-        
-        if player_1_turn is False: # Isolate movement by player turn for player 2
-            ## Player 2 movement (arrows)
-            if key == curses.KEY_UP: #key up
+    
+
+        ## Player 2 movement (arrows)
+        elif key == curses.KEY_UP: #key up
+            if player_1_turn is False: # Isolate movement by player turn for player 2
                 player_2_pos[0] = max((0, player_2_pos[0] - 1))
-            elif key == curses.KEY_DOWN: #key down
+        elif key == curses.KEY_DOWN: #key down
+            if player_1_turn is False:
                 player_2_pos[0] = min(((size-1), player_2_pos[0] + 1))
-            elif key == curses.KEY_LEFT: #key left
+        elif key == curses.KEY_LEFT: #key left
+            if player_1_turn is False:
                 player_2_pos[1] = max((0, player_2_pos[1] - 1))
-            elif key == curses.KEY_RIGHT: #key right
+        elif key == curses.KEY_RIGHT: #key right
+            if player_1_turn is False:
                 player_2_pos[1] = min(((size-1), player_2_pos[1] + 1))
 
 
