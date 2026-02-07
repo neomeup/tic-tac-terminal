@@ -122,11 +122,32 @@ def draw_board(
 
 
 def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, bool, bool]:
-    won_game = False
-    player_1_win = False
-    drawn_game = False
     
-    return won_game, player_1_win, drawn_game
+    ##  All returns in following format -> won_game, player_1_win, drawn_game
+
+    size = len(board_lst)
+    win_length = 3 ## Should be move to globals eventually
+
+
+    # Helper function using win length to determine consecutive cells
+    def consecutive_cells(cells_to_check: list, player_index: int) -> bool:
+        cell_count = 0
+        for cell in cells_to_check:
+            if cell[player_index]:
+                cell_count += 1
+                if cell_count == win_length:
+                    return True
+            else:
+                cell_count = 0
+        return False
+    
+    for row in board_lst:
+        if consecutive_cells(row, 0) is True:
+            return True, True, False
+        if consecutive_cells(row, 1) is True:
+            return True, False, False    
+
+    return False, False, False
 
 
 def main(stdscr):
