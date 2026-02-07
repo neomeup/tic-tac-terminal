@@ -220,15 +220,15 @@ def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: 
 
     changed_flag = False
 
-    for row in board_lst:
-        if row == board_lst[player_coordinates[0]]: # Identify selected row
-            for column in row:
-                if column == row[player_coordinates[1]]: # Identify selected column
-                    if column[non_active_player] is True: # Prevent double true selections
-                        pass  ## Possible addition of a separate flag to denote errors/impossible selection
-                    elif column[active_player] is False:
-                        column[active_player] = True # Change selected square to show as marked
-                        changed_flag = True
+    # Set Cell coordinates within board list
+    y, x = player_coordinates
+    working_cell = board_lst[y][x]
+
+    if working_cell[non_active_player] is True:
+        pass
+    elif working_cell[active_player] is False:
+        working_cell[active_player] = True
+        changed_flag = True
 
     return board_lst, changed_flag
 
