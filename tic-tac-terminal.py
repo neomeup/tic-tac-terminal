@@ -1,0 +1,197 @@
+'''
+This is a tic tac toe in CLI game that allows to take turns starting with "O" or "X" and replacing the empty character "-"
+Players can choose either X or O and one player will be randomly chosen to go first.
+The board will update after moves and declare a winner/loser or a draw once a win or draw condition is met. 
+Puns: Tic-tac Terminated, tty1 - tic tac your terminal 
+Example:
+Day 26  Tic Tac Toe Board
+X|O|-
+-|X|-
+O|-|X
+'''
+
+
+import random
+import curses
+
+
+## Global Start Variables
+x_char = "X"
+o_char = "O"
+empty_char = "-"
+board_size = 3
+
+
+def grab_globals(x_char,o_char,empty_char, board_size) -> tuple[str, str, str, int]:
+    return x_char,o_char,empty_char, board_size
+
+
+def board_lst_build(size: int) -> list :
+    # initial board positions creation
+    board_lst = []
+    for x in range(size):
+        board_lst.append(list(range(size)))
+
+    # bool flags to notate if a square has been selected by a player or not
+    p1_selected = False
+    p2_selected = False
+
+    # addition of selection flags to board positions
+    for x in board_lst:
+        for b in x:
+            item = [p1_selected, p2_selected, b]
+            x[b] = item
+    return board_lst
+
+def whose_turn() -> bool:
+    turn_val = random.randint(0,1)
+    if turn_val == 0:
+        return True
+    elif turn_val == 1:
+        return False
+
+
+
+def draw_board(
+        stdscr,
+        player_1: tuple[int, int],
+        player_2: tuple[int, int],
+        x_character: str,
+        o_character: str,
+        empty_character: str,
+        board_lst: list[list[tuple[bool, bool, int]]],
+        size: int,
+        player_1_turn: bool
+        ) -> tuple[bool, bool, bool]:
+    stdscr.clear()
+    stdscr.addstr(0, 10, "This is a tic tac toe in CLI game that allows to take turns starting with 'O' or 'X' and replacing the empty character '-'")
+    stdscr.addstr(1, 10, "Players can choose either X or O and one player will be randomly chosen to go first.")
+    stdscr.addstr(2, 10, "The board will update after moves and declare a winner/loser or a draw once a win or draw condition is met.")
+    
+    
+    
+    
+    #               # Readability - Board_lst is built using mathematical notation with typical [x,y] coordinates
+    col_start = 30  # Readability - col is read on the 2nd position [row, col] in addstr - inverse to mathematical graphs but matching addstr
+    row_start = 5   # Readability - row is read on the 1st position [row, col] in addstr - inverse to mathematical graphs but matching addstr
+
+    
+    #Handling of spacer character |
+    space_char_lst = []
+    for x in range((size*2)-1):
+        if x % 2 == 1:
+            space_char_lst.append(x)
+    
+    row_index = 0
+    ## Some sort of handling of if a player tries to overwrite an already true location
+    for row in board_lst:
+        col_index = 0
+        for column in row:
+            if column[0] is False and column[1] is False:
+                stdscr.addstr((row_start+row_index), (col_start+col_index), empty_character)
+                for x in space_char_lst:
+                    stdscr.addstr((row_start+row_index), (col_start+x), "|")
+            elif column[0] is True:
+                stdscr.addstr((row_start+row_index), (col_start+col_index), x_character)
+                for x in space_char_lst:
+                    stdscr.addstr((row_start+row_index), (col_start+x), "|")
+            elif column[1] is True:
+                stdscr.addstr((row_start+row_index), (col_start+col_index), o_character)
+                for x in space_char_lst:
+                    stdscr.addstr((row_start+row_index), (col_start+x), "|")                             
+            col_index += 2
+        row_index += 1
+            
+
+
+    
+    won_game = False
+    player_1_win = False
+    drawn_game = False
+
+    finish_condition = won_game, player_1_win, drawn_game
+
+    stdscr.refresh()
+    return finish_condition
+
+
+def main(stdscr):
+    stdscr.clear()          # clear the screen
+    curses.curs_set(0)      # prevents highlighted cursor from auto showing
+    stdscr.nodelay(False)   # blocking input
+    stdscr.keypad(True)     # enable arrow keys
+    curses.noecho()
+
+    # Color setup
+    if curses.has_colors():                                         # check if the terminal supports color
+        curses.start_color()                                        # enable color
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)  # white text on blue background
+        stdscr.bkgd(' ', curses.color_pair(1))                      # fill entire screen with that color
+        stdscr.clear()                                              # clear screen to apply background
+
+    # Set Variables
+    x_character,o_character,empty_character,size = grab_globals(x_char,o_char,empty_char, board_size)
+
+    # Player position coordinates are in contrary graph notation [y axis,x axis]
+    player_1_pos = [5,30]    # start position player 1
+    player_2_pos = [5,(30+((size*2)-2))]    # start position player 2
+    
+    player_1_turn = whose_turn()        # bool flag to mark whose turn it is
+    
+    board_lst = board_lst_build(size)   # board initializer
+    
+    while True:
+        stdscr.clear()
+        draw_board(stdscr, tuple(player_1_pos), tuple(player_2_pos), x_character, o_character, empty_character,board_lst, size, player_1_turn)
+        key = stdscr.getch()
+
+
+        # Exits keys
+        if key == ord("q"): #exit player 1
+            break
+        elif key == ord("/"): #exit player 2
+            break
+        
+
+        ### Possibly tie player movement to movement within the board list logical position not within the rendered space
+        ### This would more resemble current player 1 movement (changing the 2's to 1's) and not rendered space like player two currently is
+
+        
+        ## Player 1 movement (wasd)
+        elif key == ord("w"): #key up
+            player_1_pos[0] = max((0, player_1_pos[0] - 2))
+        elif key == ord("s"): #key down
+            player_1_pos[0] = min((size, player_1_pos[0] + 2))
+        elif key == ord("a"): #key left
+            player_1_pos[1] = max((0, player_1_pos[1] - 2))
+        elif key == ord("d"): #key right
+            player_1_pos[1] = min((size, player_1_pos[1] + 2))
+        
+        ## Player 2 movement (arrows)
+        elif key == curses.KEY_UP: #key up
+            player_1_pos[0] = max((30, player_1_pos[0] - 2))
+        elif key == curses.KEY_DOWN: #key down
+            player_1_pos[0] = min(((5+size), player_1_pos[0] + 2))
+        elif key == curses.KEY_LEFT: #key left
+            player_1_pos[1] = max((30, player_1_pos[1] - 2))
+        elif key == curses.KEY_RIGHT: #key right
+            player_1_pos[1] = min(((5+((size*2)-1)), player_1_pos[1] + 2))
+
+
+        ## Send action keys
+        elif key == ord("e"): # Player 1 select
+            p1_selected = True
+            player_1_turn = False
+        elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
+            p2_selected = True
+            player_1_turn = True
+
+        else:
+            continue
+
+        
+
+
+
+# This handles setup and teardown safely
+curses.wrapper(main)
