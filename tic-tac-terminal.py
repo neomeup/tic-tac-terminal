@@ -113,15 +113,20 @@ def draw_board(
             
 
 
-    
-    won_game = False
-    player_1_win = False
-    drawn_game = False
+    won_game, player_1_win, drawn_game = game_finished(board_lst)
 
     finish_condition = won_game, player_1_win, drawn_game
 
     stdscr.refresh()
     return finish_condition
+
+
+def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, bool, bool]:
+    won_game = False
+    player_1_win = False
+    drawn_game = False
+    
+    return won_game, player_1_win, drawn_game
 
 
 def main(stdscr):
@@ -151,7 +156,14 @@ def main(stdscr):
     
     while True:
         stdscr.clear()
-        draw_board(stdscr, tuple(player_1_pos), tuple(player_2_pos), x_character, o_character, empty_character,board_lst, size, player_1_turn)
+        won_game, player_1_win, drawn_game = draw_board(stdscr, tuple(player_1_pos), tuple(player_2_pos), x_character, o_character, empty_character,board_lst, size, player_1_turn)
+        if won_game is True:
+            if player_1_win is True:
+                break
+            elif player_1_win is False:
+                break
+        if drawn_game is True:
+            break
         key = stdscr.getch()
 
 
