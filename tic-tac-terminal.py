@@ -141,11 +141,24 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
                 cell_count = 0
         return False
     
+
+    # Row wins
     for row in board_lst:
         if consecutive_cells(row, 0) is True:
             return True, True, False
         if consecutive_cells(row, 1) is True:
             return True, False, False    
+        
+
+    # Column wins
+    
+
+
+    # Forward diagonals
+
+
+
+    # Backwards diagonals
 
     return False, False, False
 
