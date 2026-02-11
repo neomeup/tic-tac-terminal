@@ -142,16 +142,20 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
         return False
     
 
+    ## All win logic is generally separate into two parts
+    #  - isolate line type 
+    #  - pass line type to consec_cells as cells to check for each player
+
     # Row wins
-    for row in board_lst:
-        if consecutive_cells(row, 0) is True:
+    for row in board_lst:                       # Build rows for consec_cells()
+        if consecutive_cells(row, 0) is True:   # Check player 1
             return True, True, False
-        if consecutive_cells(row, 1) is True:
+        if consecutive_cells(row, 1) is True:   # Check player 2
             return True, False, False    
         
 
     # Column wins
-    
+
 
 
     # Forward diagonals
