@@ -155,6 +155,12 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
         
 
     # Column wins
+    for col_index in range(size):
+        column = [board_lst[row][col_index] for row in range(size)]
+        if consecutive_cells(column, 0) is True:
+            return True, True, False
+        if consecutive_cells(column, 1) is True:
+            return True, False, False
 
 
 
