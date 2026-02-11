@@ -19,7 +19,7 @@ import curses
 x_char = "X"
 o_char = "O"
 empty_char = "-"
-board_size = 3
+board_size = 4
 
 
 def grab_globals(x_char,o_char,empty_char, board_size) -> tuple[str, str, str, int]:
@@ -164,9 +164,20 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
 
 
 
-    # Forward diagonals
-
-
+    ## Forward diagonals (all possible - needed for larger boards with different win lengths)
+    # Moving row-wise
+    for diag_index in range(size):
+        diagonal_forward = []
+        row = 0
+        column = diag_index
+        while row < size and column < size:
+            diagonal_forward.append(board_lst[row][column])
+            row += 1
+            column += 1
+        if consecutive_cells(diagonal_forward, 0) is True:
+            return True, True, False
+        if consecutive_cells(diagonal_forward, 1) is True:
+            return True, False, False
 
     # Backwards diagonals
 
