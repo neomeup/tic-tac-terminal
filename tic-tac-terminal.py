@@ -303,14 +303,27 @@ def main(stdscr):
     
     board_lst = board_lst_build(size)   # board initializer
     
+    game_running = True
+    build_new_game = True
+
     while True:
         stdscr.clear()
-        won_game, player_1_win, drawn_game = draw_board(stdscr, tuple(player_1_pos), tuple(player_2_pos), x_character, o_character, empty_character,board_lst, size, player_1_turn)
+
+        # Initialize board setup for new games
+        if build_new_game:
+            board_lst = board_lst_build(size)
+            player_1_pos = [0,0]        # start position player 1
+            player_2_pos = [0,(size-1)] # start position player 2
+            player_1_turn = whose_turn()
+            build_new_game = False
+
+        # Display the active game board
+        if game_running:
+            won_game, player_1_win, drawn_game = draw_board(stdscr, tuple(player_1_pos), tuple(player_2_pos), x_character, o_character, empty_character,board_lst, size, player_1_turn)
+        
         if won_game is True:
-            if player_1_win is True:
-                break
-            elif player_1_win is False:
-                break
+            game_over_win(stdscr, player_1_win, size)
+            game_running = False
         if drawn_game is True:
             break
         key = stdscr.getch()
@@ -318,15 +331,21 @@ def main(stdscr):
 
         # Exits keys
         if key == ord("q"): #exit player 1
-            if player_1_turn:
+            if player_1_turn or not game_running:
                 break
         elif key == ord("/"): #exit player 2
-            if not player_1_turn:
+            if not player_1_turn or not game_running:
                 break
         
+        # Terminal size refresher
         elif key == curses.KEY_RESIZE:
             continue
 
+        # New game key
+        elif key == ord("n"):
+            if not game_running:
+                build_new_game = True
+                game_running = True
 
         ### Player movement tied to structure of board list - moves with the coordinates of board list
 
@@ -375,6 +394,35 @@ def main(stdscr):
         # Continue on non action key presses
         else:
             continue
+
+
+def game_over_win(stdscr, player_1_win: bool, size: int) -> tuple[bool, bool]:
+    stdscr.clear()
+    
+    
+    # Verify that terminal size is large enough
+    height, width = stdscr.getmaxyx()
+    min_height = 15 + size
+    min_width = 50
+
+    if height < min_height or width < min_width:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Terminal too small!")
+        stdscr.addstr(1, 0, f"Minimum size: {min_width}x{min_height}")
+        stdscr.addstr(2, 0, f"Current size: {width}x{height}")
+        stdscr.refresh()
+        return
+    
+    # Display winning player message
+    if player_1_win:
+        won_game_message = "Good Job Player 1"
+    elif not player_1_win:
+        won_game_message = "Good Job Player 2 !"
+
+    stdscr.addstr(0, 0, "Game Finished!")
+    stdscr.addstr(1, 0, f"{won_game_message}")
+    stdscr.refresh()
+
 
 
 def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[list, bool] :
