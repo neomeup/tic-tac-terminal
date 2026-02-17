@@ -54,8 +54,8 @@ def whose_turn() -> bool:
 
 def draw_board(
         stdscr,
-        player_1: tuple[int, int],
-        player_2: tuple[int, int],
+        player_1_pos: tuple[int, int],
+        player_2_pos: tuple[int, int],
         x_character: str,
         o_character: str,
         empty_character: str,
@@ -84,33 +84,38 @@ def draw_board(
     col_start = 30  # Readability - col is read on the 2nd position [row, col] in addstr - inverse to mathematical graphs but matching addstr
     row_start = 5   # Readability - row is read on the 1st position [row, col] in addstr - inverse to mathematical graphs but matching addstr
 
+
     
-    #Handling of vertical spacing character |
-    space_char_lst = []
-    for x in range((size*2)-1):
-        if x % 2 == 1:
-            space_char_lst.append(x)
-    
-    row_index = 0
-    ## Some sort of handling of if a player tries to overwrite an already true location
-    for row in board_lst:
-        col_index = 0
-        for column in row:
-            if column[0] is False and column[1] is False:
-                stdscr.addstr((row_start+row_index), (col_start+col_index), empty_character)
-                for x in space_char_lst:
-                    stdscr.addstr((row_start+row_index), (col_start+x), "|")
-            elif column[0] is True:
-                stdscr.addstr((row_start+row_index), (col_start+col_index), x_character)
-                for x in space_char_lst:
-                    stdscr.addstr((row_start+row_index), (col_start+x), "|")
-            elif column[1] is True:
-                stdscr.addstr((row_start+row_index), (col_start+col_index), o_character)
-                for x in space_char_lst:
-                    stdscr.addstr((row_start+row_index), (col_start+x), "|")                             
-            col_index += 2
-        row_index += 1
-            
+    for row_index, row in enumerate(board_lst):
+        for col_index, column in enumerate(row):
+
+            # Logical board coordinates
+            board_y = row_index
+            board_x = col_index
+
+            # Screen coordinates (2x spacing for vertical separators)
+            screen_y = row_start + board_y
+            screen_x = col_start + (board_x * 2)
+
+            # Determine which character to draw
+            if not column[0] and not column[1]:
+                char = empty_character
+            elif column[0]:
+                char = x_character
+            else:
+                char = o_character
+
+            # Draw the cell (with highlight if active)
+            if (board_y, board_x) == player_1_pos and player_1_turn:
+                stdscr.addstr(screen_y, screen_x, char, curses.color_pair(2))
+            elif (board_y, board_x) == player_2_pos and not player_1_turn:
+                stdscr.addstr(screen_y, screen_x, char, curses.color_pair(3))
+            else:
+                stdscr.addstr(screen_y, screen_x, char)
+
+            # Draw vertical separator if not last column
+            if col_index < size - 1:
+                stdscr.addstr(screen_y, screen_x + 1, "|")
 
 
     won_game, player_1_win, drawn_game = game_finished(board_lst)
@@ -243,11 +248,13 @@ def main(stdscr):
     curses.noecho()
 
     # Color setup
-    if curses.has_colors():                                         # check if the terminal supports color
-        curses.start_color()                                        # enable color
-        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)  # white text on blue background
-        stdscr.bkgd(' ', curses.color_pair(1))                      # fill entire screen with that color
-        stdscr.clear()                                              # clear screen to apply background
+    if curses.has_colors():                                             # check if the terminal supports color
+        curses.start_color()                                            # enable color
+        curses.init_pair(1, curses.COLOR_WHITE, curses.COLOR_BLUE)      # white text on blue background
+        stdscr.bkgd(' ', curses.color_pair(1))                          # fill entire screen with that color
+        stdscr.clear()                                                  # clear screen to apply background
+        curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)    # Player 1 highlight
+        curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)     # Player 2 highlight
 
     # Set Variables
     x_character,o_character,empty_character,size = grab_globals(x_char,o_char,empty_char, board_size)
