@@ -167,30 +167,30 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
     ## Forward diagonals (all possible - needed for larger boards with different win lengths)
     # Moving row-wise
     for diag_index in range(size):
-        diagonal_forward = []
+        diagonal_rows = []
         row = 0
         column = diag_index
         while row < size and column < size:
-            diagonal_forward.append(board_lst[row][column])
+            diagonal_rows.append(board_lst[row][column])
             row += 1
             column += 1
-        if consecutive_cells(diagonal_forward, 0) is True:
+        if consecutive_cells(diagonal_rows, 0) is True:
             return True, True, False
-        if consecutive_cells(diagonal_forward, 1) is True:
+        if consecutive_cells(diagonal_rows, 1) is True:
             return True, False, False
 
     # Move column wise
     for diag_index in range(1, size): # Readability - possible to start at 1 due to initial diagonal already being checked in row-wise
-        diagonal_backwards = []
+        diagonal_columns = []
         row = diag_index
         column = 0
         while row < size and column < size:
-            diagonal_backwards.append(board_lst[row][column])
+            diagonal_columns.append(board_lst[row][column])
             row += 1
             column += 1
-        if consecutive_cells(diagonal_backwards, 0) is True:
+        if consecutive_cells(diagonal_columns, 0) is True:
             return True, True, False
-        if consecutive_cells(diagonal_backwards, 1) is True:
+        if consecutive_cells(diagonal_columns, 1) is True:
             return True, False, False
         
 
