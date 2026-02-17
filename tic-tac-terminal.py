@@ -82,10 +82,6 @@ def draw_board(
         for wrapped_line in wrapped_text:
             stdscr.addstr(current_row, 1, wrapped_line)
             current_row += 1
-
-    #stdscr.addstr(0, 10, "This is a tic tac toe in CLI game that allows to take turns starting with 'O' or 'X' and replacing the empty character '-'")
-    #stdscr.addstr(1, 10, "Player 1 uses the X's - Player 2 uses O's and one player will be randomly chosen to go first.")
-    #stdscr.addstr(2, 10, "The board will update after moves and declare a winner/loser or a draw once a win or draw condition is met.")
     
 
     # Display player turn
