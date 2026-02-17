@@ -108,7 +108,11 @@ def draw_board(
     
     stdscr.addstr(current_row + 2, 1, f"{active_player_message}")
     
-    
+    # Display quit commands
+    last_line = height
+    last_column = width
+    stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
+    stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
 
     # Board centering / positioning
     board_width = (size * 2) + 1
@@ -153,7 +157,7 @@ def draw_board(
     # Determine game condition
     won_game, player_1_win, drawn_game = game_finished(board_lst)
 
-    
+
     finish_condition = won_game, player_1_win, drawn_game
 
     stdscr.refresh()
