@@ -70,6 +70,20 @@ def draw_board(
     height, width = stdscr.getmaxyx()
 
 
+    # Verify that terminal size is large enough
+    min_height = 15 + size
+    min_width = 50
+
+
+    if height < min_height or width < min_width:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Terminal too small!")
+        stdscr.addstr(1, 0, f"Minimum size: {min_width}x{min_height}")
+        stdscr.addstr(2, 0, f"Current size: {width}x{height}")
+        stdscr.refresh()
+        return False, False, False
+
+
 
 
 
@@ -306,9 +320,11 @@ def main(stdscr):
         elif key == ord("/"): #exit player 2
             break
         
+        elif key == curses.KEY_RESIZE:
+            continue
+
 
         ### Player movement tied to structure of board list - moves with the coordinates of board list
-
 
         ## Player 1 movement (wasd)
         elif key == ord("w"): #key up
