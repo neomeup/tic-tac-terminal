@@ -112,11 +112,12 @@ def draw_board(
     stdscr.addstr(current_row + 2, 1, f"{active_player_message}")
     
     
+
+    # Board centering / positioning
+    board_width = (size * 2) + 1
     
-    
-    #               # Readability - Board_lst is built using mathematical notation with typical [x,y] coordinates
-    col_start = 30  # Readability - col is read on the 2nd position [row, col] in addstr - inverse to mathematical graphs but matching addstr
-    row_start = current_row + 5   # Readability - row is read on the 1st position [row, col] in addstr - inverse to mathematical graphs but matching addstr
+    col_start = (width - board_width) // 2  # Readability - col is read on the 2nd position [row, col] in addstr - inverse to mathematical graphs but matching addstr
+    row_start = current_row + 5             # Readability - row is read on the 1st position [row, col] in addstr - inverse to mathematical graphs but matching addstr
 
 
     
