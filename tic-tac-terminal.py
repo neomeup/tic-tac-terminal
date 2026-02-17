@@ -348,5 +348,5 @@ def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: 
 
 
 
-# This handles setup and teardown safely
+# Easy setup and tear down
 curses.wrapper(main)
