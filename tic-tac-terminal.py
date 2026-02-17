@@ -69,6 +69,11 @@ def draw_board(
     ## Display start up information - dynamically sized
     height, width = stdscr.getmaxyx()
 
+
+
+
+
+    # Display Game info - auto scaled based on terminal size
     info_lines = [
         "This is a tic tac toe in CLI game that allows to take turns starting with 'O' or 'X' and replacing the empty character '-'",
         "Players can choose either X or O and one player will be randomly chosen to go first.",
