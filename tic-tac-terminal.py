@@ -84,9 +84,6 @@ def draw_board(
         return False, False, False
 
 
-
-
-
     # Display Game info - auto scaled based on terminal size
     info_lines = [
         "This is a tic tac toe in CLI game that allows to take turns starting with 'O' or 'X' and replacing the empty character '-'",
@@ -317,9 +314,11 @@ def main(stdscr):
 
         # Exits keys
         if key == ord("q"): #exit player 1
-            break
+            if player_1_turn:
+                break
         elif key == ord("/"): #exit player 2
-            break
+            if not player_1_turn:
+                break
         
         elif key == curses.KEY_RESIZE:
             continue
