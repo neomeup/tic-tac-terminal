@@ -44,13 +44,13 @@ def board_lst_build(size: int) -> list :
             x[b] = item
     return board_lst
 
+
 def whose_turn() -> bool:
     turn_val = random.randint(0,1)
     if turn_val == 0:
         return True
     elif turn_val == 1:
         return False
-
 
 
 def draw_board(
@@ -117,7 +117,7 @@ def draw_board(
     row_start = current_row + 5             # Readability - row is read on the 1st position [row, col] in addstr - inverse to mathematical graphs but matching addstr
 
 
-    
+    # Draw Game Board
     for row_index, row in enumerate(board_lst):
         for col_index, column in enumerate(row):
 
@@ -125,7 +125,7 @@ def draw_board(
             board_y = row_index
             board_x = col_index
 
-            # Screen coordinates (2x spacing for vertical separators)
+            # Screen coordinates (2x spacing for vertical spacers)
             screen_y = row_start + board_y
             screen_x = col_start + (board_x * 2)
 
@@ -137,7 +137,7 @@ def draw_board(
             else:
                 char = o_character
 
-            # Draw the cell (with highlight if active)
+            # Draw the cell (with highlight if active player selected)
             if (board_y, board_x) == player_1_pos and player_1_turn:
                 stdscr.addstr(screen_y, screen_x, char, curses.color_pair(2))
             elif (board_y, board_x) == player_2_pos and not player_1_turn:
@@ -150,8 +150,10 @@ def draw_board(
                 stdscr.addstr(screen_y, screen_x + 1, "|")
 
 
+    # Determine game condition
     won_game, player_1_win, drawn_game = game_finished(board_lst)
 
+    
     finish_condition = won_game, player_1_win, drawn_game
 
     stdscr.refresh()
@@ -268,8 +270,6 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
                 return False, False, False
 
     return False, False, True # Returns a draw state if draw logic never pushes a false
-
-
 
 
 def main(stdscr):
