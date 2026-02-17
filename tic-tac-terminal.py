@@ -194,7 +194,21 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
             return True, False, False
         
 
-    # Backwards diagonals
+    ## Backwards diagonals
+    # Move row wise
+    for anti_diag_index in range(size - 1, 0, -1):
+        anti_diagonal_rows = []
+        row = 0
+        column = anti_diag_index
+        while row < size and column >= 0:
+            anti_diagonal_rows.append(board_lst[row][column])
+            row += 1
+            column -= 1
+        if consecutive_cells(anti_diagonal_rows, 0) is True:
+            return True, True, False
+        if consecutive_cells(anti_diagonal_rows, 1) is True:
+            return True, False, False
+
 
     return False, False, False
 
