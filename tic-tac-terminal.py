@@ -224,9 +224,15 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
             return True, False, False
 
 
+    ## Draw logic (Basic) - sends a false draw if there are any available squares
+    for row in board_lst:
+        for cell in row:
+            if cell[0] is False and cell[1] is False:
+                return False, False, False
+
+    return False, False, True # Returns a draw state if draw logic never pushes a false
 
 
-    return False, False, False
 
 
 def main(stdscr):
