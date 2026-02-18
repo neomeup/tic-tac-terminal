@@ -402,8 +402,8 @@ def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_c
     
     # Verify that terminal size is large enough
     height, width = stdscr.getmaxyx()
-    min_height = 15 + size
-    min_width = 50
+    min_height = 10 + size
+    min_width = 40
 
     if height < min_height or width < min_width:
         stdscr.clear()
@@ -417,8 +417,10 @@ def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_c
     stdscr.addstr(0, 0, "Game Finished!")
     stdscr.addstr(1, 0, "You have drawn the game!")
 
-    row_start = 2
-    col_start = 5
+    board_width = (size * 2) - 1
+
+    row_start = 5
+    col_start = (width - board_width) // 2
 
     # Draw Game Board
     for row_index, row in enumerate(board_lst):
@@ -465,8 +467,8 @@ def game_over_win(stdscr, player_1_win: bool, size: int, board_lst: list, empty_
     
     # Verify that terminal size is large enough
     height, width = stdscr.getmaxyx()
-    min_height = 15 + size
-    min_width = 50
+    min_height = 10 + size
+    min_width = 40
 
     if height < min_height or width < min_width:
         stdscr.clear()
@@ -485,8 +487,10 @@ def game_over_win(stdscr, player_1_win: bool, size: int, board_lst: list, empty_
     stdscr.addstr(0, 0, "Game Finished!")
     stdscr.addstr(1, 0, f"{won_game_message}")
 
+    board_width = (size * 2) - 1
+    
     row_start = 5
-    col_start = 5
+    col_start = (width - board_width) // 2
 
     # Draw Game Board
     for row_index, row in enumerate(board_lst):
