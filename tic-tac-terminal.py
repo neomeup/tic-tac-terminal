@@ -325,7 +325,8 @@ def main(stdscr):
             game_over_win(stdscr, player_1_win, size)
             game_running = False
         if drawn_game is True:
-            break
+            game_over_draw(stdscr, size, board_lst, empty_character, x_character, o_character)
+            game_running = False
         key = stdscr.getch()
 
 
@@ -395,8 +396,62 @@ def main(stdscr):
         else:
             continue
 
+def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_character: str, o_character: str) -> None:
+    stdscr.clear()
+    
+    
+    # Verify that terminal size is large enough
+    height, width = stdscr.getmaxyx()
+    min_height = 15 + size
+    min_width = 50
 
-def game_over_win(stdscr, player_1_win: bool, size: int) -> tuple[bool, bool]:
+    if height < min_height or width < min_width:
+        stdscr.clear()
+        stdscr.addstr(0, 0, "Terminal too small!")
+        stdscr.addstr(1, 0, f"Minimum size: {min_width}x{min_height}")
+        stdscr.addstr(2, 0, f"Current size: {width}x{height}")
+        stdscr.refresh()
+        return
+    
+
+    stdscr.addstr(0, 0, "Game Finished!")
+    stdscr.addstr(1, 0, "You have drawn the game!")
+
+    row_start = 2
+    col_start = 5
+
+    # Draw Game Board
+    for row_index, row in enumerate(board_lst):
+        for col_index, column in enumerate(row):
+
+            # Logical board coordinates
+            board_y = row_index
+            board_x = col_index
+
+            # Screen coordinates (2x spacing for vertical spacers)
+            screen_y = row_start + board_y
+            screen_x = col_start + (board_x * 2)
+
+            # Determine which character to draw
+            if not column[0] and not column[1]:
+                char = empty_character
+            elif column[0]:
+                char = x_character
+            else:
+                char = o_character
+
+            
+            stdscr.addstr(screen_y, screen_x, char)
+
+            # Draw vertical separator if not last column
+            if col_index < size - 1:
+                stdscr.addstr(screen_y, screen_x + 1, "|")
+
+
+    stdscr.refresh()
+
+
+def game_over_win(stdscr, player_1_win: bool, size: int) -> None:
     stdscr.clear()
     
     
