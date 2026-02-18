@@ -14,20 +14,12 @@ O|-|X
 import random
 import curses
 import textwrap
+from config import GameConfig
+
+config = GameConfig()
 
 
-## Global Start Variables
-x_char = "X"
-o_char = "O"
-empty_char = "-"
-board_size = 4
-
-
-def grab_globals(x_char,o_char,empty_char, board_size) -> tuple[str, str, str, int]:
-    return x_char,o_char,empty_char, board_size
-
-
-def board_lst_build(size: int) -> list :
+def board_lst_build(size) -> list :
     # initial board positions creation
     board_lst = []
     for x in range(size):
@@ -55,15 +47,18 @@ def whose_turn() -> bool:
 
 def draw_board(
         stdscr,
+        config,
         player_1_pos: tuple[int, int],
         player_2_pos: tuple[int, int],
-        x_character: str,
-        o_character: str,
-        empty_character: str,
         board_lst: list[list[tuple[bool, bool, int]]],
-        size: int,
         player_1_turn: bool
         ) -> tuple[bool, bool, bool]:
+    
+    x_character = config.x_char
+    o_character = config.o_char
+    empty_character = config.empty_char
+    size = config.board_size
+
     stdscr.clear()
     
     ## Display start up information - dynamically sized
@@ -155,7 +150,7 @@ def draw_board(
 
 
     # Determine game condition
-    won_game, player_1_win, drawn_game = game_finished(board_lst)
+    won_game, player_1_win, drawn_game = game_finished(config, board_lst)
 
 
     finish_condition = won_game, player_1_win, drawn_game
@@ -164,16 +159,15 @@ def draw_board(
     return finish_condition
 
 
-def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, bool, bool]:
+def game_finished(config, board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, bool, bool]:
     
     ##  All returns in following format -> won_game, player_1_win, drawn_game
-
-    size = len(board_lst)
-    win_length = 3 ## Should be move to globals eventually
+    win_length = config.win_length
+    size = config.board_size
 
     # Win helper
     # Helper function using win length to determine consecutive cells
-    def consecutive_cells(cells_to_check: list, player_index: int) -> bool:
+    def consecutive_cells(cells_to_check: list, player_index: int, win_length: int) -> bool:
         cell_count = 0
         for cell in cells_to_check:
             if cell[player_index]:
@@ -186,7 +180,7 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
     
     # Stalemate helper
     # Helper function to return True if player could win the cells being checked
-    def possible_line(cells_to_check, player_index):
+    def possible_line(cells_to_check: list, player_index: int, win_length: int):
         count = 0
         for cell in cells_to_check:
             if cell[player_index] or (not cell[0] and not cell[1]):
@@ -267,36 +261,36 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
 
 
     # Win checking
-    for i in rows:
-        if consecutive_cells(i, 0) is True:
+    for cells in rows:
+        if consecutive_cells(cells, 0, win_length) is True:
             return True, True, False
-        if consecutive_cells(i, 1) is True:
+        if consecutive_cells(cells, 1, win_length) is True:
             return True, False, False
 
-    for i in columns:
-        if consecutive_cells(i, 0) is True:
+    for cells in columns:
+        if consecutive_cells(cells, 0, win_length) is True:
             return True, True, False
-        if consecutive_cells(i, 1) is True:
+        if consecutive_cells(cells, 1, win_length) is True:
             return True, False, False
 
-    for i in diagonals:
-        if consecutive_cells(i, 0) is True:
+    for cells in diagonals:
+        if consecutive_cells(cells, 0, win_length) is True:
             return True, True, False
-        if consecutive_cells(i, 1) is True:
+        if consecutive_cells(cells, 1, win_length) is True:
             return True, False, False
 
 
     # Draw Checking
-    for i in rows:
-        if possible_line(i, 0) or possible_line(i, 1):
+    for cells in rows:
+        if possible_line(cells, 0, win_length) or possible_line(cells, 1, win_length):
            return False, False, False
     
-    for i in columns:
-        if possible_line(i, 0) or possible_line(i, 1):
+    for cells in columns:
+        if possible_line(cells, 0, win_length) or possible_line(cells, 1, win_length):
            return False, False, False
 
-    for i in diagonals:
-        if possible_line(i, 0) or possible_line(i, 1):
+    for cells in diagonals:
+        if possible_line(cells, 0, win_length) or possible_line(cells, 1, win_length):
            return False, False, False       
     
 
@@ -319,17 +313,10 @@ def main(stdscr):
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)    # Player 1 highlight
         curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)     # Player 2 highlight
 
-    # Set Variables
-    x_character,o_character,empty_character,size = grab_globals(x_char,o_char,empty_char, board_size)
-
-    # Player position coordinates are in inverse graph notation [y axis,x axis] to match board list
-    player_1_pos = [0,0]        # start position player 1
-    player_2_pos = [0,(size-1)] # start position player 2
     
-    player_1_turn = whose_turn()        # bool flag to mark whose turn it is - whose_turn() sets this randomly
+    size = config.board_size
     
-    board_lst = board_lst_build(size)   # board initializer
-    
+    # Initial game state booleans
     game_running = True
     build_new_game = True
 
@@ -338,7 +325,7 @@ def main(stdscr):
 
         # Initialize board setup for new games
         if build_new_game:
-            board_lst = board_lst_build(size)
+            board_lst = board_lst_build(config.board_size)
             player_1_pos = [0,0]        # start position player 1
             player_2_pos = [0,(size-1)] # start position player 2
             player_1_turn = whose_turn()
@@ -346,13 +333,13 @@ def main(stdscr):
 
         # Display the active game board
         if game_running:
-            won_game, player_1_win, drawn_game = draw_board(stdscr, tuple(player_1_pos), tuple(player_2_pos), x_character, o_character, empty_character,board_lst, size, player_1_turn)
+            won_game, player_1_win, drawn_game = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn)
         
         if won_game is True:
-            game_over_win(stdscr, player_1_win, size, board_lst, empty_character, x_character, o_character)
+            game_over_win(stdscr, config, player_1_win, board_lst)
             game_running = False
         if drawn_game is True:
-            game_over_draw(stdscr, size, board_lst, empty_character, x_character, o_character)
+            game_over_draw(stdscr, config, board_lst)
             game_running = False
         key = stdscr.getch()
 
@@ -424,7 +411,12 @@ def main(stdscr):
             continue
 
 
-def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_character: str, o_character: str) -> None:
+def game_over_draw(stdscr, config, board_lst: list) -> None:
+    size = config.board_size
+    empty_character = config.empty_char
+    x_character = config.x_char
+    o_character = config.o_char
+
     stdscr.clear()
     
     
@@ -489,7 +481,12 @@ def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_c
     stdscr.refresh()
 
 
-def game_over_win(stdscr, player_1_win: bool, size: int, board_lst: list, empty_character: str, x_character: str, o_character: str) -> None:
+def game_over_win(stdscr, config, player_1_win: bool, board_lst: list) -> None:
+    size = config.board_size
+    empty_character = config.empty_char
+    x_character = config.x_char
+    o_character = config.o_char
+
     stdscr.clear()
     
     
@@ -557,7 +554,6 @@ def game_over_win(stdscr, player_1_win: bool, size: int, board_lst: list, empty_
 
 
     stdscr.refresh()
-
 
 
 def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[list, bool] :
