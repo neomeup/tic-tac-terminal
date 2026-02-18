@@ -171,7 +171,7 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
     size = len(board_lst)
     win_length = 3 ## Should be move to globals eventually
 
-
+    # Win helper
     # Helper function using win length to determine consecutive cells
     def consecutive_cells(cells_to_check: list, player_index: int) -> bool:
         cell_count = 0
@@ -184,100 +184,7 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
                 cell_count = 0
         return False
     
-
-    ## All win logic is generally separate into two parts
-    #  - isolate line type 
-    #  - pass line type to consec_cells as cells to check for each player
-
-    # Row wins
-    for row in board_lst:                       # Build rows for consec_cells()
-        if consecutive_cells(row, 0) is True:   # Check player 1
-            return True, True, False
-        if consecutive_cells(row, 1) is True:   # Check player 2
-            return True, False, False    
-        
-
-    # Column wins
-    for col_index in range(size):
-        column = [board_lst[row][col_index] for row in range(size)]
-        if consecutive_cells(column, 0) is True:
-            return True, True, False
-        if consecutive_cells(column, 1) is True:
-            return True, False, False
-
-
-
-    ## Forward diagonals (all possible - needed for larger boards with different win lengths)
-    # Moving row-wise
-    for diag_index in range(size):
-        diagonal_rows = []
-        row = 0
-        column = diag_index
-        while row < size and column < size:
-            diagonal_rows.append(board_lst[row][column])
-            row += 1
-            column += 1
-        if consecutive_cells(diagonal_rows, 0) is True:
-            return True, True, False
-        if consecutive_cells(diagonal_rows, 1) is True:
-            return True, False, False
-
-    # Move column wise
-    for diag_index in range(1, size): # Readability - possible to start at 1 due to initial diagonal already being checked in row-wise
-        diagonal_columns = []
-        row = diag_index
-        column = 0
-        while row < size and column < size:
-            diagonal_columns.append(board_lst[row][column])
-            row += 1
-            column += 1
-        if consecutive_cells(diagonal_columns, 0) is True:
-            return True, True, False
-        if consecutive_cells(diagonal_columns, 1) is True:
-            return True, False, False
-        
-
-    ## Backwards diagonals
-    # Move row wise
-    for anti_diag_index in range(size - 1, 0, -1):
-        anti_diagonal_rows = []
-        row = 0
-        column = anti_diag_index
-        while row < size and column >= 0:
-            anti_diagonal_rows.append(board_lst[row][column])
-            row += 1
-            column -= 1
-        if consecutive_cells(anti_diagonal_rows, 0) is True:
-            return True, True, False
-        if consecutive_cells(anti_diagonal_rows, 1) is True:
-            return True, False, False
-        
-    # Move column wise
-    for anti_diag_index in range(1, size):
-        anti_diagonal_columns = []
-        row = anti_diag_index
-        column = size - 1
-        while row < size and column >= 0:
-            anti_diagonal_columns.append(board_lst[row][column])
-            row += 1
-            column -= 1
-        if consecutive_cells(anti_diagonal_columns, 0) is True:
-            return True, True, False
-        if consecutive_cells(anti_diagonal_columns, 1) is True:
-            return True, False, False
-
-
-    # Draw logic - medium complexity 
-    if check_forced_draw(board_lst, win_length):
-        return False, False, True        
-    
-
-    return False, False, False # Returns a game running state if no wins or draws are detected
-
-
-def check_forced_draw(board_lst, win_length) -> bool:
-    size = len(board_lst)
-    
+    # Stalemate helper
     # Helper function to return True if player could win the cells being checked
     def possible_line(cells_to_check, player_index):
         count = 0
@@ -290,40 +197,111 @@ def check_forced_draw(board_lst, win_length) -> bool:
                 count = 0
         return False
 
-    # Build rows and columns
-    for i in range(size):
-        # Rows
-        row = board_lst[i]
-        if possible_line(row, 0) or possible_line(row, 1):
-            return False 
+    def build_rows(board_lst) -> list:
+        row_lst = []
+        for row in board_lst:
+            row_lst.append(row)
+        return row_lst
 
-        # Columns
-        col = [board_lst[r][i] for r in range(size)]
-        if possible_line(col, 0) or possible_line(col, 1):
-            return False
 
-    # Diagonals
-    # Forward diagonals
-    for row_start in range(size):
-        for col_start in range(size):
-            diag1 = []
-            diag2 = []
-            for offset in range(win_length):
-                r1 = row_start + offset
-                c1 = col_start + offset
-                r2 = row_start + offset
-                c2 = col_start - offset
-                if r1 < size and c1 < size:
-                    diag1.append(board_lst[r1][c1])
-                if r2 < size and c2 >= 0:
-                    diag2.append(board_lst[r2][c2])
-            if possible_line(diag1, 0) or possible_line(diag1, 1):
-                return False
-            if possible_line(diag2, 0) or possible_line(diag2, 1):
-                return False
+    def build_columns(board_lst) -> list:
+        column_lst = []
+        for col_index in range(size):
+            column = [board_lst[row][col_index] for row in range(size)]
+            column_lst.append(column)
+        return column_lst
+    
 
-    # If we get here, no line has potential => draw
-    return True
+    def build_diagonals(board_lst) -> list:
+        diagonal_lst = []
+        # Moving row-wise
+        for diag_index in range(size):
+            diagonal_rows = []
+            row = 0
+            column = diag_index
+            while row < size and column < size:
+                diagonal_rows.append(board_lst[row][column])
+                row += 1
+                column += 1
+            diagonal_lst.append(diagonal_rows)
+
+        # Move column wise
+        for diag_index in range(1, size): # Readability - possible to start at 1 due to initial diagonal already being checked in row-wise
+            diagonal_columns = []
+            row = diag_index
+            column = 0
+            while row < size and column < size:
+                diagonal_columns.append(board_lst[row][column])
+                row += 1
+                column += 1
+            diagonal_lst.append(diagonal_columns)
+            
+        # Move row wise
+        for anti_diag_index in range(size - 1, 0, -1):
+            anti_diagonal_rows = []
+            row = 0
+            column = anti_diag_index
+            while row < size and column >= 0:
+                anti_diagonal_rows.append(board_lst[row][column])
+                row += 1
+                column -= 1
+            diagonal_lst.append(anti_diagonal_rows)
+            
+        # Move column wise
+        for anti_diag_index in range(1, size):
+            anti_diagonal_columns = []
+            row = anti_diag_index
+            column = size - 1
+            while row < size and column >= 0:
+                anti_diagonal_columns.append(board_lst[row][column])
+                row += 1
+                column -= 1
+            diagonal_lst.append(anti_diagonal_columns)
+        
+        return diagonal_lst
+
+
+    rows = build_rows(board_lst)
+    columns = build_columns(board_lst)
+    diagonals = build_diagonals(board_lst)
+
+
+    # Win checking
+    for i in rows:
+        if consecutive_cells(i, 0) is True:
+            return True, True, False
+        if consecutive_cells(i, 1) is True:
+            return True, False, False
+
+    for i in columns:
+        if consecutive_cells(i, 0) is True:
+            return True, True, False
+        if consecutive_cells(i, 1) is True:
+            return True, False, False
+
+    for i in diagonals:
+        if consecutive_cells(i, 0) is True:
+            return True, True, False
+        if consecutive_cells(i, 1) is True:
+            return True, False, False
+
+
+    # Draw Checking
+    for i in rows:
+        if possible_line(i, 0) or possible_line(i, 1):
+           return False, False, False
+    
+    for i in columns:
+        if possible_line(i, 0) or possible_line(i, 1):
+           return False, False, False
+
+    for i in diagonals:
+        if possible_line(i, 0) or possible_line(i, 1):
+           return False, False, False       
+    
+
+    return False, False, True # Returns a game running state if no wins or draws are detected
+
 
 def main(stdscr):
     stdscr.clear()          # clear the screen
