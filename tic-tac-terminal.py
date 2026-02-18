@@ -448,6 +448,14 @@ def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_c
                 stdscr.addstr(screen_y, screen_x + 1, "|")
 
 
+    # Display quit commands
+    last_line = height
+    last_column = width
+    stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
+    stdscr.addstr(last_line-2, 0, "'n' Start a new game")
+    stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
+
+
     stdscr.refresh()
 
 
@@ -506,6 +514,16 @@ def game_over_win(stdscr, player_1_win: bool, size: int, board_lst: list, empty_
             # Draw vertical separator if not last column
             if col_index < size - 1:
                 stdscr.addstr(screen_y, screen_x + 1, "|")
+
+
+    # Display quit commands
+    last_line = height
+    last_column = width
+    stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
+    stdscr.addstr(last_line-2, 0, "'n' Start a new game")
+    stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
+
+
     stdscr.refresh()
 
 
