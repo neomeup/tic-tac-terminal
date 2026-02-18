@@ -267,14 +267,63 @@ def game_finished(board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, 
             return True, False, False
 
 
-    ## Draw logic (Basic) - sends a false draw if there are any available squares
-    for row in board_lst:
-        for cell in row:
-            if cell[0] is False and cell[1] is False:
-                return False, False, False
+    # Draw logic - medium complexity 
+    if check_forced_draw(board_lst, win_length):
+        return False, False, True        
+    
 
-    return False, False, True # Returns a draw state if draw logic never pushes a false
+    return False, False, False # Returns a game running state if no wins or draws are detected
 
+
+def check_forced_draw(board_lst, win_length) -> bool:
+    size = len(board_lst)
+    
+    # Helper function to return True if player could win the cells being checked
+    def possible_line(cells_to_check, player_index):
+        count = 0
+        for cell in cells_to_check:
+            if cell[player_index] or (not cell[0] and not cell[1]):
+                count += 1
+                if count >= win_length:
+                    return True
+            else:
+                count = 0
+        return False
+
+    # Build rows and columns
+    for i in range(size):
+        # Rows
+        row = board_lst[i]
+        if possible_line(row, 0) or possible_line(row, 1):
+            return False 
+
+        # Columns
+        col = [board_lst[r][i] for r in range(size)]
+        if possible_line(col, 0) or possible_line(col, 1):
+            return False
+
+    # Diagonals
+    # Forward diagonals
+    for row_start in range(size):
+        for col_start in range(size):
+            diag1 = []
+            diag2 = []
+            for offset in range(win_length):
+                r1 = row_start + offset
+                c1 = col_start + offset
+                r2 = row_start + offset
+                c2 = col_start - offset
+                if r1 < size and c1 < size:
+                    diag1.append(board_lst[r1][c1])
+                if r2 < size and c2 >= 0:
+                    diag2.append(board_lst[r2][c2])
+            if possible_line(diag1, 0) or possible_line(diag1, 1):
+                return False
+            if possible_line(diag2, 0) or possible_line(diag2, 1):
+                return False
+
+    # If we get here, no line has potential => draw
+    return True
 
 def main(stdscr):
     stdscr.clear()          # clear the screen
