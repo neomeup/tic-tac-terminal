@@ -322,7 +322,7 @@ def main(stdscr):
             won_game, player_1_win, drawn_game = draw_board(stdscr, tuple(player_1_pos), tuple(player_2_pos), x_character, o_character, empty_character,board_lst, size, player_1_turn)
         
         if won_game is True:
-            game_over_win(stdscr, player_1_win, size)
+            game_over_win(stdscr, player_1_win, size, board_lst, empty_character, x_character, o_character)
             game_running = False
         if drawn_game is True:
             game_over_draw(stdscr, size, board_lst, empty_character, x_character, o_character)
@@ -451,7 +451,7 @@ def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_c
     stdscr.refresh()
 
 
-def game_over_win(stdscr, player_1_win: bool, size: int) -> None:
+def game_over_win(stdscr, player_1_win: bool, size: int, board_lst: list, empty_character: str, x_character: str, o_character: str) -> None:
     stdscr.clear()
     
     
@@ -476,6 +476,36 @@ def game_over_win(stdscr, player_1_win: bool, size: int) -> None:
 
     stdscr.addstr(0, 0, "Game Finished!")
     stdscr.addstr(1, 0, f"{won_game_message}")
+
+    row_start = 5
+    col_start = 5
+
+    # Draw Game Board
+    for row_index, row in enumerate(board_lst):
+        for col_index, column in enumerate(row):
+
+            # Logical board coordinates
+            board_y = row_index
+            board_x = col_index
+
+            # Screen coordinates (2x spacing for vertical spacers)
+            screen_y = row_start + board_y
+            screen_x = col_start + (board_x * 2)
+
+            # Determine which character to draw
+            if not column[0] and not column[1]:
+                char = empty_character
+            elif column[0]:
+                char = x_character
+            else:
+                char = o_character
+
+            
+            stdscr.addstr(screen_y, screen_x, char)
+
+            # Draw vertical separator if not last column
+            if col_index < size - 1:
+                stdscr.addstr(screen_y, screen_x + 1, "|")
     stdscr.refresh()
 
 
