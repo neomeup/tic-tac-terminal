@@ -396,6 +396,7 @@ def main(stdscr):
         else:
             continue
 
+
 def game_over_draw(stdscr, size: int, board_lst: list, empty_character: str, x_character: str, o_character: str) -> None:
     stdscr.clear()
     
@@ -488,7 +489,7 @@ def game_over_win(stdscr, player_1_win: bool, size: int, board_lst: list, empty_
     stdscr.addstr(1, 0, f"{won_game_message}")
 
     board_width = (size * 2) - 1
-    
+
     row_start = 5
     col_start = (width - board_width) // 2
 
