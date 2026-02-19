@@ -117,13 +117,58 @@ def main(stdscr, config):
                 continue
 
 
-    def run_headless():
-        pass
+    def run_headless(config):
+        size = config.board_size
+        game_history = []
+        game_count = 0
+
+        # Initial game state booleans
+        game_running = True
+        build_new_game = True
+
+        while True:
+            # Initialize board setup for new games
+            if build_new_game:
+                board_lst = board_lst_build(config.board_size)
+                player_1_pos = [0,0]        # start position player 1
+                player_2_pos = [0,(size-1)] # start position player 2
+                build_new_game = False
+                if config.random_start:
+                    player_1_turn = whose_turn()
+                else:
+                    player_1_turn = True
+
+            won_game, player_1_win, drawn_game = game_finished(config, board_lst)
+
+            if won_game is True:
+                finished_game_state = won_game, player_1_win, drawn_game
+                game_history.append(finished_game_state)
+                game_count += 1
+                game_running = False
+            if drawn_game is True:
+                finished_game_state = won_game, player_1_win, drawn_game
+                game_history.append(finished_game_state)
+                game_count += 1
+                game_running = False
+
+            ## Ask Computer player for a move and execute said move
+            #if game_running:
+                #if player_1_turn:
+                   #player_1_pos, board_lst = get_computer_move(player_1_turn, player_1_pos, board_lst)
+                #elif not player_1_turn:
+                    #player_2_pos, board_lst = get_computer_move(player_1_turn, player_2_pos, board_lst)
+
+            if game_count == config.how_many_games:
+                return game_history
+            else:
+                game_running = True
+                build_new_game = True
+        
 
     if stdscr is not None:
         run_interactive(stdscr,config)
     else:
-        run_headless()
+        run_headless(config)
 
 
 

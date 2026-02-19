@@ -15,9 +15,11 @@ class GameConfig:
         # Optional render flag
         self.render: bool = True # Set False for non-rendered games
 
-        # Human player flag and count
-        self.human_player_exists: bool = True
-        self.how_many_human: int = 2
+        # Player types
+        self.player_types: list = ["human", "computer"]
 
         # Start conditions for movement
-        self.random_start = True
+        self.random_start: bool = True
+
+        # Games to be played in computer only mode
+        self.how_many_games: int = 1
