@@ -119,7 +119,7 @@ def draw_board(
             if col_index < size - 1:
                 stdscr.addstr(screen_y, screen_x + 1, "|")
 
-    from engine import game_finished
+    from game_types.used_rules import game_finished
 
     # Determine game condition
     won_game, player_1_win, drawn_game = game_finished(config, board_lst)

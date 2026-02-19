@@ -8,9 +8,14 @@ class GameConfig:
         self.o_char: str = "O"
         self.empty_char: str = "-"
 
-        # Board and win settings
+        # Board size
         self.board_size: int = 4
+
+        # Win length Tic-tac-toe/standard rule sets
         self.win_length: int = 3 # Used for simple wins i.e. tic-tac-toe style
+
+        # Game type indicator
+        self.rule_set: str = "standard"
 
         # Optional render flag
         self.render: bool = True # Set False for non-rendered games

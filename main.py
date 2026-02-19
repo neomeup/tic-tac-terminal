@@ -12,10 +12,12 @@ O|-|X
 
 import time
 from config import GameConfig
-from engine import board_list_select, board_lst_build, whose_turn, game_finished
+from engine import board_list_select, board_lst_build, whose_turn
 from renderer import draw_board, game_over_draw, game_over_win
 from movement.player_movement import player_move
 from movement.computer_players.computer_movement import get_computer_move
+from game_types.used_rules import game_finished
+
 config = GameConfig()
 
 
