@@ -48,6 +48,7 @@ def main(stdscr, config):
         ## No game history is returned in rendered computer vs computer scenarios
         game_count = 1
 
+        # Main logic loop for rendered games
         while True:
             stdscr.clear()
 
@@ -63,11 +64,10 @@ def main(stdscr, config):
                     player_1_turn = True
 
             # Display the active game board if rendering
-            if game_running and config.render:
+            if game_running:
                 won_game, player_1_win, drawn_game = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn)
-            elif game_running: # Return game state variables directly if not rendering
-                won_game, player_1_win, drawn_game = game_finished(config, board_lst)
             
+            # Check game state for a finished game condition
             if won_game is True:
                 game_over_win(stdscr, config, player_1_win, board_lst)
                 game_running = False
@@ -147,6 +147,7 @@ def main(stdscr, config):
 
 
     def run_headless(config):
+        # Initialize game history variables
         game_history = []
         game_count = 1
 
@@ -164,8 +165,10 @@ def main(stdscr, config):
                 else:
                     player_1_turn = True
 
+            # Store game state
             won_game, player_1_win, drawn_game = game_finished(config, board_lst)
 
+            # Check game state for a finished game condition
             if won_game is True:
                 finished_game_state = won_game, player_1_win, drawn_game
                 game_history.append(finished_game_state)
@@ -179,8 +182,8 @@ def main(stdscr, config):
             if game_running:
                 board_lst = get_computer_move(player_1_turn, board_lst, config)
                 player_1_turn = not player_1_turn
-
-            if not game_running:
+            else:
+                # If game is over process game state and determine if another game is needed
                 if game_count == config.how_many_games:
                     return game_history
                 else:
