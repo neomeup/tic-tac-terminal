@@ -15,8 +15,9 @@ class GameConfig:
         # Optional render flag
         self.render: bool = True # Set False for non-rendered games
 
-        # Optional key'ed input flag
-        self.grab_keys: bool = True
+        # Human player flag and count
+        self.human_player_exists: bool = True
+        self.how_many_human: int = 2
 
         # Start conditions for movement
-        self.random_start = True 
+        self.random_start = True
