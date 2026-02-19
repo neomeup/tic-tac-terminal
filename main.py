@@ -12,9 +12,10 @@ O|-|X
 
 
 import curses
-import textwrap
 from config import GameConfig
-
+from engine import board_list_select, board_lst_build, whose_turn, game_finished
+from renderer import draw_board, game_over_draw, game_over_win
+from movement.player_movement import player_move
 config = GameConfig()
 
 
@@ -34,7 +35,7 @@ def main(stdscr):
         curses.init_pair(2, curses.COLOR_BLACK, curses.COLOR_YELLOW)    # Player 1 highlight
         curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)     # Player 2 highlight
 
-    
+    config = GameConfig()
     size = config.board_size
     
     # Initial game state booleans
@@ -49,12 +50,17 @@ def main(stdscr):
             board_lst = board_lst_build(config.board_size)
             player_1_pos = [0,0]        # start position player 1
             player_2_pos = [0,(size-1)] # start position player 2
-            player_1_turn = whose_turn()
             build_new_game = False
+            if config.random_start:
+                player_1_turn = whose_turn()
+            else:
+                player_1_turn = True
 
-        # Display the active game board
-        if game_running:
+        # Display the active game board if rendering
+        if game_running and config.render:
             won_game, player_1_win, drawn_game = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn)
+        elif game_running: # Return game state variables directly if not rendering
+            won_game, player_1_win, drawn_game = game_finished(config, board_lst)
         
         if won_game is True:
             game_over_win(stdscr, config, player_1_win, board_lst)
@@ -62,6 +68,9 @@ def main(stdscr):
         if drawn_game is True:
             game_over_draw(stdscr, config, board_lst)
             game_running = False
+        
+        
+        ## Start grabbing inputs
         key = stdscr.getch()
 
 
@@ -84,36 +93,12 @@ def main(stdscr):
                 game_running = True
 
         ### Player movement tied to structure of board list - moves with the coordinates of board list
-
-        ## Player 1 movement (wasd)
-        elif key == ord("w"): #key up
-            if player_1_turn is True: # Isolate movement by player turn for player 1
-                player_1_pos[0] = max((0, player_1_pos[0] - 1))
-        elif key == ord("s"): #key down
-            if player_1_turn is True:
-                player_1_pos[0] = min(((size-1), player_1_pos[0] + 1))
-        elif key == ord("a"): #key left
-            if player_1_turn is True:
-                player_1_pos[1] = max((0, player_1_pos[1] - 1))
-        elif key == ord("d"): #key right
-            if player_1_turn is True:
-                player_1_pos[1] = min(((size-1), player_1_pos[1] + 1))
-    
-
-        ## Player 2 movement (arrows)
-        elif key == curses.KEY_UP: #key up
-            if player_1_turn is False: # Isolate movement by player turn for player 2
-                player_2_pos[0] = max((0, player_2_pos[0] - 1))
-        elif key == curses.KEY_DOWN: #key down
-            if player_1_turn is False:
-                player_2_pos[0] = min(((size-1), player_2_pos[0] + 1))
-        elif key == curses.KEY_LEFT: #key left
-            if player_1_turn is False:
-                player_2_pos[1] = max((0, player_2_pos[1] - 1))
-        elif key == curses.KEY_RIGHT: #key right
-            if player_1_turn is False:
-                player_2_pos[1] = min(((size-1), player_2_pos[1] + 1))
-
+        elif key in [ord("w"), ord("a"), ord("s"), ord("d"), curses.KEY_UP, curses.KEY_DOWN, curses.KEY_LEFT, curses.KEY_RIGHT]:
+            if game_running:
+                if player_1_turn:
+                    player_1_pos = player_move(key, player_1_turn, player_1_pos, size)
+                elif not player_1_turn:
+                    player_2_pos = player_move(key, player_1_turn, player_2_pos, size)
 
         ## Send action keys
         elif key == ord("e"): # Player 1 select

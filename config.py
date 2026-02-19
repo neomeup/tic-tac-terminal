@@ -12,8 +12,11 @@ class GameConfig:
         self.board_size: int = 4
         self.win_length: int = 3 # Used for simple wins i.e. tic-tac-toe style
 
-        # Render option flag
+        # Optional render flag
         self.render: bool = True # Set False for non-rendered games
+
+        # Optional key'ed input flag
+        self.grab_keys: bool = True
 
         # Start conditions for movement
         self.random_start = True 
