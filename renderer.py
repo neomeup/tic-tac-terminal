@@ -99,8 +99,16 @@ def draw_board(
             else:
                 char = o_character
 
-            # Draw the cell (with highlight if active player selected)
-            if (board_y, board_x) == player_1_pos and player_1_turn:
+            # Draw the cell (with highlight if active player selected) - if computer player, no highlight
+            if player_1_turn:
+                current_player_index = 0
+            else:
+                current_player_index = 1
+            current_player_type = config.player_types[current_player_index]
+
+            if current_player_type == "computer":
+                stdscr.addstr(screen_y, screen_x, char)
+            elif (board_y, board_x) == player_1_pos and player_1_turn:
                 stdscr.addstr(screen_y, screen_x, char, curses.color_pair(2))
             elif (board_y, board_x) == player_2_pos and not player_1_turn:
                 stdscr.addstr(screen_y, screen_x, char, curses.color_pair(3))

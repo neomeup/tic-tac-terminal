@@ -10,6 +10,7 @@ X|O|-
 O|-|X
 '''
 
+import time
 from config import GameConfig
 from engine import board_list_select, board_lst_build, whose_turn, game_finished
 from renderer import draw_board, game_over_draw, game_over_win
@@ -70,14 +71,17 @@ def main(stdscr, config):
                 game_over_draw(stdscr, config, board_lst)
                 game_running = False
             
+
+            # Determine player type
             if player_1_turn:
                 current_player_index = 0
             else:
                 current_player_index = 1
             current_player_type = config.player_types[current_player_index]
 
-
+            # If computer type player, skip all curses and make move
             if current_player_type == "computer":
+                time.sleep(1.5)
                 board_lst = get_computer_move(player_1_turn, board_lst, config)
                 player_1_turn = not player_1_turn
             else:
