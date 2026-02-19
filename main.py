@@ -14,6 +14,7 @@ from config import GameConfig
 from engine import board_list_select, board_lst_build, whose_turn, game_finished
 from renderer import draw_board, game_over_draw, game_over_win
 from movement.player_movement import player_move
+from movement.computer_players.computer_movement import get_computer_move
 config = GameConfig()
 
 
@@ -69,52 +70,62 @@ def main(stdscr, config):
                 game_over_draw(stdscr, config, board_lst)
                 game_running = False
             
-            
-            ## Start grabbing inputs
-            key = stdscr.getch()
-
-
-            # Exits keys
-            if key == ord("q"): #exit player 1
-                if player_1_turn or not game_running:
-                    break
-            elif key == ord("/"): #exit player 2
-                if not player_1_turn or not game_running:
-                    break
-            
-            # Terminal size refresher
-            elif key == curses.KEY_RESIZE:
-                continue
-
-            # New game key
-            elif key == ord("n"):
-                if not game_running:
-                    build_new_game = True
-                    game_running = True
-
-            ### Player movement tied to structure of board list - moves with the coordinates of board list
-            elif key in [ord("w"), ord("a"), ord("s"), ord("d"), curses.KEY_UP, curses.KEY_DOWN, curses.KEY_LEFT, curses.KEY_RIGHT]:
-                if game_running:
-                    if player_1_turn:
-                        player_1_pos = player_move(key, player_1_turn, player_1_pos, size)
-                    elif not player_1_turn:
-                        player_2_pos = player_move(key, player_1_turn, player_2_pos, size)
-
-            ## Send action keys
-            elif key == ord("e"): # Player 1 select
-                if player_1_turn is True:
-                    board_lst, changed_flag = board_list_select(player_1_turn,player_1_pos,board_lst)
-                    if changed_flag is True:
-                        player_1_turn = not player_1_turn
-            elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
-                if player_1_turn is False:
-                    board_lst, changed_flag = board_list_select(player_1_turn,player_2_pos,board_lst)
-                    if changed_flag is True:
-                        player_1_turn = not player_1_turn
-            
-            # Continue on non action key presses
+            if player_1_turn:
+                current_player_index = 0
             else:
-                continue
+                current_player_index = 1
+            current_player_type = config.player_types[current_player_index]
+
+
+            if current_player_type == "computer":
+                board_lst = get_computer_move(player_1_turn, board_lst, config)
+                player_1_turn = not player_1_turn
+            else:
+                ## Start grabbing inputs
+                key = stdscr.getch()
+
+
+                # Exits keys
+                if key == ord("q"): #exit player 1
+                    if player_1_turn or not game_running:
+                        break
+                elif key == ord("/"): #exit player 2
+                    if not player_1_turn or not game_running:
+                        break
+                
+                # Terminal size refresher
+                elif key == curses.KEY_RESIZE:
+                    continue
+
+                # New game key
+                elif key == ord("n"):
+                    if not game_running:
+                        build_new_game = True
+                        game_running = True
+
+                ### Player movement tied to structure of board list - moves with the coordinates of board list
+                elif key in [ord("w"), ord("a"), ord("s"), ord("d"), curses.KEY_UP, curses.KEY_DOWN, curses.KEY_LEFT, curses.KEY_RIGHT]:
+                    if game_running:
+                        if player_1_turn:
+                            player_1_pos = player_move(key, player_1_turn, player_1_pos, size)
+                        elif not player_1_turn:
+                            player_2_pos = player_move(key, player_1_turn, player_2_pos, size)
+
+                ## Send action keys
+                elif key == ord("e"): # Player 1 select
+                    if player_1_turn is True:
+                        board_lst, changed_flag = board_list_select(player_1_turn,player_1_pos,board_lst)
+                        if changed_flag is True:
+                            player_1_turn = not player_1_turn
+                elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
+                    if player_1_turn is False:
+                        board_lst, changed_flag = board_list_select(player_1_turn,player_2_pos,board_lst)
+                        if changed_flag is True:
+                            player_1_turn = not player_1_turn
+                
+                # Continue on non action key presses
+                else:
+                    continue
 
 
     def run_headless(config):
@@ -130,8 +141,6 @@ def main(stdscr, config):
             # Initialize board setup for new games
             if build_new_game:
                 board_lst = board_lst_build(config.board_size)
-                player_1_pos = [0,0]        # start position player 1
-                player_2_pos = [0,(size-1)] # start position player 2
                 build_new_game = False
                 if config.random_start:
                     player_1_turn = whose_turn()
@@ -152,17 +161,16 @@ def main(stdscr, config):
                 game_running = False
 
             ## Ask Computer player for a move and execute said move
-            #if game_running:
-                #if player_1_turn:
-                   #player_1_pos, board_lst = get_computer_move(player_1_turn, player_1_pos, board_lst)
-                #elif not player_1_turn:
-                    #player_2_pos, board_lst = get_computer_move(player_1_turn, player_2_pos, board_lst)
+            if game_running:
+                board_lst = get_computer_move(player_1_turn, board_lst, config)
+                player_1_turn = not player_1_turn
 
-            if game_count == config.how_many_games:
-                return game_history
-            else:
-                game_running = True
-                build_new_game = True
+            if not game_running:
+                if game_count == config.how_many_games:
+                    return game_history
+                else:
+                    game_running = True
+                    build_new_game = True
         
 
     if stdscr is not None:

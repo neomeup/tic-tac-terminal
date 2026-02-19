@@ -16,7 +16,9 @@ class GameConfig:
         self.render: bool = True # Set False for non-rendered games
 
         # Player types
-        self.player_types: list = ["human", "computer"]
+        self.player_types: list = ["human", "human"] # ["hhuman", "computer"] -> will yeild single player mode
+        # If computer player what algorithm to use
+        self.computer_algorithms: list = ["random", "random"]
 
         # Start conditions for movement
         self.random_start: bool = True
