@@ -184,7 +184,7 @@ def main(stdscr, config):
                 if game_count == config.how_many_games:
                     return game_history
                 else:
-                    game_count =+ 1
+                    game_count += 1
                     game_running = True
                     build_new_game = True
         
