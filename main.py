@@ -44,6 +44,10 @@ def main(stdscr, config):
         game_running = True
         build_new_game = True
 
+        # Initialize game count for computer vs computer rendered
+        ## No game history is returned in rendered computer vs computer scenarios
+        game_count = 1
+
         while True:
             stdscr.clear()
 
@@ -71,6 +75,16 @@ def main(stdscr, config):
                 game_over_draw(stdscr, config, board_lst)
                 game_running = False
             
+            # Game repeat/end control for computer vs computer rendered
+            if config.player_types[0] == "computer" and config.player_types[1] == "computer":
+                if not game_running:
+                    time.sleep(5)
+                    if game_count == config.how_many_games:
+                        break
+                    else:
+                        game_count += 1
+                        game_running = True
+                        build_new_game = True                
 
             # Determine player type
             if player_1_turn:
@@ -133,9 +147,8 @@ def main(stdscr, config):
 
 
     def run_headless(config):
-        size = config.board_size
         game_history = []
-        game_count = 0
+        game_count = 1
 
         # Initial game state booleans
         game_running = True
@@ -156,12 +169,10 @@ def main(stdscr, config):
             if won_game is True:
                 finished_game_state = won_game, player_1_win, drawn_game
                 game_history.append(finished_game_state)
-                game_count += 1
                 game_running = False
             if drawn_game is True:
                 finished_game_state = won_game, player_1_win, drawn_game
                 game_history.append(finished_game_state)
-                game_count += 1
                 game_running = False
 
             ## Ask Computer player for a move and execute said move
@@ -173,6 +184,7 @@ def main(stdscr, config):
                 if game_count == config.how_many_games:
                     return game_history
                 else:
+                    game_count =+ 1
                     game_running = True
                     build_new_game = True
         
@@ -180,7 +192,7 @@ def main(stdscr, config):
     if stdscr is not None:
         run_interactive(stdscr,config)
     else:
-        run_headless(config)
+        print(run_headless(config))
 
 
 
