@@ -1,6 +1,6 @@
 Tic Tac Terminal
 
-Unfinished version
+Modular refactor to separate concerns and prepare for different configs.
 
 
 
