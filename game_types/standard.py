@@ -99,39 +99,19 @@ def standard_rules(config, board_lst: list[list[tuple[bool, bool, int]]]) -> tup
     columns = build_columns(board_lst)
     diagonals = build_diagonals(board_lst)
 
+    all_lines = rows + columns + diagonals
 
     # Win checking
-    for cells in rows:
+    for cells in all_lines:
         if consecutive_cells(cells, 0, win_length) is True:
             return True, True, False
-        if consecutive_cells(cells, 1, win_length) is True:
+        elif consecutive_cells(cells, 1, win_length) is True:
             return True, False, False
-
-    for cells in columns:
-        if consecutive_cells(cells, 0, win_length) is True:
-            return True, True, False
-        if consecutive_cells(cells, 1, win_length) is True:
-            return True, False, False
-
-    for cells in diagonals:
-        if consecutive_cells(cells, 0, win_length) is True:
-            return True, True, False
-        if consecutive_cells(cells, 1, win_length) is True:
-            return True, False, False
-
 
     # Draw Checking
-    for cells in rows:
+    for cells in all_lines:
         if possible_line(cells, 0, win_length) or possible_line(cells, 1, win_length):
-           return False, False, False
-    
-    for cells in columns:
-        if possible_line(cells, 0, win_length) or possible_line(cells, 1, win_length):
-           return False, False, False
-
-    for cells in diagonals:
-        if possible_line(cells, 0, win_length) or possible_line(cells, 1, win_length):
-           return False, False, False       
+           return False, False, False    
     
 
     return False, False, True # Returns a drawn game running state if no wins or possible wins are detected
