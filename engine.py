@@ -12,14 +12,10 @@ def board_lst_build(size) -> list :
     for x in range(size):
         board_lst.append(list(range(size)))
 
-    # bool flags to notate if a square has been selected by a player or not
-    p1_selected = False
-    p2_selected = False
-
-    # addition of selection flags to board positions
+    # Initial board ownership defined 
     for x in board_lst:
         for b in x:
-            item = [p1_selected, p2_selected, b]
+            item = None
             x[b] = item
     return board_lst
 
