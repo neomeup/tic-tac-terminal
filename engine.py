@@ -30,13 +30,7 @@ def whose_turn() -> bool:
 
 
 ## Identify where a player is on the board and if they can select, allow selections
-def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[list, bool] :
-    if player_1_turn is True:
-        non_active_player = 1 # Player two is inactive
-        active_player = 0 # Player one is active - corresponds to bool flags within board list
-    elif player_1_turn is False:
-        non_active_player = 0 # Player one is inactive
-        active_player = 1 # Player two is active - corresponds to bool flags within board list
+def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list]) -> tuple[list, bool] :
 
     changed_flag = False
 
@@ -44,10 +38,11 @@ def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: 
     y, x = player_coordinates
     working_cell = board_lst[y][x]
 
-    if working_cell[non_active_player] is True:
-        pass
-    elif working_cell[active_player] is False:
-        working_cell[active_player] = True
+    if working_cell is None:
+        if player_1_turn:
+            working_cell = 0
+        else:
+            working_cell = 1
         changed_flag = True
 
     return board_lst, changed_flag
