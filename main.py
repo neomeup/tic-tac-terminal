@@ -74,7 +74,7 @@ def main(stdscr, config):
             if won_game is True:
                 game_over_win(stdscr, config, player_1_win, board_lst)
                 game_running = False
-            if drawn_game is True:
+            elif drawn_game is True:
                 game_over_draw(stdscr, config, board_lst)
                 game_running = False
             
@@ -176,7 +176,7 @@ def main(stdscr, config):
                 finished_game_state = won_game, player_1_win, drawn_game
                 game_history.append(finished_game_state)
                 game_running = False
-            if drawn_game is True:
+            elif drawn_game is True:
                 finished_game_state = won_game, player_1_win, drawn_game
                 game_history.append(finished_game_state)
                 game_running = False
