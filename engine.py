@@ -45,4 +45,5 @@ def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: 
             working_cell = 1
         changed_flag = True
 
+    board_lst[y][x] = working_cell
     return board_lst, changed_flag
