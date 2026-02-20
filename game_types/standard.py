@@ -1,5 +1,5 @@
 ## Determine is game is over - based on tic-tac-toe style gameplay
-def standard_rules(config, board_lst: list[list[tuple[bool, bool, int]]]) -> tuple[bool, bool, bool]:
+def standard_rules(config, board_lst: list[list]) -> tuple[bool, bool, bool]:
     
     ##  All returns in following format -> won_game, player_1_win, drawn_game
     win_length = config.win_length
@@ -10,7 +10,7 @@ def standard_rules(config, board_lst: list[list[tuple[bool, bool, int]]]) -> tup
     def consecutive_cells(cells_to_check: list, player_index: int, win_length: int) -> bool:
         cell_count = 0
         for cell in cells_to_check:
-            if cell[player_index]:
+            if cell == player_index:
                 cell_count += 1
                 if cell_count == win_length:
                     return True
@@ -23,7 +23,7 @@ def standard_rules(config, board_lst: list[list[tuple[bool, bool, int]]]) -> tup
     def possible_line(cells_to_check: list, player_index: int, win_length: int):
         count = 0
         for cell in cells_to_check:
-            if cell[player_index] or (not cell[0] and not cell[1]):
+            if cell == player_index or cell is None:
                 count += 1
                 if count >= win_length:
                     return True
