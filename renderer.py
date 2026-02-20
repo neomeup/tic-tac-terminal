@@ -173,11 +173,11 @@ def game_over_win(stdscr, config, player_1_win: bool, board_lst: list) -> None:
             screen_x = col_start + (board_x * 2)
 
             # Determine which character to draw
-            if not column[0] and not column[1]:
+            if column is None:
                 char = empty_character
-            elif column[0]:
+            elif column == 0:
                 char = x_character
-            else:
+            elif column == 1:
                 char = o_character
 
             
