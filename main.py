@@ -67,7 +67,8 @@ def main(stdscr, config):
 
             # Display the active game board if rendering
             if game_running:
-                won_game, player_1_win, drawn_game = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn)
+                board_lst = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn)
+                won_game, player_1_win, drawn_game = game_finished(config, board_lst)
             
             # Check game state for a finished game condition
             if won_game is True:
@@ -96,7 +97,7 @@ def main(stdscr, config):
             current_player_type = config.player_types[current_player_index]
 
             # If computer type player, skip all curses and make move
-            if current_player_type == "computer":
+            if current_player_type == "computer" and game_running:
                 time.sleep(1.5)
                 board_lst = get_computer_move(player_1_turn, board_lst, config)
                 player_1_turn = not player_1_turn
