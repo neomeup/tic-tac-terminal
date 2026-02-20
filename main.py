@@ -78,16 +78,7 @@ def main(stdscr, config):
                 game_over_draw(stdscr, config, board_lst)
                 game_running = False
             
-            # Game repeat/end control for computer vs computer rendered
-            if config.player_types[0] == "computer" and config.player_types[1] == "computer":
-                if not game_running:
-                    time.sleep(5)
-                    if game_count == config.how_many_games:
-                        break
-                    else:
-                        game_count += 1
-                        game_running = True
-                        build_new_game = True                
+               
 
             # Determine player type
             if player_1_turn:
@@ -98,9 +89,21 @@ def main(stdscr, config):
 
             # If computer type player, skip all curses and make move
             if current_player_type == "computer" and game_running:
-                time.sleep(1.5)
+                time.sleep(1)
                 board_lst = get_computer_move(player_1_turn, board_lst, config)
                 player_1_turn = not player_1_turn
+
+            # Game repeat/end control for computer vs computer rendered
+            elif config.player_types[0] == "computer" and config.player_types[1] == "computer":
+                if not game_running:
+                    time.sleep(3.5)
+                    if game_count == config.how_many_games:
+                        break
+                    else:
+                        game_count += 1
+                        game_running = True
+                        build_new_game = True 
+            # Grab keys if human player and game running
             else:
                 ## Start grabbing inputs
                 key = stdscr.getch()

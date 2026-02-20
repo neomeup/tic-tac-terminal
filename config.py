@@ -9,7 +9,7 @@ class GameConfig:
         self.empty_char: str = "-"
 
         # Board size
-        self.board_size: int = 4
+        self.board_size: int = 3
 
         # Win length Tic-tac-toe/standard rule sets
         self.win_length: int = 3 # Used for simple wins i.e. tic-tac-toe style
@@ -21,7 +21,7 @@ class GameConfig:
         self.render: bool = True # Set False for non-rendered games
 
         # Player types
-        self.player_types: list = ["human", "computer"] # ["human", "computer"] -> will yeild single player mode
+        self.player_types: list = ["computer", "computer"] # ["human", "computer"] -> will yeild single player mode
         # If computer player what algorithm to use
         self.computer_algorithms: list = ["random", "random"]
 
