@@ -13,7 +13,7 @@ def draw_board(
         config,
         player_1_pos: tuple[int, int],
         player_2_pos: tuple[int, int],
-        board_lst: list[list[tuple[bool, bool, int]]],
+        board_lst: list[list],
         player_1_turn: bool
         ) -> tuple[bool, bool, bool]:
     
@@ -92,11 +92,11 @@ def draw_board(
             screen_x = col_start + (board_x * 2)
 
             # Determine which character to draw
-            if not column[0] and not column[1]:
+            if column is None:
                 char = empty_character
-            elif column[0]:
+            elif column == 0:
                 char = x_character
-            else:
+            elif column == 1:
                 char = o_character
 
             # Draw the cell (with highlight if active player selected) - if computer player, no highlight
