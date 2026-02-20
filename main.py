@@ -67,15 +67,15 @@ def main(stdscr, config):
 
             # Display the active game board if rendering
             if game_running:
-                board_lst = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn)
+                board_lst = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn, game_count)
                 won_game, player_1_win, drawn_game = game_finished(config, board_lst)
             
             # Check game state for a finished game condition
             if won_game is True:
-                game_over_win(stdscr, config, player_1_win, board_lst)
+                game_over_win(stdscr, config, player_1_win, board_lst, game_count)
                 game_running = False
             elif drawn_game is True:
-                game_over_draw(stdscr, config, board_lst)
+                game_over_draw(stdscr, config, board_lst, game_count)
                 game_running = False
             
                

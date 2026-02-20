@@ -14,13 +14,15 @@ def draw_board(
         player_1_pos: tuple[int, int],
         player_2_pos: tuple[int, int],
         board_lst: list[list],
-        player_1_turn: bool
+        player_1_turn: bool,
+        game_count: int
         ) -> tuple[bool, bool, bool]:
     
     x_character = config.x_char
     o_character = config.o_char
     empty_character = config.empty_char
     size = config.board_size
+    total_game_count = config.how_many_games
 
     stdscr.clear()
     
@@ -65,12 +67,18 @@ def draw_board(
         active_player_message = "Player 2's turn!"
     
     stdscr.addstr(current_row + 2, 1, f"{active_player_message}")
-    
+
     # Display quit commands
-    last_line = height
-    last_column = width
-    stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
-    stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
+    if config.player_types[0] == "human" or config.player_types[1] == "human":
+        last_line = height
+        last_column = width
+        stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
+        stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
+    else:
+        last_line = height
+        last_column = width
+        stdscr.addstr(last_line-2, 0, f"You are watching game {game_count} of {total_game_count}")
+        stdscr.addstr(last_line-1, 0, "^c To keyboard interrupt and quit watching render")
 
     # Board centering / positioning
     board_width = (size * 2) + 1
@@ -124,11 +132,12 @@ def draw_board(
 
 
 ## Render the game won screen
-def game_over_win(stdscr, config, player_1_win: bool, board_lst: list) -> None:
+def game_over_win(stdscr, config, player_1_win: bool, board_lst: list, game_count: int) -> None:
     size = config.board_size
     empty_character = config.empty_char
     x_character = config.x_char
     o_character = config.o_char
+    total_game_count = config.how_many_games
 
     stdscr.clear()
     
@@ -186,25 +195,30 @@ def game_over_win(stdscr, config, player_1_win: bool, board_lst: list) -> None:
             # Draw vertical separator if not last column
             if col_index < size - 1:
                 stdscr.addstr(screen_y, screen_x + 1, "|")
-
-
+    
     # Display quit commands
-    last_line = height
-    last_column = width
-    stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
-    stdscr.addstr(last_line-2, 0, "'n' Start a new game")
-    stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
-
-
+    if config.player_types[0] == "human" or config.player_types[1] == "human":
+        last_line = height
+        last_column = width
+        stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
+        stdscr.addstr(last_line-2, 0, "'n' Start a new game")
+        stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
+    else:
+        games_left = total_game_count - game_count
+        last_line = height
+        last_column = width
+        stdscr.addstr(last_line-1, 0, "^c To keyboard interrupt and quit watching render")
+        stdscr.addstr(last_line-2, 0, f"You have {games_left} games left to watch")
     stdscr.refresh()
 
 
 ## Render the drawn game screen
-def game_over_draw(stdscr, config, board_lst: list) -> None:
+def game_over_draw(stdscr, config, board_lst: list, game_count: int) -> None:
     size = config.board_size
     empty_character = config.empty_char
     x_character = config.x_char
     o_character = config.o_char
+    total_game_count = config.how_many_games
 
     stdscr.clear()
     
@@ -257,13 +271,18 @@ def game_over_draw(stdscr, config, board_lst: list) -> None:
             if col_index < size - 1:
                 stdscr.addstr(screen_y, screen_x + 1, "|")
 
-
     # Display quit commands
-    last_line = height
-    last_column = width
-    stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
-    stdscr.addstr(last_line-2, 0, "'n' Start a new game")
-    stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
-
+    if config.player_types[0] == "human" or config.player_types[1] == "human":
+        last_line = height
+        last_column = width
+        stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
+        stdscr.addstr(last_line-2, 0, "'n' Start a new game")
+        stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
+    else:
+        games_left = total_game_count - game_count
+        last_line = height
+        last_column = width
+        stdscr.addstr(last_line-1, 0, "^c To keyboard interrupt and quit watching render")
+        stdscr.addstr(last_line-2, 0, f"You have {games_left} games left to watch")
 
     stdscr.refresh()
