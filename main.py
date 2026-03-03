@@ -12,9 +12,9 @@ O|-|X
 
 import time
 from config import GameConfig
-from engine import board_list_select, board_lst_build, whose_turn
-from renderer import draw_board, game_over_draw, game_over_win
-from movement.player_movement import player_move
+from engine import board_list_select, build_starting_board, whose_turn
+from renderer import render_board, render_game_draw, render_game_won
+from movement.player_movement import get_player_move
 from movement.computer_players.computer_movement import get_computer_move
 from game_types.used_rules import game_finished
 
@@ -56,7 +56,7 @@ def main(stdscr, config):
 
             # Initialize board setup for new games
             if build_new_game:
-                board_lst = board_lst_build(config.board_size)
+                board_lst = build_starting_board(config.board_size)
                 player_1_pos = [0,0]        # start position player 1
                 player_2_pos = [0,(size-1)] # start position player 2
                 build_new_game = False
@@ -67,15 +67,15 @@ def main(stdscr, config):
 
             # Display the active game board if rendering
             if game_running:
-                board_lst = draw_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn, game_count)
+                board_lst = render_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn, game_count)
                 won_game, player_1_win, drawn_game = game_finished(config, board_lst)
             
             # Check game state for a finished game condition
             if won_game is True:
-                game_over_win(stdscr, config, player_1_win, board_lst, game_count)
+                render_game_won(stdscr, config, player_1_win, board_lst, game_count)
                 game_running = False
             elif drawn_game is True:
-                game_over_draw(stdscr, config, board_lst, game_count)
+                render_game_draw(stdscr, config, board_lst, game_count)
                 game_running = False
             
                
@@ -131,9 +131,9 @@ def main(stdscr, config):
                 elif key in [ord("w"), ord("a"), ord("s"), ord("d"), curses.KEY_UP, curses.KEY_DOWN, curses.KEY_LEFT, curses.KEY_RIGHT]:
                     if game_running:
                         if player_1_turn:
-                            player_1_pos = player_move(key, player_1_turn, player_1_pos, size)
+                            player_1_pos = get_player_move(key, player_1_turn, player_1_pos, size)
                         elif not player_1_turn:
-                            player_2_pos = player_move(key, player_1_turn, player_2_pos, size)
+                            player_2_pos = get_player_move(key, player_1_turn, player_2_pos, size)
 
                 ## Send action keys
                 elif key == ord("e"): # Player 1 select
@@ -164,7 +164,7 @@ def main(stdscr, config):
         while True:
             # Initialize board setup for new games
             if build_new_game:
-                board_lst = board_lst_build(config.board_size)
+                board_lst = build_starting_board(config.board_size)
                 build_new_game = False
                 if config.random_start:
                     player_1_turn = whose_turn()

@@ -6,7 +6,7 @@ are introduced. i.e. win with a square as opposed to a line
 import random
 
 ## Build a grid that can be used interchangably with all game modes
-def board_lst_build(size) -> list :
+def build_starting_board(size) -> list :
     # initial board positions creation
     board_lst = []
     for x in range(size):

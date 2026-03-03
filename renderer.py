@@ -8,7 +8,7 @@ import textwrap
 
 
 ## Render the board during gameplay
-def draw_board(
+def render_board(
         stdscr,
         config,
         player_1_pos: tuple[int, int],
@@ -132,7 +132,7 @@ def draw_board(
 
 
 ## Render the game won screen
-def game_over_win(stdscr, config, player_1_win: bool, board_lst: list, game_count: int) -> None:
+def render_game_won(stdscr, config, player_1_win: bool, board_lst: list, game_count: int) -> None:
     size = config.board_size
     empty_character = config.empty_char
     x_character = config.x_char
@@ -213,7 +213,7 @@ def game_over_win(stdscr, config, player_1_win: bool, board_lst: list, game_coun
 
 
 ## Render the drawn game screen
-def game_over_draw(stdscr, config, board_lst: list, game_count: int) -> None:
+def render_game_draw(stdscr, config, board_lst: list, game_count: int) -> None:
     size = config.board_size
     empty_character = config.empty_char
     x_character = config.x_char

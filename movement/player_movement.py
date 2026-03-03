@@ -5,7 +5,7 @@ Movement for human players
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
 
 ## Updates player position for human players and return it to main
-def player_move(key, player_1_turn: bool, player_position: list, size: int) -> list :
+def get_player_move(key, player_1_turn: bool, player_position: list, size: int) -> list :
     ## Player 1 movement (wasd)
     if key == ord("w"): #key up
         if player_1_turn is True: # Isolate movement by player turn for player 1
