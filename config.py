@@ -18,11 +18,11 @@ class GameConfig:
         self.rule_set: str = "standard"
 
         # Optional render flag
-        self.render: bool = False # Set False for non-rendered games
+        self.render: bool = True # Set False for non-rendered games
         self.render_type: str = "cli"
 
         # Player types
-        self.player_types: list = ["computer", "computer"] # ["human", "computer"] -> will yeild single player mode
+        self.player_types: list = ["human", "computer"] # ["human", "computer"] -> will yeild single player mode
         self.model_type: list = ["random", "random"]
 
         # Piece type

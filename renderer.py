@@ -5,7 +5,6 @@ renderer should handle only the curses rendering of game screen, win screen, and
 
 import curses
 import textwrap
-from engine.player_utils import get_player_id
 
 
 ## Render the board during gameplay
@@ -15,7 +14,7 @@ def render_board(
         player_1_pos: tuple[int, int],
         player_2_pos: tuple[int, int],
         board_lst: list[list],
-        player_1_turn: bool,
+        current_player_index: int,
         game_count: int
         ) -> tuple[bool, bool, bool]:
     
@@ -62,7 +61,6 @@ def render_board(
     
 
     # Display player turn
-    current_player_index = get_player_id(player_1_turn)
     if current_player_index == 0:
         active_player_message = "Player 1's turn!"
     elif current_player_index == 1:
@@ -134,7 +132,7 @@ def render_board(
 
 
 ## Render the game won screen
-def render_game_won(stdscr, config, player_1_win: bool, board_lst: list, game_count: int) -> None:
+def render_game_won(stdscr, config, winning_player: int, board_lst: list, game_count: int) -> None:
     size = config.board_size
     empty_character = config.empty_char
     x_character = config.x_char
@@ -158,10 +156,7 @@ def render_game_won(stdscr, config, player_1_win: bool, board_lst: list, game_co
         return
     
     # Display winning player message
-    if player_1_win:
-        won_game_message = "Good Job Player 1"
-    elif not player_1_win:
-        won_game_message = "Good Job Player 2 !"
+    won_game_message = f"Good Job Player {winning_player + 1} !"
 
     stdscr.addstr(0, 0, "Game Finished!")
     stdscr.addstr(1, 0, f"{won_game_message}")

@@ -11,13 +11,13 @@ O|-|X
 '''
 
 import time
+import random
 from config import GameConfig
-from engine.engine import board_list_select, build_starting_board, whose_turn
+from engine.engine import board_list_select, build_starting_board
 from renderer import render_board, render_game_draw, render_game_won
 from movement.player_movement import get_player_move
 from movement.computer_players.computer_movement import get_computer_move
 from game_types.used_rules import game_finished
-from engine.player_utils import get_player_id
 
 config = GameConfig()
 
@@ -42,6 +42,7 @@ def main(stdscr, config):
             curses.init_pair(3, curses.COLOR_BLACK, curses.COLOR_GREEN)     # Player 2 highlight
 
         size = config.board_size
+        total_players = len(config.player_types)
         
         # Initial game state booleans
         game_running = True
@@ -62,18 +63,18 @@ def main(stdscr, config):
                 player_2_pos = [0,(size-1)] # start position player 2
                 build_new_game = False
                 if config.random_start:
-                    player_1_turn = whose_turn()
+                    current_player_index = random.randint(0, total_players - 1)
                 else:
-                    player_1_turn = True
+                    current_player_index = 0
 
             # Display the active game board if rendering
             if game_running:
-                board_lst = render_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, player_1_turn, game_count)
-                won_game, player_1_win, drawn_game = game_finished(config, board_lst)
+                board_lst = render_board(stdscr, config, tuple(player_1_pos), tuple(player_2_pos), board_lst, current_player_index, game_count)
+                won_game, winning_player, drawn_game = game_finished(config, board_lst)
             
             # Check game state for a finished game condition
             if won_game is True:
-                render_game_won(stdscr, config, player_1_win, board_lst, game_count)
+                render_game_won(stdscr, config, winning_player, board_lst, game_count)
                 game_running = False
             elif drawn_game is True:
                 render_game_draw(stdscr, config, board_lst, game_count)
@@ -82,15 +83,14 @@ def main(stdscr, config):
                
 
             # Determine player type
-            current_player_index = get_player_id(player_1_turn)
 
             current_player_type = config.player_types[current_player_index]
 
             # If computer type player, skip all curses and make move
             if current_player_type == "computer" and game_running:
                 time.sleep(1)
-                board_lst = get_computer_move(player_1_turn, board_lst, config)
-                player_1_turn = not player_1_turn
+                board_lst = get_computer_move(current_player_index, board_lst, config)
+                current_player_index = (current_player_index + 1) % total_players
 
             # Game repeat/end control for computer vs computer rendered
             elif config.player_types[0] == "computer" and config.player_types[1] == "computer":
@@ -130,21 +130,21 @@ def main(stdscr, config):
                 elif key in [ord("w"), ord("a"), ord("s"), ord("d"), curses.KEY_UP, curses.KEY_DOWN, curses.KEY_LEFT, curses.KEY_RIGHT]:
                     if game_running:
                         if current_player_index == 0:
-                            player_1_pos = get_player_move(key, player_1_turn, player_1_pos, size)
+                            player_1_pos = get_player_move(key, current_player_index, player_1_pos, size)
                         elif current_player_index == 1:
-                            player_2_pos = get_player_move(key, player_1_turn, player_2_pos, size)
+                            player_2_pos = get_player_move(key, current_player_index, player_2_pos, size)
 
                 ## Send action keys
                 elif key == ord("e"): # Player 1 select
                     if current_player_index == 0:
-                        board_lst, changed_flag = board_list_select(player_1_turn, player_1_pos, board_lst, config)
+                        board_lst, changed_flag = board_list_select(current_player_index, player_1_pos, board_lst, config)
                         if changed_flag is True:
-                            player_1_turn = not player_1_turn
+                            current_player_index = (current_player_index + 1) % total_players
                 elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
                     if current_player_index == 1:
-                        board_lst, changed_flag = board_list_select(player_1_turn, player_2_pos, board_lst, config)
+                        board_lst, changed_flag = board_list_select(current_player_index, player_2_pos, board_lst, config)
                         if changed_flag is True:
-                            player_1_turn = not player_1_turn
+                            current_player_index = (current_player_index + 1) % total_players
                 
                 # Continue on non action key presses
                 else:
@@ -160,33 +160,35 @@ def main(stdscr, config):
         game_running = True
         build_new_game = True
 
+        total_players = len(config.player_types)
+
         while True:
             # Initialize board setup for new games
             if build_new_game:
                 board_lst = build_starting_board(config.board_size)
                 build_new_game = False
                 if config.random_start:
-                    player_1_turn = whose_turn()
+                    current_player_index = random.randint(0, total_players - 1)
                 else:
-                    player_1_turn = True
+                    current_player_index = 0
 
             # Store game state
-            won_game, player_1_win, drawn_game = game_finished(config, board_lst)
+            won_game, winning_player, drawn_game = game_finished(config, board_lst)
 
             # Check game state for a finished game condition
             if won_game is True:
-                finished_game_state = won_game, player_1_win, drawn_game
+                finished_game_state = won_game, winning_player, drawn_game
                 game_history.append(finished_game_state)
                 game_running = False
             elif drawn_game is True:
-                finished_game_state = won_game, player_1_win, drawn_game
+                finished_game_state = won_game, winning_player, drawn_game
                 game_history.append(finished_game_state)
                 game_running = False
 
             ## Ask Computer player for a move and execute said move
             if game_running:
-                board_lst = get_computer_move(player_1_turn, board_lst, config)
-                player_1_turn = not player_1_turn
+                board_lst = get_computer_move(current_player_index, board_lst, config)
+                current_player_index = (current_player_index + 1) % total_players
             else:
                 # If game is over process game state and determine if another game is needed
                 if game_count == config.how_many_games:

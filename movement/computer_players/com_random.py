@@ -3,10 +3,8 @@ Random move algorithm for a computer player
 '''
 import random
 from core.piece import Piece
-from engine.player_utils import get_player_id
 
-
-def get_move(player_1_turn, board_lst, config) -> list:
+def get_move(current_player_index, board_lst, config) -> list:
     # List of empty positions to grab one randomly
     empty_positions = []
     for row_index, row in enumerate(board_lst):
@@ -19,7 +17,7 @@ def get_move(player_1_turn, board_lst, config) -> list:
     row, col = random.choice(empty_positions)
 
     # Assign working cell
-    player_id = get_player_id(player_1_turn)
+    player_id = current_player_index
 
     
 

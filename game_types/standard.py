@@ -1,9 +1,10 @@
 ## Determine is game is over - based on tic-tac-toe style gameplay
-def standard_rules(config, board_lst: list[list]) -> tuple[bool, bool, bool]:
+def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, bool]:
     
     ##  All returns in following format -> won_game, player_1_win, drawn_game
     win_length = config.win_length
     size = config.board_size
+    total_players = len(config.player_types)
 
     # Win helper
     # Helper function using win length to determine consecutive cells
@@ -103,15 +104,15 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, bool, bool]:
 
     # Win checking
     for cells in all_lines:
-        if consecutive_cells(cells, 0, win_length) is True:
-            return True, True, False
-        elif consecutive_cells(cells, 1, win_length) is True:
-            return True, False, False
+        for player_index in range(total_players):
+            if consecutive_cells(cells, player_index, win_length) is True:
+                return True, player_index, False
 
     # Draw Checking
     for cells in all_lines:
-        if possible_line(cells, 0, win_length) or possible_line(cells, 1, win_length):
-           return False, False, False    
+        for player_index in range(total_players):
+            if possible_line(cells, player_index, win_length):
+                return False, None, False    
     
 
-    return False, False, True # Returns a drawn game running state if no wins or possible wins are detected
+    return False, None, True # Returns a drawn game running state if no wins or possible wins are detected

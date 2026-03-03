@@ -3,12 +3,11 @@ Movement for human players
 '''
 
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
-from engine.player_utils import get_player_id
 
 ## Updates player position for human players and return it to main
-def get_player_move(key, player_1_turn: bool, player_position: list, size: int) -> list :
+def get_player_move(key, current_player_index, player_position: list, size: int) -> list :
 
-    player_id = get_player_id(player_1_turn)
+    player_id = current_player_index
 
     ## Player 1 movement (wasd)
     if key == ord("w"): #key up
