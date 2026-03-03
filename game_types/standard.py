@@ -10,7 +10,7 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, bool, bool]:
     def consecutive_cells(cells_to_check: list, player_index: int, win_length: int) -> bool:
         cell_count = 0
         for cell in cells_to_check:
-            if cell == player_index:
+            if cell is not None and cell.owner_id == player_index:
                 cell_count += 1
                 if cell_count == win_length:
                     return True
@@ -23,7 +23,7 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, bool, bool]:
     def possible_line(cells_to_check: list, player_index: int, win_length: int):
         count = 0
         for cell in cells_to_check:
-            if cell == player_index or cell is None:
+            if cell is None or (cell is not None and cell.owner_id == player_index):
                 count += 1
                 if count >= win_length:
                     return True

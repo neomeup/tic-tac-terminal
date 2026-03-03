@@ -4,6 +4,7 @@ are introduced. i.e. win with a square as opposed to a line
 '''
 
 import random
+from core.piece import Piece
 
 ## Build a grid that can be used interchangably with all game modes
 def build_starting_board(size) -> list :
@@ -30,7 +31,7 @@ def whose_turn() -> bool:
 
 
 ## Identify where a player is on the board and if they can select, allow selections
-def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list]) -> tuple[list, bool] :
+def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: list[list], config) -> tuple[list, bool] :
 
     changed_flag = False
 
@@ -40,9 +41,15 @@ def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: 
 
     if working_cell is None:
         if player_1_turn:
-            working_cell = 0
+            player_id = 0
         else:
-            working_cell = 1
+            player_id = 1
+    
+        working_cell = Piece(
+            owner_id=player_id,
+            piece_type=config.piece_type
+        )
+
         changed_flag = True
 
     board_lst[y][x] = working_cell

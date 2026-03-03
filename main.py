@@ -12,7 +12,7 @@ O|-|X
 
 import time
 from config import GameConfig
-from engine import board_list_select, build_starting_board, whose_turn
+from engine.engine import board_list_select, build_starting_board, whose_turn
 from renderer import render_board, render_game_draw, render_game_won
 from movement.player_movement import get_player_move
 from movement.computer_players.computer_movement import get_computer_move
@@ -138,12 +138,12 @@ def main(stdscr, config):
                 ## Send action keys
                 elif key == ord("e"): # Player 1 select
                     if player_1_turn is True:
-                        board_lst, changed_flag = board_list_select(player_1_turn,player_1_pos,board_lst)
+                        board_lst, changed_flag = board_list_select(player_1_turn, player_1_pos, board_lst, config)
                         if changed_flag is True:
                             player_1_turn = not player_1_turn
                 elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
                     if player_1_turn is False:
-                        board_lst, changed_flag = board_list_select(player_1_turn,player_2_pos,board_lst)
+                        board_lst, changed_flag = board_list_select(player_1_turn, player_2_pos, board_lst, config)
                         if changed_flag is True:
                             player_1_turn = not player_1_turn
                 

@@ -102,10 +102,14 @@ def render_board(
             # Determine which character to draw
             if column is None:
                 char = empty_character
-            elif column == 0:
-                char = x_character
-            elif column == 1:
-                char = o_character
+            else:
+                owner_id = column.owner_id
+                if owner_id == 0:
+                    char = x_character
+                elif owner_id == 1:
+                    char = o_character
+                else:
+                    char = "?"
 
             # Draw the cell (with highlight if active player selected) - if computer player, no highlight
             if player_1_turn:
@@ -184,10 +188,14 @@ def render_game_won(stdscr, config, player_1_win: bool, board_lst: list, game_co
             # Determine which character to draw
             if column is None:
                 char = empty_character
-            elif column == 0:
-                char = x_character
-            elif column == 1:
-                char = o_character
+            else:
+                owner_id = column.owner_id
+                if owner_id == 0:
+                    char = x_character
+                elif owner_id == 1:
+                    char = o_character
+                else:
+                    char = "?"
 
             
             stdscr.addstr(screen_y, screen_x, char)
@@ -260,10 +268,14 @@ def render_game_draw(stdscr, config, board_lst: list, game_count: int) -> None:
             # Determine which character to draw
             if column is None:
                 char = empty_character
-            elif column == 0:
-                char = x_character
-            elif column == 1:
-                char = o_character
+            else:
+                owner_id = column.owner_id
+                if owner_id == 0:
+                    char = x_character
+                elif owner_id == 1:
+                    char = o_character
+                else:
+                    char = "?"
             
             stdscr.addstr(screen_y, screen_x, char)
 
