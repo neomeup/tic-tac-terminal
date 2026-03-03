@@ -13,11 +13,13 @@ O|-|X
 import time
 import random
 from config import GameConfig
-from engine.engine import board_list_select, build_starting_board
+from engine.board_build import build_starting_board
 from renderer import render_board, render_game_draw, render_game_won
 from movement.player_movement import get_player_move
 from movement.computer_players.computer_movement import get_computer_move
 from game_types.used_rules import game_finished
+from core.move import Move
+from engine.apply_move import apply_move
 
 config = GameConfig()
 
@@ -137,12 +139,22 @@ def main(stdscr, config):
                 ## Send action keys
                 elif key == ord("e"): # Player 1 select
                     if current_player_index == 0:
-                        board_lst, changed_flag = board_list_select(current_player_index, player_1_pos, board_lst, config)
+                        move = Move(
+                            player_id=current_player_index,
+                            target_row=player_1_pos[0],
+                            target_col=player_1_pos[1]
+                        )
+                        board_lst, changed_flag = apply_move(move, board_lst, config)
                         if changed_flag is True:
                             current_player_index = (current_player_index + 1) % total_players
                 elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
                     if current_player_index == 1:
-                        board_lst, changed_flag = board_list_select(current_player_index, player_2_pos, board_lst, config)
+                        move = Move(
+                            player_id=current_player_index,
+                            target_row=player_2_pos[0],
+                            target_col=player_2_pos[1]
+                        )
+                        board_lst, changed_flag = apply_move(move, board_lst, config)
                         if changed_flag is True:
                             current_player_index = (current_player_index + 1) % total_players
                 

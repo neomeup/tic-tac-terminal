@@ -72,7 +72,9 @@ def render_board(
     if config.player_types[0] == "human" or config.player_types[1] == "human":
         last_line = height
         last_column = width
-        stdscr.addstr(last_line-1, 0, "'q' Quit player 1")
+        stdscr.addstr(last_line-2, 0, " wasd movement for player 1")
+        stdscr.addstr(last_line-1, 0, " 'q' Quit player 1")
+        stdscr.addstr(last_line-2, (last_column - 21), "Arrows for player 2")
         stdscr.addstr(last_line-1, (last_column - 20), "'/' Quit player 2")
     else:
         last_line = height
