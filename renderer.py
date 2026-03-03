@@ -41,7 +41,7 @@ def render_board(
         stdscr.addstr(1, 0, f"Minimum size: {min_width}x{min_height}")
         stdscr.addstr(2, 0, f"Current size: {width}x{height}")
         stdscr.refresh()
-        return False, False, False
+        return board_lst
 
 
     # Display Game info - auto scaled based on terminal size
