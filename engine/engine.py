@@ -5,6 +5,7 @@ are introduced. i.e. win with a square as opposed to a line
 
 import random
 from core.piece import Piece
+from engine.player_utils import get_player_id
 
 ## Build a grid that can be used interchangably with all game modes
 def build_starting_board(size) -> list :
@@ -40,10 +41,7 @@ def board_list_select(player_1_turn: bool, player_coordinates: list, board_lst: 
     working_cell = board_lst[y][x]
 
     if working_cell is None:
-        if player_1_turn:
-            player_id = 0
-        else:
-            player_id = 1
+        player_id = get_player_id(player_1_turn)
     
         working_cell = Piece(
             owner_id=player_id,

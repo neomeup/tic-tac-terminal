@@ -3,6 +3,7 @@ Random move algorithm for a computer player
 '''
 import random
 from core.piece import Piece
+from engine.player_utils import get_player_id
 
 
 def get_move(player_1_turn, board_lst, config) -> list:
@@ -18,10 +19,7 @@ def get_move(player_1_turn, board_lst, config) -> list:
     row, col = random.choice(empty_positions)
 
     # Assign working cell
-    if player_1_turn:
-        player_id = 0
-    else:
-        player_id = 1
+    player_id = get_player_id(player_1_turn)
 
     
 

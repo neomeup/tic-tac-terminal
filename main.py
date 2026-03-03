@@ -17,6 +17,7 @@ from renderer import render_board, render_game_draw, render_game_won
 from movement.player_movement import get_player_move
 from movement.computer_players.computer_movement import get_computer_move
 from game_types.used_rules import game_finished
+from engine.player_utils import get_player_id
 
 config = GameConfig()
 
@@ -81,10 +82,8 @@ def main(stdscr, config):
                
 
             # Determine player type
-            if player_1_turn:
-                current_player_index = 0
-            else:
-                current_player_index = 1
+            current_player_index = get_player_id(player_1_turn)
+
             current_player_type = config.player_types[current_player_index]
 
             # If computer type player, skip all curses and make move
@@ -111,10 +110,10 @@ def main(stdscr, config):
 
                 # Exits keys
                 if key == ord("q"): #exit player 1
-                    if player_1_turn or not game_running:
+                    if current_player_index == 0 or not game_running:
                         break
                 elif key == ord("/"): #exit player 2
-                    if not player_1_turn or not game_running:
+                    if current_player_index == 1 or not game_running:
                         break
                 
                 # Terminal size refresher
@@ -130,19 +129,19 @@ def main(stdscr, config):
                 ### Player movement tied to structure of board list - moves with the coordinates of board list
                 elif key in [ord("w"), ord("a"), ord("s"), ord("d"), curses.KEY_UP, curses.KEY_DOWN, curses.KEY_LEFT, curses.KEY_RIGHT]:
                     if game_running:
-                        if player_1_turn:
+                        if current_player_index == 0:
                             player_1_pos = get_player_move(key, player_1_turn, player_1_pos, size)
-                        elif not player_1_turn:
+                        elif current_player_index == 1:
                             player_2_pos = get_player_move(key, player_1_turn, player_2_pos, size)
 
                 ## Send action keys
                 elif key == ord("e"): # Player 1 select
-                    if player_1_turn is True:
+                    if current_player_index == 0:
                         board_lst, changed_flag = board_list_select(player_1_turn, player_1_pos, board_lst, config)
                         if changed_flag is True:
                             player_1_turn = not player_1_turn
                 elif key in [curses.KEY_ENTER, 10, 13]: #Player 2 select
-                    if player_1_turn is False:
+                    if current_player_index == 1:
                         board_lst, changed_flag = board_list_select(player_1_turn, player_2_pos, board_lst, config)
                         if changed_flag is True:
                             player_1_turn = not player_1_turn
@@ -191,6 +190,8 @@ def main(stdscr, config):
             else:
                 # If game is over process game state and determine if another game is needed
                 if game_count == config.how_many_games:
+                    print(board_lst)
+                    print(type(board_lst[0][0]))
                     return game_history
                 else:
                     game_count += 1

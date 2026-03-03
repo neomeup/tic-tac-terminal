@@ -5,6 +5,7 @@ renderer should handle only the curses rendering of game screen, win screen, and
 
 import curses
 import textwrap
+from engine.player_utils import get_player_id
 
 
 ## Render the board during gameplay
@@ -61,9 +62,10 @@ def render_board(
     
 
     # Display player turn
-    if player_1_turn is True:
+    current_player_index = get_player_id(player_1_turn)
+    if current_player_index == 0:
         active_player_message = "Player 1's turn!"
-    elif player_1_turn is False:
+    elif current_player_index == 1:
         active_player_message = "Player 2's turn!"
     
     stdscr.addstr(current_row + 2, 1, f"{active_player_message}")
@@ -112,17 +114,13 @@ def render_board(
                     char = "?"
 
             # Draw the cell (with highlight if active player selected) - if computer player, no highlight
-            if player_1_turn:
-                current_player_index = 0
-            else:
-                current_player_index = 1
             current_player_type = config.player_types[current_player_index]
 
             if current_player_type == "computer":
                 stdscr.addstr(screen_y, screen_x, char)
-            elif (board_y, board_x) == player_1_pos and player_1_turn:
+            elif (board_y, board_x) == player_1_pos and current_player_index == 0:
                 stdscr.addstr(screen_y, screen_x, char, curses.color_pair(2))
-            elif (board_y, board_x) == player_2_pos and not player_1_turn:
+            elif (board_y, board_x) == player_2_pos and current_player_index == 1:
                 stdscr.addstr(screen_y, screen_x, char, curses.color_pair(3))
             else:
                 stdscr.addstr(screen_y, screen_x, char)
