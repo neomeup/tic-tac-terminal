@@ -2,7 +2,7 @@
 Random move algorithm for a computer player
 '''
 import random
-from core.piece import Piece
+from core.move import Move
 
 def get_move(current_player_index: int, board_lst: list[list], config) -> list:
     # List of empty positions to grab one randomly
@@ -16,15 +16,4 @@ def get_move(current_player_index: int, board_lst: list[list], config) -> list:
     # Pick a random empty cell
     row, col = random.choice(empty_positions)
 
-    # Assign working cell
-    player_id = current_player_index
-
-    
-
-    board_lst[row][col] = Piece(
-        owner_id=player_id,
-        piece_type=config.piece_type
-    )
-
-    updated_board_lst = board_lst
-    return updated_board_lst
+    return Move (player_id=current_player_index, target_row=row, target_col=col)
