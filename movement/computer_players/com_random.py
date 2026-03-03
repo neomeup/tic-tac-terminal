@@ -4,7 +4,7 @@ Random move algorithm for a computer player
 import random
 from core.piece import Piece
 
-def get_move(current_player_index, board_lst, config) -> list:
+def get_move(current_player_index: int, board_lst: list[list], config) -> list:
     # List of empty positions to grab one randomly
     empty_positions = []
     for row_index, row in enumerate(board_lst):
