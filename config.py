@@ -23,8 +23,10 @@ class GameConfig:
 
         # Player types
         self.player_types: list = ["human", "computer"] # ["human", "computer"] -> will yeild single player mode
-        # If computer player what algorithm to use
         self.model_type: list = ["random", "random"]
+
+        # Piece type
+        self.piece_type: str = "standard_x-o"
 
         # Start conditions for movement
         self.random_start: bool = True
