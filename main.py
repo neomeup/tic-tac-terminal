@@ -22,7 +22,7 @@ config = GameConfig()
 
 
 def main(stdscr, config):
-    def run_interactive(stdscr, config):
+    def run_interactive_cli(stdscr, config):
 
         ## Start up curses for humans or observable computer play
         stdscr.clear()          # clear the screen
@@ -199,7 +199,7 @@ def main(stdscr, config):
         
 
     if stdscr is not None:
-        run_interactive(stdscr,config)
+        run_interactive_cli(stdscr,config)
     else:
         print(run_headless(config))
 
@@ -207,7 +207,8 @@ def main(stdscr, config):
 
 # Easy setup and tear down
 if config.render:
-    import curses
-    curses.wrapper(lambda stdscr: main(stdscr, config))
+    if config.render_type == "cli":
+        import curses
+        curses.wrapper(lambda stdscr: main(stdscr, config))
 else:
     main(None, config)

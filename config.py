@@ -19,6 +19,7 @@ class GameConfig:
 
         # Optional render flag
         self.render: bool = True # Set False for non-rendered games
+        self.render_type: str = "cli"
 
         # Player types
         self.player_types: list = ["human", "computer"] # ["human", "computer"] -> will yeild single player mode
