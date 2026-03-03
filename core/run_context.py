@@ -8,6 +8,7 @@ class GameRunContext:
         self.start_time = datetime.utcnow()
         self.end_time = None
         self.winner = None
+        self.draw = False
 
         self.moves = []  # list of move logs
         self.players = {}  # not sure if needed - come back to this
@@ -27,6 +28,7 @@ class GameRunContext:
             "reward": reward
         })
 
-    def finalize(self, winner):
+    def finalize(self, winner, draw):
         self.winner = winner
-        self.end_time = datetime.utcnow()
+        self.draw = draw
+        self.end_time = datetime.utcnow() 

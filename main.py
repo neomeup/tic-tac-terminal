@@ -20,6 +20,9 @@ from movement.computer_players.computer_movement import get_computer_move
 from game_types.used_rules import game_finished
 from core.move import Move
 from engine.apply_move import apply_move
+from core.game_state import GameState
+from core.run_context import GameRunContext
+from core.serialization import serialize_board
 
 config = GameConfig()
 
@@ -91,8 +94,10 @@ def main(stdscr, config):
             # If computer type player, skip all curses and make move
             if current_player_type == "computer" and game_running:
                 time.sleep(1)
-                board_lst = get_computer_move(current_player_index, board_lst, config)
-                current_player_index = (current_player_index + 1) % total_players
+                move = get_computer_move(current_player_index, board_lst, config)
+                board_lst, changed_flag = apply_move(move, board_lst, config)
+                if changed_flag is True:
+                    current_player_index = (current_player_index + 1) % total_players
 
             # Game repeat/end control for computer vs computer rendered
             elif config.player_types[0] == "computer" and config.player_types[1] == "computer":
@@ -177,35 +182,63 @@ def main(stdscr, config):
         while True:
             # Initialize board setup for new games
             if build_new_game:
-                board_lst = build_starting_board(config.board_size)
+                board = build_starting_board(config.board_size)
+                
+                state = GameState(
+                    board=board,
+                    players=list(range(len(config.player_types))),
+                    config=config
+                )
+                
+                run_context = GameRunContext(config.__dict__)
+                
+                for player_id, player_type in enumerate(config.player_types):
+                    run_context.register_player(
+                        player_id=player_id,
+                        player_type=player_type,
+                        model_version=config.model_type[player_id]
+                    )
+                
+
                 build_new_game = False
                 if config.random_start:
-                    current_player_index = random.randint(0, total_players - 1)
+                    state.current_player_id = random.randint(0, total_players - 1)
                 else:
-                    current_player_index = 0
+                    state.current_player_id = 0
 
             # Store game state
-            won_game, winning_player, drawn_game = game_finished(config, board_lst)
+            won_game, winning_player, drawn_game = game_finished(config, state.board)
 
             # Check game state for a finished game condition
             if won_game is True:
-                finished_game_state = won_game, winning_player, drawn_game
-                game_history.append(finished_game_state)
+                run_context.finalize(winner=winning_player, draw=False)
+                game_history.append(run_context)
                 game_running = False
             elif drawn_game is True:
-                finished_game_state = won_game, winning_player, drawn_game
-                game_history.append(finished_game_state)
+                run_context.finalize(winner=None, draw=True)
+                game_history.append(run_context)
                 game_running = False
 
             ## Ask Computer player for a move and execute said move
             if game_running:
-                board_lst = get_computer_move(current_player_index, board_lst, config)
-                current_player_index = (current_player_index + 1) % total_players
+                move = get_computer_move(state.current_player_id, state.board, config)
+                state.board, changed_flag = apply_move(move, state.board, config)
+                if changed_flag is True:
+                    run_context.log_move(
+                        turn_number=state.turn_number,
+                        player_id=move.player_id,
+                        board_state=serialize_board(state.board),
+                        action={
+                            "row": move.target_row,
+                            "col": move.target_col
+                        },
+                        reward=None
+                    )
+                    state.turn_number += 1
+                    state.current_player_id = (state.current_player_id + 1) % total_players
             else:
                 # If game is over process game state and determine if another game is needed
                 if game_count == config.how_many_games:
-                    print(board_lst)
-                    print(type(board_lst[0][0]))
                     return game_history
                 else:
                     game_count += 1
@@ -216,7 +249,14 @@ def main(stdscr, config):
     if stdscr is not None:
         run_interactive_cli(stdscr,config)
     else:
-        print(run_headless(config))
+        game_history = run_headless(config)
+        print(game_history)
+        for game in game_history:
+            print("Game ID:", game.game_id)
+            print("Winner:", game.winner)
+            print("Moves:", len(game.moves))
+            print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
+            print("--------")
 
 
 
