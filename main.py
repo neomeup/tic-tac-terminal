@@ -12,17 +12,18 @@ O|-|X
 
 import time
 import random
+
 from config import GameConfig
-from engine.board_build import build_starting_board
-from renderer import render_board, render_game_draw, render_game_won
+from cli_renderer import render_board, render_game_draw, render_game_won
 from movement.player_movement import get_player_move
 from movement.computer_players.computer_movement import get_computer_move
 from game_types.used_rules import game_finished
 from core.move import Move
-from engine.apply_move import apply_move
 from core.game_state import GameState
 from core.run_context import GameRunContext
 from core.serialization import serialize_board
+from engine.board_build import build_starting_board
+from engine.apply_move import apply_move
 
 config = GameConfig()
 

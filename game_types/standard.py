@@ -1,7 +1,7 @@
 ## Determine is game is over - based on tic-tac-toe style gameplay
 def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, bool]:
     
-    ##  All returns in following format -> won_game, player_1_win, drawn_game
+    ##  All returns in following format -> won_game, winning_player, drawn_game
     win_length = config.win_length
     size = config.board_size
     total_players = len(config.player_types)
