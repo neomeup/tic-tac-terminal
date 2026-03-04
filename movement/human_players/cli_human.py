@@ -2,10 +2,10 @@
 Movement for human players 
 '''
 
-from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT
+from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT 
 
 ## Updates player position for human players and return it to main
-def get_player_move(key, current_player_index, player_position: list, size: int) -> list :
+def get_cli_move(key, current_player_index, player_position: list, size: int) -> list :
 
     player_id = current_player_index
 

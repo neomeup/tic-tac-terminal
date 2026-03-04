@@ -14,8 +14,8 @@ import time
 import random
 
 from config import GameConfig
-from cli_renderer import render_board, render_game_draw, render_game_won
-from movement.player_movement import get_player_move
+from renderers.cli_renderer import render_board, render_game_draw, render_game_won
+from movement.human_players.human_movement import get_player_move
 from movement.computer_players.computer_movement import get_computer_move
 from game_types.used_rules import game_finished
 from core.move import Move
@@ -138,9 +138,9 @@ def main(stdscr, config):
                 elif key in [ord("w"), ord("a"), ord("s"), ord("d"), curses.KEY_UP, curses.KEY_DOWN, curses.KEY_LEFT, curses.KEY_RIGHT]:
                     if game_running:
                         if current_player_index == 0:
-                            player_1_pos = get_player_move(key, current_player_index, player_1_pos, size)
+                            player_1_pos = get_player_move(key, current_player_index, player_1_pos, size, config)
                         elif current_player_index == 1:
-                            player_2_pos = get_player_move(key, current_player_index, player_2_pos, size)
+                            player_2_pos = get_player_move(key, current_player_index, player_2_pos, size, config)
 
                 ## Send action keys
                 elif key == ord("e"): # Player 1 select
