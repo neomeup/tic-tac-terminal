@@ -18,12 +18,12 @@ class GameConfig:
         self.rule_set: str = "standard"
 
         # Optional render flag
-        self.render: bool = True # Set False for non-rendered games
+        self.render: bool = False # Set False for non-rendered games
         self.render_type: str = "cli"
 
         # Player types
-        self.player_types: list = ["human", "human"] # ["human", "computer"] -> will yeild single player mode
-        self.model_type: list = ["random", "random"]
+        self.player_types: list = ["computer", "computer", "computer"] # ["human", "computer"] -> will yeild single player mode
+        self.model_type: list = ["random", "random", "random"]
 
         # Piece type
         self.piece_type: str = "standard_x-o"
@@ -31,5 +31,8 @@ class GameConfig:
         # Start conditions for movement
         self.random_start: bool = True
 
-        # Games to be played in computer only mode
+        # Games to be played in simulation mode
         self.how_many_games: int = 2
+
+        # Random Seed Config
+        self.random_seed: int | None = None

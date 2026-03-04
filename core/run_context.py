@@ -9,9 +9,9 @@ class GameRunContext:
         self.end_time = None
         self.winner = None
         self.draw = False
-
+        
         self.moves = []  # list of move logs
-        self.players = {}  # not sure if needed - come back to this
+        self.players = {}  # players log
 
     def register_player(self, player_id, player_type, model_version=None):
         self.players[player_id] = {
@@ -31,4 +31,4 @@ class GameRunContext:
     def finalize(self, winner, draw):
         self.winner = winner
         self.draw = draw
-        self.end_time = datetime.utcnow() 
+        self.end_time = datetime.utcnow()

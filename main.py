@@ -25,6 +25,8 @@ from core.serialization import serialize_board
 from engine.board_build import build_starting_board
 from engine.apply_move import apply_move
 
+from simulation.engine import SimulationEngine
+
 config = GameConfig()
 
 
@@ -167,90 +169,14 @@ def main(stdscr, config):
                 # Continue on non action key presses
                 else:
                     continue
-
-
-    def run_headless(config):
-        # Initialize game history variables
-        game_history = []
-        game_count = 1
-
-        # Initial game state booleans
-        game_running = True
-        build_new_game = True
-
-        total_players = len(config.player_types)
-
-        while True:
-            # Initialize board setup for new games
-            if build_new_game:
-                board = build_starting_board(config.board_size)
-                
-                state = GameState(
-                    board=board,
-                    players=list(range(len(config.player_types))),
-                    config=config
-                )
-                
-                run_context = GameRunContext(config.__dict__)
-                
-                for player_id, player_type in enumerate(config.player_types):
-                    run_context.register_player(
-                        player_id=player_id,
-                        player_type=player_type,
-                        model_version=config.model_type[player_id]
-                    )
-                
-
-                build_new_game = False
-                if config.random_start:
-                    state.current_player_id = random.randint(0, total_players - 1)
-                else:
-                    state.current_player_id = 0
-
-            # Store game state
-            won_game, winning_player, drawn_game = game_finished(config, state.board)
-
-            # Check game state for a finished game condition
-            if won_game is True:
-                run_context.finalize(winner=winning_player, draw=False)
-                game_history.append(run_context)
-                game_running = False
-            elif drawn_game is True:
-                run_context.finalize(winner=None, draw=True)
-                game_history.append(run_context)
-                game_running = False
-
-            ## Ask Computer player for a move and execute said move
-            if game_running:
-                move = get_computer_move(state.current_player_id, state.board, config)
-                state.board, changed_flag = apply_move(move, state.board, config)
-                if changed_flag is True:
-                    run_context.log_move(
-                        turn_number=state.turn_number,
-                        player_id=move.player_id,
-                        board_state=serialize_board(state.board),
-                        action={
-                            "row": move.target_row,
-                            "col": move.target_col
-                        },
-                        reward=None
-                    )
-                    state.turn_number += 1
-                    state.current_player_id = (state.current_player_id + 1) % total_players
-            else:
-                # If game is over process game state and determine if another game is needed
-                if game_count == config.how_many_games:
-                    return game_history
-                else:
-                    game_count += 1
-                    game_running = True
-                    build_new_game = True
         
 
     if stdscr is not None:
         run_interactive_cli(stdscr,config)
     else:
-        game_history = run_headless(config)
+        engine = SimulationEngine(config)
+        game_history = engine.run()
+
         print(game_history)
         for game in game_history:
             print("Game ID:", game.game_id)
