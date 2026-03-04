@@ -40,6 +40,10 @@ def main(stdscr, config):
 if config.render:
     if config.render_type == "cli":
         import curses
-        curses.wrapper(lambda stdscr: main(stdscr, config))
+        try:
+            curses.wrapper(lambda stdscr: main(stdscr, config))
+        except KeyboardInterrupt:
+            print("Exiting through KeyboardInterrupt by user")
+            exit()
 else:
     main(None, config)
