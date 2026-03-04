@@ -17,7 +17,7 @@ class GameConfig:
     rule_set: str = "standard"
 
     # Optional render flag
-    render: bool = True
+    render: bool = False
     render_type: str = "cli" #registerized
 
     # Piece type
@@ -30,7 +30,7 @@ class GameConfig:
     how_many_games: int = 2
 
     # Random Seed Config
-    random_seed: int | None = 15
+    random_seed: int | None = 96
 
     def __post_init__(self):
         # Player types

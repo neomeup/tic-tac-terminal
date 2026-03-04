@@ -29,6 +29,7 @@ def run_headless(config):
     engine = SimulationEngine(config)
     result = engine.run()
 
+    # To view basic results in terminal output
     print(result)
     for game in result.runs:
         print("GameRunContext Object:", game)
@@ -37,7 +38,9 @@ def run_headless(config):
         print("Moves:", len(game.moves))
         print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
         print("--------")
-
+    
+    experiences = result.to_experiences()
+    print("Total Experiences:", len(experiences))
     return result
 
 

@@ -1,4 +1,5 @@
 from core.run_context import GameRunContext
+from simulation.training.dataset import ExperienceDatasetBuilder
 
 
 class SimulationResult:
@@ -46,3 +47,8 @@ class SimulationResult:
                 for r in self.runs
             ]
         }
+    
+    # To connect to training for RL
+    def to_experiences(self):
+        builder = ExperienceDatasetBuilder(self)
+        return builder.build()
