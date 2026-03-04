@@ -18,7 +18,7 @@ class GameConfig:
 
     # Optional render flag
     render: bool = True
-    render_type: str = "cli"
+    render_type: str = "cli" #registerized
 
     # Piece type
     piece_type: str = "standard_x-o"
@@ -34,5 +34,5 @@ class GameConfig:
 
     def __post_init__(self):
         # Player types
-        self.player_types: list = ["computer", "computer"]
-        self.model_type: list = ["random", "random"]
+        self.player_types: list = ["computer", "computer"] #registerized
+        self.model_type: list = ["random", "random"] #registerized
