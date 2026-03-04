@@ -108,6 +108,8 @@ class SimulationEngine:
         if valid_move:
             state.board = new_board
 
+            state.turn_number += 1
+
             context.log_move(
                 turn_number=state.turn_number,
                 player_id=move.player_id,
@@ -118,19 +120,18 @@ class SimulationEngine:
                 },
                 reward=None
             )
-
-            state.turn_number += 1
+         
             state.current_player_id = (
                 state.current_player_id + 1
             ) % self.total_players
 
-        # Check game termination
-        won, winner, draw = game_finished(self.config, state.board)
+            # Check game termination
+            won, winner, draw = game_finished(self.config, state.board)
 
-        if won:
-            state.is_finished = True
-            context.finalize(winner=winner, draw=False)
+            if won:
+                state.is_finished = True
+                context.finalize(winner=winner, draw=False)
 
-        elif draw:
-            state.is_finished = True
-            context.finalize(winner=None, draw=True)
+            elif draw:
+                state.is_finished = True
+                context.finalize(winner=None, draw=True)
