@@ -19,6 +19,7 @@ class CLIRuntime:
     def __init__(self, config):
         self.config = config
         self.total_players = len(config.player_types)
+        self.is_all_computer = all(player == "computer" for player in self.config.player_types)
         
         if self.config.random_seed is not None:
             self.rng = random.Random(self.config.random_seed)
@@ -97,7 +98,7 @@ class CLIRuntime:
                     current_player_index = (current_player_index + 1) % self.total_players
 
             # Repeat games for computer vs computer
-            elif not game_running and not any(player == "human" for player in self.config.player_types):
+            elif not game_running and self.is_all_computer:
                 time.sleep(3)
 
                 if game_count >= self.config.how_many_games:
