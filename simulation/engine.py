@@ -7,7 +7,7 @@ from engine.board_build import build_starting_board
 from engine.apply_move import apply_move
 from game_types.used_rules import game_finished
 from movement.computer_players.computer_movement import get_computer_move
-
+from simulation.result import SimulationResult
 
 class SimulationEngine:
 
@@ -23,14 +23,14 @@ class SimulationEngine:
 
 
     # Public Methods
-    def run(self) -> list[GameRunContext]:
+    def run(self) -> SimulationResult:
         game_history = []
 
         for game_index in range(self.config.how_many_games):
             context = self._run_single_game()
             game_history.append(context)
 
-        return game_history
+        return SimulationResult(game_history)
 
 
     # Single Game Execution

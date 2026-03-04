@@ -175,10 +175,11 @@ def main(stdscr, config):
         run_interactive_cli(stdscr,config)
     else:
         engine = SimulationEngine(config)
-        game_history = engine.run()
+        result = engine.run()
 
-        print(game_history)
-        for game in game_history:
+        print(result)
+        for game in result.runs:
+            print("GameRunContext Object:", game)
             print("Game ID:", game.game_id)
             print("Winner:", game.winner)
             print("Moves:", len(game.moves))
