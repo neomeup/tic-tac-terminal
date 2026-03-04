@@ -32,7 +32,7 @@ class GameConfig:
         self.random_start: bool = True
 
         # Games to be played in simulation mode
-        self.how_many_games: int = 2
+        self.how_many_games: int = 3
 
         # Random Seed Config
-        self.random_seed: int | None = None
+        self.random_seed: int | None = 15

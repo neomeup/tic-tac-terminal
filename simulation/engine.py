@@ -17,7 +17,9 @@ class SimulationEngine:
         self.total_players = len(config.player_types)
 
         if self.config.random_seed is not None:
-            random.seed(self.config.random_seed)
+            self.rng = random.Random(self.config.random_seed)
+        else:
+            self.rng = random.Random()
 
 
     # Public Methods
@@ -45,6 +47,8 @@ class SimulationEngine:
             reward=None
         )
 
+        print("Starting player:", state.current_player_id) # Debug random_seed
+
         while not state.is_finished:
             self._step(state, context)
 
@@ -63,7 +67,7 @@ class SimulationEngine:
         )
 
         if self.config.random_start:
-            state.current_player_id = random.randint(0, self.total_players - 1)
+            state.current_player_id = self.rng.randint(0, self.total_players - 1)
         else:
             state.current_player_id = 0
 
@@ -71,7 +75,7 @@ class SimulationEngine:
 
     # Initialize Logging and Metadata
     def _initialize_run_context(self) -> GameRunContext:
-        context = GameRunContext(self.config.__dict__)
+        context = GameRunContext(vars(self.config).copy())
 
         for player_id, player_type in enumerate(self.config.player_types):
             context.register_player(
@@ -90,7 +94,8 @@ class SimulationEngine:
         return get_computer_move(
             state.current_player_id,
             state.board,
-            self.config
+            self.config,
+            self.rng
         )
     
     # Perform the step based on current action/policy
