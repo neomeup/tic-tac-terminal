@@ -17,7 +17,7 @@ class GameConfig:
     rule_set: str = "standard"
 
     # Optional render flag
-    render: bool = False # Set False for non-rendered games
+    render: bool = True
     render_type: str = "cli"
 
     # Piece type
@@ -27,12 +27,12 @@ class GameConfig:
     random_start: bool = True
 
     # Games to be played in simulation mode
-    how_many_games: int = 3
+    how_many_games: int = 2
 
     # Random Seed Config
     random_seed: int | None = 15
 
     def __post_init__(self):
         # Player types
-        self.player_types: list = ["computer", "computer", "computer"] # ["human", "computer"] -> will yeild single player mode
-        self.model_type: list = ["random", "random", "random"]
+        self.player_types: list = ["computer", "computer"]
+        self.model_type: list = ["random", "random"]
