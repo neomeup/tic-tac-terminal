@@ -40,6 +40,12 @@ def run_headless(config):
         print("--------")
     
     experiences = result.to_experiences()
+
+    from movement.computer_players.agents.rl_dumb_agent import agent
+
+    agent.observe(experiences)
+    print("----------")
+
     print("Total Experiences:", len(experiences))
     return result
 

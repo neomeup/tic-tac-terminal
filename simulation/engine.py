@@ -9,6 +9,9 @@ from game_types.used_rules import game_finished
 from movement.computer_players.computer_movement import get_computer_move
 from simulation.result import SimulationResult
 
+
+
+
 class SimulationEngine:
 
     # Top constructor

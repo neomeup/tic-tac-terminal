@@ -2,7 +2,7 @@
 Computer movement middle man for main and registry
 '''
 
-from game_types.registry import rule_registry
+from game_types.rules_registry import rule_registry
 
 def game_finished(config, board_lst: list[list]) -> tuple[bool, bool, bool]:
     rule_name = config.rule_set

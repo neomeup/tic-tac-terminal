@@ -2,7 +2,7 @@
 Computer movement middle man for main and registry
 '''
 
-from movement.computer_players.registry import computer_model_registry
+from movement.computer_players.model_policy_registry import computer_model_registry
 
 # Should return a move object
 def get_computer_move(current_player_index, board_lst, config, rng):
