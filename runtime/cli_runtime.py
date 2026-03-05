@@ -2,8 +2,8 @@ import curses
 import time
 import random
 
-from engine.board_build import build_starting_board
-from engine.apply_move import apply_move
+from game_engine.board_build import build_starting_board
+from game_engine.apply_move import apply_move
 from core.move import Move
 
 from renderers.cli_renderer import render_board, render_game_draw, render_game_won

@@ -3,8 +3,8 @@ import random
 from core.game_state import GameState
 from core.run_context import GameRunContext
 from core.serialization import serialize_board
-from engine.board_build import build_starting_board
-from engine.apply_move import apply_move
+from game_engine.board_build import build_starting_board
+from game_engine.apply_move import apply_move
 from game_types.used_rules import game_finished
 from movement.computer_players.computer_movement import get_computer_move
 from simulation.result import SimulationResult
