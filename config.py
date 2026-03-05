@@ -30,9 +30,12 @@ class GameConfig:
     how_many_games: int = 2
 
     # Random Seed Config
-    random_seed: int | None = 96
+    random_seed: int | None = None
+
+    # Online training within SimEngine bool
+    online_training_enabled: bool = True
 
     def __post_init__(self):
         # Player types
         self.player_types: list = ["computer", "computer"] #registerized
-        self.model_type: list = ["random", "random"] #registerized
+        self.model_type: list = ["rl_dumb", "random"] #registerized

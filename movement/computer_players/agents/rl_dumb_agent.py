@@ -27,26 +27,53 @@ class RLDumbAgent:
             experiences = [experiences]
 
         for exp in experiences:
-            self.buffer.push(exp)
+            if not getattr(exp, "player_id") == None:
+                if hasattr(exp, "player_id"):
+                    exp = {
+                        "player_id": exp.player_id,
+                        "reward": exp.reward,
+                        "done": exp.done
+                    }
+                self.buffer.push(exp)
 
         # Debug buffer size
         print("Buffer size:", len(self.buffer))
 
         # Debug pipeline
-        if len(self.buffer) >= 4:
-            batch = self.buffer.sample(4)
+        if len(self.buffer) >= 10:
+            batch = self.buffer.sample(10)
 
             print("Sample batch:")
-            for e in batch:
+            for exp in batch:
                 print(
-                    "Player:", e.player_id,
-                    "Reward:", e.reward,
-                    "Done:", e.done
+                    "Player:", exp["player_id"],
+                    "Reward:", exp["reward"],
+                    "Done:", exp["done"]
                 )
+    
+    def observe_transition(self, state, action, reward, next_state, done, player_id):
+        
+        if player_id is None:
+            return 
+        
+        experience = {
+            "state": state,
+            "action": action,
+            "reward": reward,
+            "next_state": next_state,
+            "done": done,
+            "player_id": player_id
+        }
 
+        self.buffer.push(experience)
+
+        print("Buffer size:", len(self.buffer))
 
     def train_step(self):
         # Placeholder for future batch training
+
+        # Debug for fully active RL pipes
+        print("Training step executed")
         pass
 
 

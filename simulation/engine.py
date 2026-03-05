@@ -6,10 +6,13 @@ from core.serialization import serialize_board
 from game_engine.board_build import build_starting_board
 from game_engine.apply_move import apply_move
 from game_types.used_rules import game_finished
-from movement.computer_players.computer_movement import get_computer_move
 from simulation.result import SimulationResult
 
+# Import for the basic move
+from movement.computer_players.computer_movement import get_computer_move
 
+# Imports for agents ** Should be registerized with a model agent registery/agent registery
+from movement.computer_players.agents.rl_dumb_agent import agent as rl_agent
 
 
 class SimulationEngine:
@@ -29,8 +32,9 @@ class SimulationEngine:
     def run(self) -> SimulationResult:
         game_history = []
 
-        for game_index in range(self.config.how_many_games):
+        for _game_index in range(self.config.how_many_games):
             context = self._run_single_game()
+            print("------------")
             game_history.append(context)
 
         return SimulationResult(game_history)
@@ -104,14 +108,65 @@ class SimulationEngine:
     # Perform the step based on current action/policy
     def _step(self, state: GameState, context: GameRunContext):
 
+        # Capture state before action
+        previous_state = serialize_board(state.board)
+
         move = self._choose_action(state)
 
         new_board, valid_move = apply_move(move, state.board, self.config)
+
+        # Possible implementation of a penalty or something for non valid move
+        if not valid_move:
+            pass
 
         if valid_move:
             state.board = new_board
 
             state.turn_number += 1
+
+            # Check game termination
+            won, winner, draw = game_finished(self.config, state.board)
+
+            reward = 0.0
+
+            if won:
+                if winner == move.player_id:
+                    state.is_finished = True
+                    reward = 1.0
+                else: 
+                    state.is_finished = True
+                    reward = -1.0
+            elif draw:
+                state.is_finished = True
+                reward = 0.0
+
+            next_state = serialize_board(state.board)
+
+            done = won or draw
+
+            if self.config.online_training_enabled:
+
+                print(
+                    "RL TRANSITION:",
+                    "Player:", move.player_id,
+                    "Reward:", reward,
+                    "Done:", state.is_finished
+                )
+
+
+                rl_agent.observe_transition(
+                    state=previous_state,
+                    action={
+                        "row": move.target_row,
+                        "col": move.target_col
+                    },
+                    reward=reward,
+                    next_state=next_state,
+                    done=state.is_finished,
+                    player_id=move.player_id
+                )
+
+                rl_agent.train_step()
 
             context.log_move(
                 turn_number=state.turn_number,
@@ -121,18 +176,14 @@ class SimulationEngine:
                     "row": move.target_row,
                     "col": move.target_col
                 },
-                reward=None
+                reward=reward
             )
          
             state.current_player_id = (
                 state.current_player_id + 1
             ) % self.total_players
 
-            # Check game termination
-            won, winner, draw = game_finished(self.config, state.board)
-
             if won:
-                state.is_finished = True
                 context.finalize(winner=winner, draw=False)
 
             elif draw:

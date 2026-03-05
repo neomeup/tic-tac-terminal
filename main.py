@@ -41,6 +41,7 @@ def run_headless(config):
     
     experiences = result.to_experiences()
 
+    # For offline observe experiences
     from movement.computer_players.agents.rl_dumb_agent import agent
 
     agent.observe(experiences)
