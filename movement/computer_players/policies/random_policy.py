@@ -19,9 +19,3 @@ class RandomPolicy(BasePolicy):
         row, col = rng.choice(empty_positions)
 
         return Move (player_id=current_player_index, target_row=row, target_col=col)
-
-
-policy = RandomPolicy()
-
-def get_move(player_id, board, config, rng):
-    return policy.select_action(player_id, board, config, rng)

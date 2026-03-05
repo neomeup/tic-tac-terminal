@@ -1,11 +1,16 @@
 
-from movement.computer_players.policies.rl_dumb_policy import RLDumbPolicy
+from movement.computer_players.model_policy_registry import model_policy_registry
 from simulation.training.buffer import ReplayBuffer
 
 class RLDumbAgent:
 
-    def __init__(self, capacity=10000):
-        self.policy = RLDumbPolicy()
+    def __init__(self, policy_name=None, capacity=10000):
+
+        if policy_name is None:
+            policy_name = "rl_dumb_policy"
+        
+        policy_class = model_policy_registry[policy_name]
+        self.policy = policy_class()
         self.buffer = ReplayBuffer(capacity)
 
     def select_action(self, player_id, board, config, rng):
@@ -27,14 +32,15 @@ class RLDumbAgent:
             experiences = [experiences]
 
         for exp in experiences:
-            if not getattr(exp, "player_id") == None:
-                if hasattr(exp, "player_id"):
-                    exp = {
-                        "player_id": exp.player_id,
-                        "reward": exp.reward,
-                        "done": exp.done
-                    }
-                self.buffer.push(exp)
+            if getattr(exp, "player_id") is None:
+                continue
+            if hasattr(exp, "player_id"):
+                exp = {
+                    "player_id": exp.player_id,
+                    "reward": exp.reward,
+                    "done": exp.done
+                }
+            self.buffer.push(exp)
 
         # Debug buffer size
         print("Buffer size:", len(self.buffer))
@@ -67,17 +73,18 @@ class RLDumbAgent:
 
         self.buffer.push(experience)
 
+        print("Stored experience for player", player_id)
         print("Buffer size:", len(self.buffer))
 
     def train_step(self):
         # Placeholder for future batch training
 
         # Debug for fully active RL pipes
-        print("Training step executed")
+        if len(self.buffer) < 1:
+            return
+
+        batch = self.buffer.sample(1)
+
+        print("Train Step")
+        print("Training batch:", batch)
         pass
-
-
-agent = RLDumbAgent()
-
-def get_move(player_id, board, config, rng):
-    return agent.select_action(player_id, board, config, rng)

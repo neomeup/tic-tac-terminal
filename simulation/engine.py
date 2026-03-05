@@ -9,10 +9,7 @@ from game_types.used_rules import game_finished
 from simulation.result import SimulationResult
 
 # Import for the basic move
-from movement.computer_players.computer_movement import get_computer_move
-
-# Imports for agents ** Should be registerized with a model agent registery/agent registery
-from movement.computer_players.agents.rl_dumb_agent import agent as rl_agent
+from movement.computer_players.computer_movement import get_computer_move, get_agent
 
 
 class SimulationEngine:
@@ -142,9 +139,8 @@ class SimulationEngine:
 
             next_state = serialize_board(state.board)
 
-            done = won or draw
-
             if self.config.online_training_enabled:
+                agent = get_agent(move.player_id, self.config)
 
                 print(
                     "RL TRANSITION:",
@@ -153,8 +149,7 @@ class SimulationEngine:
                     "Done:", state.is_finished
                 )
 
-
-                rl_agent.observe_transition(
+                agent.observe_transition(
                     state=previous_state,
                     action={
                         "row": move.target_row,
@@ -166,7 +161,7 @@ class SimulationEngine:
                     player_id=move.player_id
                 )
 
-                rl_agent.train_step()
+                agent.train_step()
 
             context.log_move(
                 turn_number=state.turn_number,

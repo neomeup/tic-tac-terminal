@@ -35,7 +35,10 @@ class GameConfig:
     # Online training within SimEngine bool
     online_training_enabled: bool = True
 
+    offline_agent: str = "rl_dumb_agent"
+
     def __post_init__(self):
         # Player types
         self.player_types: list = ["computer", "computer"] #registerized
         self.model_type: list = ["rl_dumb_policy", "random_policy"] #registerized
+        self.agent_type: list = ["rl_dumb_agent", "random_agent"] # registerized
