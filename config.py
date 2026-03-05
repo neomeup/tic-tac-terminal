@@ -14,14 +14,14 @@ class GameConfig:
     win_length: int = 3 # Used for simple wins i.e. tic-tac-toe style
 
     # Game type indicator
-    rule_set: str = "standard"
+    rule_set: str = "standard" # registerized
 
     # Optional render flag
     render: bool = False
-    render_type: str = "cli" #registerized
+    render_type: str = "cli" # Could be registerized if you want multiple render types
 
     # Piece type
-    piece_type: str = "standard_x-o"
+    piece_type: str = "standard_x-o" # Could be registerized if you want multiple piece types - would be tied to rules
 
     # Start conditions for movement
     random_start: bool = True
@@ -38,4 +38,4 @@ class GameConfig:
     def __post_init__(self):
         # Player types
         self.player_types: list = ["computer", "computer"] #registerized
-        self.model_type: list = ["rl_dumb", "random"] #registerized
+        self.model_type: list = ["rl_dumb_policy", "random_policy"] #registerized
