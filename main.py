@@ -43,15 +43,18 @@ def run_headless(config):
 
     # For offline observe experiences
     #### To be changed/modified once trainer is introduced for offline so that you have a single agent persistance
-    from movement.computer_players.computer_movement import offline_agent
+    if config.offline_training_enabled:
+        from movement.computer_players.computer_movement import offline_agent
 
-    agent = offline_agent(config)
+        agent = offline_agent(config)
+             
+        print("----------")
+        print("Offline")
+        
+        agent.observe(experiences)
 
-    agent.observe(experiences)
-    print("----------")
-    print("Offline")
+        print("Total Experiences:", len(experiences))
 
-    print("Total Experiences:", len(experiences))
     return result
 
 
