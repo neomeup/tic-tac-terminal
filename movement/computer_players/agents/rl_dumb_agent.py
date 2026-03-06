@@ -74,7 +74,7 @@ class RLDumbAgent:
 
         self.buffer.push(experience)
 
-        print("Stored experience for player", player_id)
+        print(f"Stored experience for player {player_id} | reward={reward} | done={done}")
         print("Buffer size:", len(self.buffer))
 
     def train_step(self):
@@ -89,6 +89,7 @@ class RLDumbAgent:
         dones = np.array([e["done"] for e in batch])
         action = np.array([e["action"] for e in batch])
 
+        # Print for debug of encoding
         print("Train Step")
         print("Training batch:", batch)
 
