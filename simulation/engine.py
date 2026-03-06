@@ -8,9 +8,9 @@ from game_engine.apply_move import apply_move
 from game_types.used_rules import game_finished
 from simulation.result import SimulationResult
 
-# Import for the basic move
-from movement.computer_players.computer_movement import get_computer_move, get_agent
 
+from movement.computer_players.computer_movement import get_computer_move, get_agent
+from simulation.rewards.reward_registry import reward_registry
 
 class SimulationEngine:
 
@@ -24,6 +24,8 @@ class SimulationEngine:
         else:
             self.rng = random.Random()
 
+        reward_class = reward_registry[self.config.reward_type]
+        self.reward_engine = reward_class()
 
     # Public Methods
     def run(self) -> SimulationResult:
@@ -124,18 +126,21 @@ class SimulationEngine:
             # Check game termination
             won, winner, draw = game_finished(self.config, state.board)
 
-            reward = 0.0
-
             if won:
                 if winner == move.player_id:
                     state.is_finished = True
-                    reward = 1.0
                 else: 
                     state.is_finished = True
-                    reward = -1.0
             elif draw:
                 state.is_finished = True
-                reward = 0.0
+
+            reward = self.reward_engine.compute(
+                player_id=move.player_id,
+                winner=winner,
+                draw=draw,
+                board_state=state.board,
+                move=move
+            )
 
             next_state = serialize_board(state.board)
 
