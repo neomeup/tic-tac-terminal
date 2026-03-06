@@ -30,7 +30,7 @@ class GameConfig:
     render: bool = False
     render_type: str = "cli" # Could be registerized if you want multiple render types
     # Games to be played in simulation mode
-    how_many_games: int = 2
+    how_many_games: int = 1
 
 
 

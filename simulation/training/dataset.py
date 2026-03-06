@@ -1,4 +1,13 @@
+'''
+For offline use with simulation result
+'''
+
 from simulation.training.experience import Experience
+
+from simulation.training.encoders.action_encoder import encode_action
+# Should be registerized as encode board currently builds 4 shapes of (3,3), (9,), (2,3,3) and (18,)
+# Currently just returns the (9,)
+from simulation.training.encoders.board_encoder import encode_board
 
 
 class ExperienceDatasetBuilder:
@@ -18,14 +27,18 @@ class ExperienceDatasetBuilder:
                 current_move = moves[i]
                 next_move = moves[i + 1]
 
-                state = current_move["board_state"]
-                action = current_move["action"]
-                next_state = next_move["board_state"]
+                player_id = current_move["player_id"]
+
+                state = encode_board(current_move["board_state"], player_id)
+                next_state = encode_board(next_move["board_state"], player_id)
+
+                board_size = len(current_move["board_state"])
+                action = encode_action(current_move["action"], board_size)
 
                 done = False
                 reward = 0.0
 
-                # Terminal reward logic
+                # Terminal reward logic 
                 if i == len(moves) - 2:
                     done = True
 

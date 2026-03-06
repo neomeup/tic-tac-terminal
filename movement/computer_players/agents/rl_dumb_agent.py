@@ -1,3 +1,4 @@
+import numpy as np
 
 from movement.computer_players.model_policy_registry import model_policy_registry
 from simulation.training.buffer import ReplayBuffer
@@ -38,7 +39,7 @@ class RLDumbAgent:
                 exp = {
                     "player_id": exp.player_id,
                     "reward": exp.reward,
-                    "done": exp.done
+                    "done": exp.done 
                 }
             self.buffer.push(exp)
 
@@ -77,14 +78,19 @@ class RLDumbAgent:
         print("Buffer size:", len(self.buffer))
 
     def train_step(self):
-        # Placeholder for future batch training
-
-        # Debug for fully active RL pipes
+        # Debug for active pipes
         if len(self.buffer) < 1:
             return
 
         batch = self.buffer.sample(1)
 
+        states = np.array([e["state"] for e in batch])
+        rewards = np.array([e["reward"] for e in batch])
+        dones = np.array([e["done"] for e in batch])
+        action = np.array([e["action"] for e in batch])
+
         print("Train Step")
         print("Training batch:", batch)
-        pass
+
+        print("Training batch shape:", states.shape)
+        print("Training action:", action)

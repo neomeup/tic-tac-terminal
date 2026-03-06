@@ -12,6 +12,14 @@ from simulation.result import SimulationResult
 from movement.computer_players.computer_movement import get_computer_move, get_agent
 from simulation.rewards.reward_registry import reward_registry
 
+
+
+# Should be registerized as encode board currently builds 4 shapes of (3,3), (9,), (2,3,3) and (18,)
+# Currently just returns the (9,)
+from simulation.training.encoders.board_encoder import encode_board
+from simulation.training.encoders.action_encoder import encode_action
+
+
 class SimulationEngine:
 
     # Top constructor
@@ -127,10 +135,7 @@ class SimulationEngine:
             won, winner, draw = game_finished(self.config, state.board)
 
             if won:
-                if winner == move.player_id:
-                    state.is_finished = True
-                else: 
-                    state.is_finished = True
+                state.is_finished = True
             elif draw:
                 state.is_finished = True
 
@@ -154,14 +159,23 @@ class SimulationEngine:
                     "Done:", state.is_finished
                 )
 
+
+                board_size = len(previous_state)
+
+                encoded_state = encode_board(previous_state, move.player_id)
+                encoded_next_state = encode_board(next_state, move.player_id)
+
+                encoded_action = encode_action(
+                    {"row": move.target_row, "col": move.target_col},
+                    board_size
+                )
+
+
                 agent.observe_transition(
-                    state=previous_state,
-                    action={
-                        "row": move.target_row,
-                        "col": move.target_col
-                    },
+                    state=encoded_state,
+                    action=encoded_action,
                     reward=reward,
-                    next_state=next_state,
+                    next_state=encoded_next_state,
                     done=state.is_finished,
                     player_id=move.player_id
                 )
@@ -178,14 +192,36 @@ class SimulationEngine:
                 },
                 reward=reward
             )
-         
-            state.current_player_id = (
-                state.current_player_id + 1
-            ) % self.total_players
 
             if won:
+                if self.config.online_training_enabled:
+                    for player_id in range(self.total_players):
+
+                        if player_id == move.player_id:
+                            continue
+
+                        loser_agent = get_agent(player_id, self.config)
+
+                        if loser_agent is None:
+                            continue
+
+                        loser_state = encode_board(next_state, player_id)
+
+                        loser_agent.observe_transition(
+                            state=loser_state,
+                            action=None,
+                            reward=-1.0,
+                            next_state=loser_state,
+                            done=True,
+                            player_id=player_id
+                        )
                 context.finalize(winner=winner, draw=False)
 
             elif draw:
                 state.is_finished = True
                 context.finalize(winner=None, draw=True)
+
+
+            state.current_player_id = (
+                state.current_player_id + 1
+            ) % self.total_players
