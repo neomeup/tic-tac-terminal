@@ -2,7 +2,7 @@ from simulation.rewards.base_reward import BaseReward
 
 class StandardReward(BaseReward):
 
-    def compute (self, player_id, winner, draw, board_state=None, move=None):
+    def compute_reward(self, player_id, winner, draw, board_state=None, move=None):
 
         if draw:
             return 0.0

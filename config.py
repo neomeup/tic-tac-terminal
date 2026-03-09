@@ -34,13 +34,15 @@ class GameConfig:
 
 
 
-    # Online training within SimEngine bool
+    # Online training within SimEngine bools
     online_training_enabled: bool = True
     offline_training_enabled: bool = True
     
     offline_agent: str = "rl_dumb_agent"
 
     reward_type: str = "standard" #registerized
+    state_encoding_flattened: bool = False # interacts with dim type to provide a flat version of the selected type
+    state_encoding_dim_type: str = "vector" # registerized
 
     def __post_init__(self):
         # Player types

@@ -49,6 +49,6 @@ class SimulationResult:
         }
     
     # To connect to training for RL
-    def to_experiences(self):
-        builder = ExperienceDatasetBuilder(self)
+    def to_experiences(self, config):
+        builder = ExperienceDatasetBuilder(self, config)
         return builder.build()

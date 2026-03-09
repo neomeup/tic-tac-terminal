@@ -15,7 +15,7 @@ Puns: Tic-tac Terminated, tty1 - tic tac your terminal
 '''
 
 from config import GameConfig
-from simulation.engine import SimulationEngine
+from simulation.sim_engine import SimulationEngine
 from runtime.cli_runtime import CLIRuntime
 
 config = GameConfig()
@@ -39,7 +39,7 @@ def run_headless(config):
         print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
         print("--------")
     
-    experiences = result.to_experiences()
+    experiences = result.to_experiences(config)
 
     # For offline observe experiences
     #### To be changed/modified once trainer is introduced for offline so that you have a single agent persistance

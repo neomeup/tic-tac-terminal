@@ -2,18 +2,32 @@
 For offline use with simulation result
 '''
 
+
 from simulation.training.experience import Experience
 
-from simulation.training.encoders.action_encoder import encode_action
-# Should be registerized as encode board currently builds 4 shapes of (3,3), (9,), (2,3,3) and (18,)
-# Currently just returns the (9,)
-from simulation.training.encoders.board_encoder import encode_board
+from simulation.training.encoding.encoders.action_encoder import encode_action
+
+from simulation.training.encoding.encoder_registry import encoder_registry
 
 
 class ExperienceDatasetBuilder:
 
-    def __init__(self, simulation_result):
+    def __init__(self, simulation_result, config):
         self.result = simulation_result
+        self.config = config
+
+        encoder_class = encoder_registry[self.config.state_encoding_dim_type]
+        self.encoder = encoder_class()
+
+    # Helper function for encoding
+    def _encode_board(self, board_state, player_id):
+
+        flat, matrix = self.encoder.compute_encode(board_state, player_id)
+
+        if self.config.state_encoding_flattened:
+            return flat
+        else: 
+            return matrix
 
     def build(self):
         experiences = []
@@ -29,8 +43,8 @@ class ExperienceDatasetBuilder:
 
                 player_id = current_move["player_id"]
 
-                state = encode_board(current_move["board_state"], player_id)
-                next_state = encode_board(next_move["board_state"], player_id)
+                state = self._encode_board(current_move["board_state"], player_id)
+                next_state = self._encode_board(next_move["board_state"], player_id)
 
                 board_size = len(current_move["board_state"])
                 action = encode_action(current_move["action"], board_size)
@@ -39,7 +53,7 @@ class ExperienceDatasetBuilder:
                 reward = 0.0
 
                 # Terminal reward logic 
-                if i == len(moves) - 2:
+                if i == len(moves) - 2: # if last transition
                     done = True
 
                     if run.draw:

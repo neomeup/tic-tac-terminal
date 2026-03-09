@@ -14,10 +14,10 @@ from simulation.rewards.reward_registry import reward_registry
 
 
 
-# Should be registerized as encode board currently builds 4 shapes of (3,3), (9,), (2,3,3) and (18,)
-# Currently just returns the (9,)
-from simulation.training.encoders.board_encoder import encode_board
-from simulation.training.encoders.action_encoder import encode_action
+from simulation.training.encoding.encoder_registry import encoder_registry
+
+# Probably leave unregisterized - if you need better action encoding, just change encode action
+from simulation.training.encoding.encoders.action_encoder import encode_action
 
 
 class SimulationEngine:
@@ -34,6 +34,19 @@ class SimulationEngine:
 
         reward_class = reward_registry[self.config.reward_type]
         self.reward_engine = reward_class()
+
+        encoder_class = encoder_registry[self.config.state_encoding_dim_type]
+        self.encoder = encoder_class()
+
+    # Helper function for encoding
+    def _encode_board(self, board_state, player_id):
+
+        flat, matrix = self.encoder.compute_encode(board_state, player_id)
+
+        if self.config.state_encoding_flattened:
+            return flat
+        else: 
+            return matrix
 
     # Public Methods
     def run(self) -> SimulationResult:
@@ -139,7 +152,7 @@ class SimulationEngine:
             elif draw:
                 state.is_finished = True
 
-            reward = self.reward_engine.compute(
+            reward = self.reward_engine.compute_reward(
                 player_id=move.player_id,
                 winner=winner,
                 draw=draw,
@@ -162,8 +175,8 @@ class SimulationEngine:
 
                 board_size = len(previous_state)
 
-                encoded_state = encode_board(previous_state, move.player_id)
-                encoded_next_state = encode_board(next_state, move.player_id)
+                encoded_state = self._encode_board(previous_state, move.player_id)
+                encoded_next_state = self._encode_board(next_state, move.player_id)
 
                 encoded_action = encode_action(
                     {"row": move.target_row, "col": move.target_col},
@@ -205,7 +218,7 @@ class SimulationEngine:
                         if loser_agent is None:
                             continue
 
-                        loser_state = encode_board(next_state, player_id)
+                        loser_state = self._encode_board(next_state, player_id)
 
                         loser_agent.observe_transition(
                             state=loser_state,
