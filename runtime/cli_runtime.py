@@ -1,3 +1,13 @@
+'''
+CLI runtime engine for Tic-Tac-Toe.
+
+Manages:
+- Game loop and multiple games
+- Human and computer turns
+- Board rendering
+- Terminal input handling
+'''
+
 import curses
 import time
 import random

@@ -1,6 +1,12 @@
 '''
-renderer should handle only the curses rendering of game screen, win screen, and draw screen.
--- all future rendered screens should be located here
+Renders the Tic-Tac-Toe board and game messages in the CLI.
+
+Handles:
+- Board display
+- Game won/draw messages
+- Terminal colors and formatting
+
+Supports two player format only
 '''
 
 import curses
