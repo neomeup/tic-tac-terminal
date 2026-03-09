@@ -18,6 +18,12 @@ class GameConfig:
 
     # Game type indicator
     rule_set: str = "standard" # registerized in game_types/rules_registry
+    '''
+    - individually should be used as win/draw verification
+    - logic ties to apply_move which checks for a valid move thus this should be changed if play rules change i.e. captures
+    '''
+
+
     # Piece type
     piece_type: str = "standard_x-o" # Could be registerized if you want multiple piece types - would be tied to rules
 

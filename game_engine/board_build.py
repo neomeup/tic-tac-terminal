@@ -1,11 +1,14 @@
-## Build a grid that can be used interchangably with all game modes
+'''
+Function to create starting board for Tic-Tac-Toe style games (squares with no starting pieces)
+
+Supports variable board sizes through config
+'''
+
 def build_starting_board(size) -> list :
-    # initial board positions creation
     board_lst = []
     for x in range(size):
         board_lst.append(list(range(size)))
 
-    # Initial board ownership defined 
     for x in board_lst:
         for b in x:
             item = None

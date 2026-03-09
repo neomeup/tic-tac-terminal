@@ -1,3 +1,10 @@
+'''
+Function to apply a move to the game board.
+
+Handles basic validation and updating of board state.
+Passes the board state and either a valid or invalid change flag.
+'''
+
 from core.piece import Piece
 from core.move import Move
 
