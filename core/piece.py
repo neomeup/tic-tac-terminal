@@ -1,3 +1,8 @@
+'''
+Represents a game piece on the board.
+
+Tracks ownership and other piece-specific properties.
+'''
 from dataclasses import dataclass
 
 @dataclass

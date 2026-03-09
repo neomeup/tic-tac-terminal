@@ -1,3 +1,9 @@
+'''
+Utility functions for serializing the game board.
+
+Used for logging and passed through to GameRunContext as board state
+'''
+
 def serialize_board(board):
     return [
         [

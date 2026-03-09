@@ -1,3 +1,21 @@
+'''
+Logs game metadata and moves during a single run.
+
+Provides:
+- Move logging
+- Player registration
+- Game finalization
+
+Used by simulation/result in:
+in __init__ as runs
+
+simulation/sim_engine in:
+_initialize_run_context - to initialize context and add player data
+_run_single_game - logs first move
+_step - to log all following moves
+
+'''
+
 import uuid
 from datetime import datetime
 
