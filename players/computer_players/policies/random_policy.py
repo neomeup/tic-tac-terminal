@@ -1,5 +1,7 @@
 '''
-Random move algorithm for a computer player
+Random move policy for AI players.
+
+Selects a valid move at random.
 '''
 from core.move import Move
 from players.computer_players.policies.base_policy import BasePolicy

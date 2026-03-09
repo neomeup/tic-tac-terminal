@@ -1,5 +1,5 @@
 '''
-Registry for the different algorithms 
+Registry mapping type name to policy classes.
 '''
 
 from players.computer_players.policies.random_policy import RandomPolicy

@@ -1,3 +1,11 @@
+'''
+Simple RL policy stub for testing agent training.
+
+Uses fixed or basic decision logic for moves.
+
+Can be used as a template for more advanced learning and contains debugs for pipeline issues.
+'''
+
 from core.move import Move
 from players.computer_players.policies.base_policy import BasePolicy
 

@@ -1,5 +1,5 @@
 '''
-Computer movement middle man for main and registry
+Wrapper between computer player moves and main game logic.
 '''
 
 from players.computer_players.agent_registry import agent_registry

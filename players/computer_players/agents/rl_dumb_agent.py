@@ -1,3 +1,11 @@
+'''
+Simple reinforcement learning agent for testing.
+
+Holds policy and replay buffer for offline or online training.
+
+Can be used as a template for more advanced learning and contains debugs for pipeline issues.
+'''
+
 import numpy as np
 
 from players.computer_players.model_policy_registry import model_policy_registry
