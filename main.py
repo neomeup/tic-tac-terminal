@@ -1,17 +1,11 @@
 '''
-This is a tic tac toe in CLI game that allows to take turns starting with "O" or "X" and replacing the empty character "-"
-The board will update after moves and declare a winner/loser or a draw once a win or draw condition is met.
+Entry point
 
-You can play human vs human, human vs computer or computer vs computer.
-
-For computer vs computer play, you have the option to run a headless simulation.
-
-All control variables are set through config and you can find the different options/names for #registerized components in
-their corresponding registries.
-
-Have fun and happy learning!
-
-Puns: Tic-tac Terminated, tty1 - tic tac your terminal
+Supports both CLI and headless modes. Handles:
+- Game configuration
+- Runtime selection (CLI vs headless simulation)
+- Offline and online reinforcement learning
+- Integration with agents, rules, and rewards
 '''
 
 from config import GameConfig

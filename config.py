@@ -1,52 +1,51 @@
+'''
+Defines global configuration for the Tic-Tac-Toe game.
+
+'''
+
 from dataclasses import dataclass
 
 @dataclass
 class GameConfig:
-    # Board size
-    board_size: int = 3
+    board_size: int = 3 # Board size
 
-
-    # Character for renders
+    # Character for renders, can be any single character
     x_char: str = "X"
     o_char: str = "O"
     empty_char: str = "-"
-    # Win length Tic-tac-toe/standard rule sets
-    win_length: int = 3 # Used for simple wins i.e. tic-tac-toe style
 
+    win_length: int = 3 # Win length Tic-tac-toe/standard rule set
 
     # Game type indicator
-    rule_set: str = "standard" # registerized
+    rule_set: str = "standard" # registerized in game_types/rules_registry
     # Piece type
     piece_type: str = "standard_x-o" # Could be registerized if you want multiple piece types - would be tied to rules
 
 
-    # Start conditions for movement
-    random_start: bool = True
-    # Random Seed Config
-    random_seed: int | None = None
+    random_start: bool = True # Start conditions for movement
+    random_seed: int | None = None # Random Seed Config
+    
+    render: bool = False # Optional render flag
+    render_type: str = "cli" # Could be registerized if you want multiple render types and is currently hardcoded to render options in main
 
-
-    # Optional render flag
-    render: bool = False
-    render_type: str = "cli" # Could be registerized if you want multiple render types
-    # Games to be played in simulation mode
-    how_many_games: int = 1
-
-
-
-    # Online training within SimEngine bools
+    # Training Enablement
     online_training_enabled: bool = True
     offline_training_enabled: bool = True
+
+    # Games to be played in simulation mode
+    how_many_games: int = 1
     
-    offline_agent: str = "rl_dumb_agent"
-    offline_reward_type: str = "standard"
-
-    online_reward_type: str = "standard" #registerized
+    state_encoding_dim_type: str = "tensor_with_empty" # registerized in simulation/training/encoding/encoder_registry
     state_encoding_flattened: bool = True # interacts with dim type to provide a flat version of the selected type
-    state_encoding_dim_type: str = "tensor_with_empty" # registerized
-
+    
+    # Offline training agent/reward types
+    offline_agent: str = "rl_dumb_agent" # registerized in players/computer_players/agent_registry
+    offline_reward_type: str = "standard" # registerized in simulation/rewards/reward_registry
+    
+    # Online training and player type list - player types must be config'd for all games even without training
+    online_reward_type: str = "standard" # registerized in simulation/rewards/reward_registry
     def __post_init__(self):
-        # Player types
-        self.player_types: list = ["computer", "computer"] #registerized
-        self.model_type: list = ["rl_dumb_policy", "random_policy"] #registerized
-        self.agent_type: list = ["rl_dumb_agent", "random_agent"] # registerized
+        self.player_types: list = ["computer", "computer"] # Options human or computer
+        # If computer player type please input policy and agent type
+        self.model_type: list = ["rl_dumb_policy", "random_policy"] #registerized in players/computer_players/model_policy_registry
+        self.agent_type: list = ["rl_dumb_agent", "random_agent"] # registerized in players/computer_players/agent_registry
