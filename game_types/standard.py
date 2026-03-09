@@ -1,13 +1,19 @@
-## Determine is game is over - based on tic-tac-toe style gameplay
+'''
+Standard Tic-Tac-Toe rule implementation.
+
+Checks:
+- Win conditions
+- Draw conditions
+- Returns flags (won, winner, draw)
+'''
+
 def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, bool]:
     
-    ##  All returns in following format -> won_game, winning_player, drawn_game
     win_length = config.win_length
     size = config.board_size
     total_players = len(config.player_types)
 
     # Win helper
-    # Helper function using win length to determine consecutive cells
     def consecutive_cells(cells_to_check: list, player_index: int, win_length: int) -> bool:
         cell_count = 0
         for cell in cells_to_check:
@@ -20,7 +26,6 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
         return False
     
     # Stalemate helper
-    # Helper function to return True if player could win the cells being checked
     def possible_line(cells_to_check: list, player_index: int, win_length: int):
         count = 0
         for cell in cells_to_check:
@@ -32,12 +37,12 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
                 count = 0
         return False
 
+
     def build_rows(board_lst) -> list:
         row_lst = []
         for row in board_lst:
             row_lst.append(row)
         return row_lst
-
 
     def build_columns(board_lst) -> list:
         column_lst = []
@@ -46,10 +51,8 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
             column_lst.append(column)
         return column_lst
     
-
     def build_diagonals(board_lst) -> list:
         diagonal_lst = []
-        # Moving row-wise
         for diag_index in range(size):
             diagonal_rows = []
             row = 0
@@ -60,8 +63,7 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
                 column += 1
             diagonal_lst.append(diagonal_rows)
 
-        # Move column wise
-        for diag_index in range(1, size): # Readability - possible to start at 1 due to initial diagonal already being checked in row-wise
+        for diag_index in range(1, size):
             diagonal_columns = []
             row = diag_index
             column = 0
@@ -71,7 +73,6 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
                 column += 1
             diagonal_lst.append(diagonal_columns)
             
-        # Move row wise
         for anti_diag_index in range(size - 1, 0, -1):
             anti_diagonal_rows = []
             row = 0
@@ -82,7 +83,6 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
                 column -= 1
             diagonal_lst.append(anti_diagonal_rows)
             
-        # Move column wise
         for anti_diag_index in range(1, size):
             anti_diagonal_columns = []
             row = anti_diag_index
@@ -94,6 +94,7 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
             diagonal_lst.append(anti_diagonal_columns)
         
         return diagonal_lst
+
 
 
     rows = build_rows(board_lst)
@@ -115,4 +116,4 @@ def standard_rules(config, board_lst: list[list]) -> tuple[bool, int | None, boo
                 return False, None, False    
     
 
-    return False, None, True # Returns a drawn game running state if no wins or possible wins are detected
+    return False, None, True

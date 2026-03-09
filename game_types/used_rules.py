@@ -1,5 +1,5 @@
 '''
-Computer movement middle man for main and registry
+Wrapper for accessing registered game rules.
 '''
 
 from game_types.rules_registry import rule_registry
