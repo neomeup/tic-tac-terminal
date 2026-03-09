@@ -448,7 +448,21 @@ Expansions:
 * Self-play training
 
 ---
+License
 
-# License
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
 
-MIT License
+This means:
+
+* You may use, modify, and distribute this software.
+
+* If you distribute modified versions, you must also release the source code.
+
+* If you run modified versions as a network service, you must make the source code available to users of that service.
+
+See the LICENSE file for the full license text.
+
+If you modify this software and run it as a network service,
+you must make the source code of your modified version available.
+
+Copyright (C) 2026 Neal (Neomeup)
