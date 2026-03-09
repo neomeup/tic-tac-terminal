@@ -13,6 +13,28 @@ The project separates **game logic, players, rendering, simulation, and training
 
 ---
 
+# Design Philosophy
+
+The system follows several design principles:
+
+### Separation of Concerns
+
+Game logic, simulation, training, and UI are separated.
+
+### Registry-Driven Architecture
+
+Rules, rewards, encoders, and policies are dynamically selected.
+
+### Simulation-First Design
+
+The engine supports:
+
+* gameplay
+* large scale simulations
+* ML training pipelines
+
+---
+
 # Features
 
 ## Easy config control
@@ -67,11 +89,6 @@ Controls (default):
 
 ---
 
-# Project Architecture
-
-
----
-
 # System Flow
 
 ## Runtime Game Flow
@@ -120,7 +137,7 @@ E --> F[Agent Policy Chooses Move]
 
 F --> G[Apply Move]
 
-G --> H[Check Game Rules]
+G --> H[Check Game Rules/Game Over]
 
 H --> I[Compute Reward]
 
@@ -130,6 +147,7 @@ J --> K[Replay Buffer]
 
 K --> L[Agent Train Step]
 
+L -->|Continue| E
 H -->|Game End| M[Store Run Result]
 
 M --> N[Dataset Builder]
@@ -416,28 +434,6 @@ simulation/training/encoding/encoders
 ```
 encoder_registry.py
 ```
-
----
-
-# Design Philosophy
-
-The system follows several design principles:
-
-### Separation of Concerns
-
-Game logic, simulation, training, and UI are separated.
-
-### Registry-Driven Architecture
-
-Rules, rewards, encoders, and policies are dynamically selected.
-
-### Simulation-First Design
-
-The engine supports:
-
-* gameplay
-* large scale simulations
-* ML training pipelines
 
 ---
 
