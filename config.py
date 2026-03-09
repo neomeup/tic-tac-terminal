@@ -33,7 +33,7 @@ class GameConfig:
     
     render: bool = False # Optional render flag
     render_type: str = "cli" # Registerized in players/human_players/regsitry for selected type of movement for human players
-    ## render_type is hardcoded for renderring.  If additional render types are built, this should be changed
+    ## render_type is hardcoded for renderring in main.  If additional render types are built, this should be changed
     ## again, render_type is tied to movement for human players as well though
 
     # Training Enablement
