@@ -42,7 +42,7 @@ class GameConfig:
 
     reward_type: str = "standard" #registerized
     state_encoding_flattened: bool = False # interacts with dim type to provide a flat version of the selected type
-    state_encoding_dim_type: str = "vector" # registerized
+    state_encoding_dim_type: str = "tensor_players" # registerized
 
     def __post_init__(self):
         # Player types

@@ -36,7 +36,7 @@ class SimulationEngine:
         self.reward_engine = reward_class()
 
         encoder_class = encoder_registry[self.config.state_encoding_dim_type]
-        self.encoder = encoder_class()
+        self.encoder = encoder_class(self.config)
 
     # Helper function for encoding
     def _encode_board(self, board_state, player_id):
