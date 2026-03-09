@@ -4,9 +4,9 @@ For offline use with simulation result
 
 
 from simulation.training.experience import Experience
+from simulation.rewards.reward_registry import reward_registry
 
 from simulation.training.encoding.encoders.action_encoder import encode_action
-
 from simulation.training.encoding.encoder_registry import encoder_registry
 
 
@@ -19,13 +19,16 @@ class ExperienceDatasetBuilder:
         encoder_class = encoder_registry[self.config.state_encoding_dim_type]
         self.encoder = encoder_class(self.config)
 
+        reward_class = reward_registry[self.config.offline_reward_type]
+        self.reward_engine = reward_class()
+
     # Helper function for encoding
     def _encode_board(self, board_state, player_id):
 
         matrix = self.encoder.compute_encode(board_state, player_id)
 
         if self.config.state_encoding_flattened:
-            return matrix.flatten()
+            return matrix.ravel()
         else: 
             return matrix
 
@@ -50,18 +53,17 @@ class ExperienceDatasetBuilder:
                 action = encode_action(current_move["action"], board_size)
 
                 done = False
-                reward = 0.0
-
-                # Terminal reward logic 
+                # Terminal reward logic
                 if i == len(moves) - 2: # if last transition
                     done = True
 
-                    if run.draw:
-                        reward = 0.0
-                    elif run.winner == current_move["player_id"]:
-                        reward = 1.0
-                    else:
-                        reward = -1.0
+                reward = self.reward_engine.compute_reward(
+                    player_id=current_move["player_id"],
+                    winner=run.winner,
+                    draw=run.draw,
+                    board_state=current_move["board_state"],
+                    move=current_move["action"]
+                )
 
                 experiences.append(
                     Experience(

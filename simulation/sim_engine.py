@@ -32,7 +32,7 @@ class SimulationEngine:
         else:
             self.rng = random.Random()
 
-        reward_class = reward_registry[self.config.reward_type]
+        reward_class = reward_registry[self.config.online_reward_type]
         self.reward_engine = reward_class()
 
         encoder_class = encoder_registry[self.config.state_encoding_dim_type]
@@ -44,7 +44,7 @@ class SimulationEngine:
         matrix = self.encoder.compute_encode(board_state, player_id)
 
         if self.config.state_encoding_flattened:
-            return matrix.flatten()
+            return matrix.ravel()
         else: 
             return matrix
 

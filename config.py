@@ -39,8 +39,9 @@ class GameConfig:
     offline_training_enabled: bool = True
     
     offline_agent: str = "rl_dumb_agent"
+    offline_reward_type: str = "standard"
 
-    reward_type: str = "standard" #registerized
+    online_reward_type: str = "standard" #registerized
     state_encoding_flattened: bool = True # interacts with dim type to provide a flat version of the selected type
     state_encoding_dim_type: str = "tensor_with_empty" # registerized
 
