@@ -1,3 +1,9 @@
+'''
+Main simulation entry point.
+
+Simulation engine to run multiple Tic-Tac-Toe games programmatically.
+'''
+
 import random
 
 from core.game_state import GameState

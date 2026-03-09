@@ -1,3 +1,7 @@
+'''
+Holds simulation results and provides utility methods.
+'''
+
 from core.run_context import GameRunContext
 from simulation.training.dataset import ExperienceDatasetBuilder
 

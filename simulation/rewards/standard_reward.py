@@ -1,3 +1,12 @@
+'''
+Basic reward function.
+
+- +1 for win
+- 0 for draw
+- -1 for loss
+'''
+
+
 from simulation.rewards.base_reward import BaseReward
 
 class StandardReward(BaseReward):
