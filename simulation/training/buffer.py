@@ -1,5 +1,8 @@
-import random
+'''
+Replay buffer for storing RL experiences.
+'''
 
+import random
 
 class ReplayBuffer:
 

@@ -1,5 +1,5 @@
 '''
-Simple encoder to turn move objects into integers
+Simple encoder to turn move objects into integers actions
 '''
 
 def encode_action(move, board_size):

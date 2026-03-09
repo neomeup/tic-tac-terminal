@@ -1,5 +1,8 @@
 '''
-For offline use with simulation result
+Builds RL experience datasets from simulation results.
+
+Handles encoding of states and actions, reward calculation,
+and Experience object creation for offline training.
 '''
 
 

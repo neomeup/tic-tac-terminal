@@ -1,3 +1,12 @@
+'''
+Encodes board as a tensor with one channel per player.
+
+Each channel indicates cell occupancy by that player.
+
+- 1 occupied
+- 0 unoccupied
+'''
+
 import numpy as np
 from simulation.training.encoding.base_encoder import BaseEncoder
 

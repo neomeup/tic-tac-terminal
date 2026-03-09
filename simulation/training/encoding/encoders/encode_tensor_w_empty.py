@@ -1,3 +1,14 @@
+'''
+Encodes board as a tensor including a channel for empty cells.
+
+Tensor shape: (number of players + 1, board_size, board_size)
+
+- 1 occupied
+- 0 unoccupied
+
+Note for the empty cell channel 1 will indicated an occupied empty cell whereas 0 a cell unoccupied by the 'empty' player
+'''
+
 import numpy as np
 from simulation.training.encoding.base_encoder import BaseEncoder
 

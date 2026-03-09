@@ -1,6 +1,9 @@
+'''
+Defines Experience dataclass for RL agents.
+'''
+
 from dataclasses import dataclass
 from typing import Any
-
 
 @dataclass
 class Experience:

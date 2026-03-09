@@ -1,3 +1,11 @@
+'''
+Encodes board as a 2D vector.
+
+- 1 for current player's cells
+- -1 for opponent's cells
+- 0 for empty cells
+'''
+
 import numpy as np
 from simulation.training.encoding.base_encoder import BaseEncoder
 

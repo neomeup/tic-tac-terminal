@@ -1,3 +1,9 @@
+'''
+Base class for board state encoders.
+
+Requires derived classes to implement compute_encode.
+'''
+
 class BaseEncoder:
     
     def __init__(self, config):
