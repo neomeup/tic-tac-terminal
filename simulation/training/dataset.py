@@ -22,10 +22,10 @@ class ExperienceDatasetBuilder:
     # Helper function for encoding
     def _encode_board(self, board_state, player_id):
 
-        flat, matrix = self.encoder.compute_encode(board_state, player_id)
+        matrix = self.encoder.compute_encode(board_state, player_id)
 
         if self.config.state_encoding_flattened:
-            return flat
+            return matrix.flatten()
         else: 
             return matrix
 

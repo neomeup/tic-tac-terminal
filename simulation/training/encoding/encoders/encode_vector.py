@@ -23,4 +23,4 @@ class VectorEncode(BaseEncoder):
                 elif cell["owner"] != player_id: 
                     vector[row][col] = -1
 
-        return vector.flatten(), vector
+        return vector

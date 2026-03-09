@@ -23,4 +23,4 @@ class TensorPlayersEncode(BaseEncoder):
                     elif cell["owner"] == x:
                         tensor_players[x][row][col] = 1
 
-        return tensor_players.flatten(), tensor_players
+        return tensor_players

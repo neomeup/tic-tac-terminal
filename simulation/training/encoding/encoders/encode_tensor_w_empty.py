@@ -29,4 +29,4 @@ class TensorPlayersWithEmptyEncode(BaseEncoder):
                     else: 
                         tensor_w_empty[x][row][col] = 0
 
-        return tensor_w_empty.flatten(), tensor_w_empty
+        return tensor_w_empty
