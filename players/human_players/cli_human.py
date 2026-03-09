@@ -1,5 +1,7 @@
 '''
-Movement for human players 
+Command-line human player input handler.
+
+Processes keyboard movement and selection for CLI games. 
 '''
 
 from curses import KEY_UP, KEY_DOWN, KEY_LEFT, KEY_RIGHT 
@@ -10,31 +12,31 @@ def get_cli_move(key, current_player_index, player_position: list, size: int) ->
     player_id = current_player_index
 
     ## Player 1 movement (wasd)
-    if key == ord("w"): #key up
-        if player_id == 0: # Isolate movement by player turn for player 1
+    if key == ord("w"):
+        if player_id == 0:
             player_position[0] = max((0, player_position[0] - 1))
-    elif key == ord("s"): #key down
+    elif key == ord("s"):
         if player_id == 0:
             player_position[0] = min(((size-1), player_position[0] + 1))
-    elif key == ord("a"): #key left
+    elif key == ord("a"):
         if player_id == 0:
             player_position[1] = max((0, player_position[1] - 1))
-    elif key == ord("d"): #key right
+    elif key == ord("d"):
         if player_id == 0:
             player_position[1] = min(((size-1), player_position[1] + 1))
 
 
     ## Player 2 movement (arrows)
-    elif key == KEY_UP: #key up
-        if player_id == 1: # Isolate movement by player turn for player 2
+    elif key == KEY_UP:
+        if player_id == 1:
             player_position[0] = max((0, player_position[0] - 1))
-    elif key == KEY_DOWN: #key down
+    elif key == KEY_DOWN:
         if player_id == 1:
             player_position[0] = min(((size-1), player_position[0] + 1))
-    elif key == KEY_LEFT: #key left
+    elif key == KEY_LEFT:
         if player_id == 1:
             player_position[1] = max((0, player_position[1] - 1))
-    elif key == KEY_RIGHT: #key right
+    elif key == KEY_RIGHT:
         if player_id == 1:
             player_position[1] = min(((size-1), player_position[1] + 1))
 
