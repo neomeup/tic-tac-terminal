@@ -204,7 +204,7 @@ class SimulationEngine:
             context.log_move(
                 turn_number=state.turn_number,
                 player_id=move.player_id,
-                board_state=serialize_board(state.board),
+                board_state=next_state,
                 action={
                     "row": move.target_row,
                     "col": move.target_col
