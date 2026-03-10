@@ -440,7 +440,7 @@ Each database can be independently optimized or scaled.
 
 # Future Extensions
 
-This module will later support:
+This module could later support:
 
 * experiment tracking
 * training dataset management
@@ -448,6 +448,6 @@ This module will later support:
 * replay data visualization
 * distributed simulation pipelines
 
-These features will build upon the persistence abstractions defined here.
+These features should build upon the persistence abstractions defined here.
 
 ---
