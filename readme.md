@@ -58,6 +58,8 @@ The engine supports:
 
 Requires **Python 3.12** (You can try other python versions but they have not been tested)
 
+Local installation
+
 bash
 git clone <repo>
 cd tic_tac_term
@@ -67,6 +69,12 @@ source venv/bin/activate
 
 pip install -r requirements.txt
 
+### Persistence
+
+You can experiment locally with the core of the system without any additional work and the only true requirement is numpy.
+The engine itself does not require a database connection but you will not have any persistent data. 
+
+Please see the persistence directory readme for information about persistence.
 
 ---
 
