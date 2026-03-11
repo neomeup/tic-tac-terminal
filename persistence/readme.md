@@ -315,8 +315,9 @@ Conceptual schemas:
 | ----------------- | ----------------------- | -------------- |
 | id                | Serial Primary Key      | int            |
 | game_id           | Integer (FK games.id)   | int            |
-| turn_number       | Integer                 | int            |
 | player_id         | Integer (FK players.id) | int            |
+| player_id_in_game | Integer                 | int            |
+| turn_number       | Integer                 | int            |
 | row               | Integer                 | int            |
 | col               | Integer                 | int            |
 | reward            | Float                   | float          |
@@ -354,13 +355,12 @@ Example document:
 
   "encoder": "vector",
   "flat_encoding": true,
-  "encoding_shape": [9],
 
   "experiences": [
     {
         "turn": 0,
         "state": [...], (Possible nested structure)
-        "action": 4,
+        "action": ["row": 0, "col": 2]
         "reward": 1,
         "next_state": [...], (Possible nested structure)
         "done": false,

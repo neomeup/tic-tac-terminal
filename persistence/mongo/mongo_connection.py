@@ -1,6 +1,7 @@
 '''
-Handles creation of MongoDB client and exposes collections
-and returns the Mongo collection used for RL experiences.
+Handles creation of MongoDB client.  
+
+Exposes and returns the Mongo collection used for RL experiences.
 '''
 
 
@@ -18,7 +19,7 @@ class MongoConnection:
         mongo_uri = os.getenv("MONGO_URI")
         mongo_db = os.getenv("MONGO_DB")
 
-        self.client = MongoClient(mongo_uri)
+        self.client = MongoClient(mongo_uri, serverSelectionTimeoutMS=5000)
         self.db = self.client[mongo_db]
 
     def get_simulation_experiences(self) -> Collection:

@@ -58,7 +58,10 @@ class SimulationEngine:
 
         for _game_index in range(self.config.how_many_games):
             context = self._run_single_game()
-            print("------------")
+
+            # debug spacing for games in a sim
+            print("-----online game finished-----")
+            
             game_history.append(context)
 
         return SimulationResult(game_history)
@@ -78,7 +81,8 @@ class SimulationEngine:
             reward=None
         )
 
-        print("Starting player:", state.current_player_id) # Debug random_seed
+        # Debug random_seed
+        print("Starting player:", state.current_player_id)
 
         while not state.is_finished:
             self._step(state, context)
@@ -112,7 +116,7 @@ class SimulationEngine:
             context.register_player(
                 player_id=player_id,
                 player_type=player_type,
-                model_version=self.config.model_type[player_id]
+                model_version=self.config.policy_type[player_id]
             )
 
         return context
@@ -169,6 +173,7 @@ class SimulationEngine:
             if self.config.online_training_enabled:
                 agent = get_agent(move.player_id, self.config)
 
+                # debug online training
                 print(
                     "RL TRANSITION:",
                     "Player:", move.player_id,

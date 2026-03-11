@@ -6,7 +6,7 @@ class ExperienceStep(TypedDict):
     turn: int
 
     state: list[list[dict[str, Any] | None]]
-    action: int
+    action: dict[str, int]
     reward: float
     next_state: list[list[dict[str, Any] | None]]
     done: bool
@@ -28,7 +28,6 @@ class SimulationExperienceDocument(TypedDict):
 
     encoder: str
     flat_encoding: bool
-    encoding_shape: list[int]
 
     experiences: list[ExperienceStep]
 

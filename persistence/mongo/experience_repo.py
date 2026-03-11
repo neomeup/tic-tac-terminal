@@ -1,12 +1,17 @@
 '''
 Handles persistence of RL experience documents.
+
+Contains functions used to either insert of fetch data to or from the mongo database.
+
+Expansions:
+- possible index initialization
+- creation of function which use indecies 
 '''
 
 
 from pymongo.collection import Collection
 
 from datetime import datetime
-from typing import List
 
 from persistence.mongo.mongo_connection import MongoConnection
 from persistence.mongo.base_collection import SimulationExperienceDocument
@@ -29,7 +34,7 @@ class ExperienceRepository:
 
         return str(result.inserted_id)
 
-    def insert_many(self, documents: List[SimulationExperienceDocument]):
+    def insert_many(self, documents: list[SimulationExperienceDocument]):
 
 
         # Bulk insert for faster dataset writing.

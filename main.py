@@ -49,6 +49,25 @@ def run_headless(config):
 
         print("Total Experiences:", len(experiences))
 
+    if config.mongo_logging_enabled:
+
+        from persistence.mongo.document_builder import build_experience_document
+        from persistence.run_logger import RunLogger
+
+        logger = RunLogger()
+
+        sim_id = 1 # Placeholder
+        documents = []
+        for game_index, game in enumerate(result.runs):
+            document = build_experience_document(game, sim_id, game_index, config)
+            documents.append(document)
+        
+        try:
+            logger.exp_repo.insert_many(documents)
+        except Exception as e:
+            print(documents)
+            print("Mongo logging failed:", e)
+
     return result
 
 

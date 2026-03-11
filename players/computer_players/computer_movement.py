@@ -14,7 +14,7 @@ def get_agent(player_id, config):
     if player_id not in _agents:
 
         agent_name = config.agent_type[player_id]
-        policy_name = config.model_type[player_id]
+        policy_name = config.policy_type[player_id]
 
         agent_class = agent_registry[agent_name]
 

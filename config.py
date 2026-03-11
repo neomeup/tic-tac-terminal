@@ -36,6 +36,10 @@ class GameConfig:
     ## render_type is hardcoded for renderring in main.  If additional render types are built, this should be changed
     ## again, render_type is tied to movement for human players as well though
 
+    # Persistence
+    mongo_logging_enabled: bool = True
+
+
     # Training Enablement
     online_training_enabled: bool = True
     offline_training_enabled: bool = True
@@ -56,5 +60,5 @@ class GameConfig:
         self.player_types: list = ["computer", "computer"] # Options human or computer
 
         # If computer player type please input policy and agent type
-        self.model_type: list = ["rl_dumb_policy", "random_policy"] #registerized in players/computer_players/model_policy_registry
+        self.policy_type: list = ["rl_dumb_policy", "random_policy"] #registerized in players/computer_players/model_policy_registry
         self.agent_type: list = ["rl_dumb_agent", "random_agent"] # registerized in players/computer_players/agent_registry
