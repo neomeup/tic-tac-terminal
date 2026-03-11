@@ -55,6 +55,11 @@ This persistence layer acts as a **boundary between the game/simulation systems 
 The rest of the codebase does not directly interact with databases; instead it interacts with repository classes defined here.
 The data is then pushed to the corresponding database from the connection files.
 
+## Limitations
+
+The major limitation of this database structure is that is will only hold data for 2 player simulations.  If you use the sim_engine with
+more than 2 players, you cannot use the database to track these runs. 
+
 ---
 
 # Architecture Overview
@@ -300,7 +305,6 @@ Conceptual schemas:
 | finished_at       | Timestamp                | datetime    |
 | player_one_id     | Integer (FK players.id)  | int         |
 | player_two_id     | Integer (FK players.id)  | int         |
-| player_n_id       | Integer (FK players.id)  | int         |
 
 * If is_draw is true, winner_player_id = None
 
@@ -316,7 +320,7 @@ Conceptual schemas:
 | row               | Integer                 | int            |
 | col               | Integer                 | int            |
 | reward            | Float                   | float          |
-| board_state_json  | JSONB                   | list[list[]]     |
+| board_state_json  | JSONB                   | list[list[]]   |
 
 
 
@@ -447,6 +451,7 @@ This module could later support:
 * model performance metrics
 * replay data visualization
 * distributed simulation pipelines
+* implementation of more than 2 player persistence
 
 These features should build upon the persistence abstractions defined here.
 
