@@ -19,9 +19,7 @@ from players.computer_players.computer_movement import get_computer_move, get_ag
 from simulation.rewards.reward_registry import reward_registry
 
 
-
 from simulation.training.encoding.encoder_registry import encoder_registry
-
 # Probably leave unregisterized - if you need better action encoding, just change encode action
 from simulation.training.encoding.encoders.action_encoder import encode_action
 
