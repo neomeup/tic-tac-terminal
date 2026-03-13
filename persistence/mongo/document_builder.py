@@ -26,10 +26,10 @@ def build_experience_document(context, simulation_run_id: int, game_id: int, con
             "done": next_move.get("done", False),
 
             "policy": config.policy_type[current_move["player_id"]],
-            "policy_version": "v1",
+            "policy_version": "v1", # Placeholder for future versioning
 
             "agent": config.agent_type[current_move["player_id"]],
-            "agent_version": "v1",
+            "agent_version": "v1", # Placeholder for future versioning
 
             "exploration_rate": .5,  ## Placeholder for a future config.exploration_rate variable
             "action_source": "policy"
