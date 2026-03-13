@@ -1,12 +1,25 @@
+from config import GameConfig
 
-from persistence.mongo.experience_repo import ExperienceRepository
+config = GameConfig
+
+if config.mongo_logging_enabled:
+    from persistence.mongo.experience_repo import ExperienceRepository
+
+if config.postgres_logging_enabled:
+    from persistence.postgres.simulation_repo import SimulationRepository
+    from persistence.postgres.game_moves_repo import GameRepository
+    from persistence.postgres.players_repo import PlayersRepository
 
 class RunLogger:
 
     def __init__(self):
 
-        self.exp_repo = ExperienceRepository()
-    
-    def log_experiences(self, experience_document):
+        # Mongo
+        if config.mongo_logging_enabled:
+            self.exp_repo = ExperienceRepository()
 
-        self.exp_repo.insert_game_experience(experience_document)
+        # Postgres
+        if config.postgres_logging_enabled:
+            self.sim_repo = SimulationRepository()
+            self.player_repo = PlayersRepository()
+            self.game_repo = GameRepository()

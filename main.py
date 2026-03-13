@@ -54,7 +54,6 @@ def run_headless(config):
         from persistence.mongo.document_builder import build_experience_document
         from persistence.run_logger import RunLogger
 
-        logger = RunLogger()
 
         sim_id = 1 # Placeholder
         documents = []
@@ -63,11 +62,35 @@ def run_headless(config):
             documents.append(document)
         
         try:
+            logger = RunLogger()
             logger.exp_repo.insert_many(documents)
         except Exception as e:
             print("-----mongo to storage-----")
             print(documents,"\n")
             print("\nMongo logging failed:", e)
+
+    if config.postgres_logging_enabled:
+        from persistence.postgres.table_builder import build_postgres_payloads
+        from persistence.run_logger import RunLogger
+
+        from psycopg import OperationalError
+
+        payload = build_postgres_payloads(result, config)
+
+        try:
+            logger = RunLogger()
+
+            sim_id = logger.sim_repo.create_simulation_run(**payload["simulation"])
+
+            player_map = logger.player_repo.get_or_create_players(payload["players"])
+
+            logger.game_repo.save_games_with_moves(sim_id, payload["games"], player_map)
+        except OperationalError or Exception as e:
+            import pprint 
+            print("-----Postgres connection failed-----")
+            print("\nPayloads that would have been inserted:\n")
+            pprint.pprint(payload)
+            print("\nError details:\n", e)
 
     return result
 

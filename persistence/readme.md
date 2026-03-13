@@ -286,6 +286,22 @@ Relational tables are used for structured metadata.
 
 Conceptual schemas:
 
+
+### Players
+
+| Value          | SQL Type           | Python Type                  |
+| -------------- | ------------------ | ---------------------------- |
+| id             | Serial Primary Key | int                          |
+| user           | Text               | str                          |
+| player_type    | Text               | Literal["human", "computer"] |
+| agent_name     | Text               | str / None                   |
+| agent_version  | Text               | str / None                   |
+| policy_name    | Text               | str / None                   |
+| policy_version | Text               | str / None                   |
+| created_at     | Timestamp          | datetime                     |
+
+* Agent and policy info is None if human player
+
 ### Simulation Runs
 
 | Value          | SQL Type           | Python Type    |
@@ -296,19 +312,7 @@ Conceptual schemas:
 | reward_system  | Text               | str            |
 | num_games      | Integer            | int            |
 | created_at     | Timestamp          | datetime       |
-| config_json    | JSONB              | dict[str, Any] | 
-
-
-### Players
-
-| Value        | SQL Type           | Python Type                  |
-| ------------ | ------------------ | ---------------------------- |
-| id           | Serial Primary Key | int                          |
-| user         | Text               | str                          |
-| player_type  | Text               | Literal["human", "computer"] |
-| agent_name   | Text               | str / None                   |
-| policy_name  | Text               | str / None                   |
-| created_at   | Timestamp          | datetime                     |
+| config_json    | JSONB              | dict[str, Any] |
 
 
 ### Games
@@ -317,13 +321,14 @@ Conceptual schemas:
 | ----------------- | ------------------------ | ----------- |
 | id                | Serial Primary Key       | int         |
 | simulation_run_id | Integer (FK sim_runs.id) | int         |
-| winner_player_id  | Integer (FK players.id)  | int / None  |
-| is_draw           | Boolean                  | bool        |
-| total_moves       | Integer                  | int         |
-| started_at        | Timestamp                | datetime    |
-| finished_at       | Timestamp                | datetime    |
 | player_one_id     | Integer (FK players.id)  | int         |
 | player_two_id     | Integer (FK players.id)  | int         |
+| winner_player_id  | Integer (FK players.id)  | int / None  |
+| winner_in_game_id | Integer                  | int / None  |
+| is_draw           | Boolean                  | bool        |
+| total_moves       | Integer                  | int         |
+| created_at        | Timestamp                | datetime    |
+
 
 * If is_draw is true, winner_player_id = None
 
@@ -333,6 +338,7 @@ Conceptual schemas:
 | Value             | SQL Type                | Python Type    |
 | ----------------- | ----------------------- | -------------- |
 | id                | Serial Primary Key      | int            |
+| simulation_run_id | Integer (FK sim_runs.id)| int            |
 | game_id           | Integer (FK games.id)   | int            |
 | player_id         | Integer (FK players.id) | int            |
 | player_id_in_game | Integer                 | int            |

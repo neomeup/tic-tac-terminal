@@ -37,12 +37,13 @@ class GameConfig:
     ## again, render_type is tied to movement for human players as well though
 
     # Persistence
-    mongo_logging_enabled: bool = True
+    mongo_logging_enabled: bool = False
+    postgres_logging_enabled: bool = True
 
 
     # Training Enablement
-    online_training_enabled: bool = True
-    offline_training_enabled: bool = True
+    online_training_enabled: bool = False
+    offline_training_enabled: bool = False
 
     # Games to be played in simulation mode
     how_many_games: int = 1
