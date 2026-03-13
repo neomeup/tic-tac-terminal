@@ -10,6 +10,25 @@ Several persistence strategies are possible:
 
 Skip to the **Overview** section of this document and you can use this document as an outline for database persistence.
 
+To perform end to end testing, it is recommended to use a docker instance of the databases.
+
+Ex. Mongo
+```bash
+sudo docker run -d --name mongo_tic_tac_ai_db -p 27017:27017 mongo:latest
+```
+and verify that your .env lists mongo_tic_tac_ai_db as the MONGO_DB and the URI points to localhost 27017
+
+You can then use the following commands to verify the structure and insertion of a collection by entering the Mongo Shell.
+```bash
+sudo docker exec -it mongo_tic_tac_ai_db mongosh
+```
+```javascript
+show dbs
+use mongo_tic_tac_ai_db
+show collections
+db.simulation_experiences.find().pretty()
+```
+
 ### 2. Pickle-Based Persistence (Simple Alternative)
 
 For quick experimentation or local development, simulation data can also be stored using Python's `pickle` module.

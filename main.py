@@ -65,8 +65,9 @@ def run_headless(config):
         try:
             logger.exp_repo.insert_many(documents)
         except Exception as e:
-            print(documents)
-            print("Mongo logging failed:", e)
+            print("-----mongo to storage-----")
+            print(documents,"\n")
+            print("\nMongo logging failed:", e)
 
     return result
 
