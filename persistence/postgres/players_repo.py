@@ -14,7 +14,7 @@ class PlayersRepository:
     # Helper to be used with get_or_create_players()
     def get_or_create_player(
         self,
-        user: str,
+        account_user: str,
         player_type: str,
         agent_name: str | None = None,
         agent_version: str | None = None,
@@ -25,7 +25,7 @@ class PlayersRepository:
         select_query = """
         SELECT id FROM players
         WHERE
-            user = %s
+            account_user = %s
             AND player_type = %s
             AND agent_name IS NOT DISTINCT FROM %s
             AND agent_version IS NOT DISTINCT FROM %s
@@ -35,7 +35,7 @@ class PlayersRepository:
 
         insert_query = """
         INSERT INTO players
-        (user, player_type, agent_name, agent_version, policy_name, policy_version, created_at)
+        (account_user, player_type, agent_name, agent_version, policy_name, policy_version, created_at)
         VALUES (%s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """
@@ -46,7 +46,7 @@ class PlayersRepository:
             cur.execute(
                 select_query,
                 (
-                    user,
+                    account_user,
                     player_type,
                     agent_name,
                     agent_version,
@@ -64,7 +64,7 @@ class PlayersRepository:
             cur.execute(
                 insert_query,
                 (
-                    user,
+                    account_user,
                     player_type,
                     agent_name,
                     agent_version,
@@ -86,7 +86,7 @@ class PlayersRepository:
         player_id_map = {}
         for p in players:
             db_id = self.get_or_create_player(
-                user=p["user"],
+                account_user=p["account_user"],
                 player_type=p["player_type"],
                 agent_name=p.get("agent_name"),
                 agent_version=p.get("agent_version"),

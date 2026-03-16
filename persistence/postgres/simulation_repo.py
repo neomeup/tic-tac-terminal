@@ -3,6 +3,7 @@ Handles storage of data into simulation runs table
 '''
 
 from datetime import datetime
+from psycopg.types.json import Json
 from .postgres_connection import PostgresConnection
 
 
@@ -31,7 +32,7 @@ class SimulationRepository:
                     reward_system,
                     num_games,
                     datetime.utcnow(),
-                    config_json
+                    Json(config_json)
                 )
             )
 

@@ -24,7 +24,7 @@ def build_postgres_payloads(result: SimulationResult, config) -> dict[str, Any]:
 
         players_payload.append({
             "internal_id": player_id,  # for mapping moves later
-            "user": "local_neal", # Placeholder for when a users db exists
+            "account_user": "local_neal", # Placeholder for when a users db exists
             "player_type": player_type,
             "agent_name": agent_name,
             "agent_version": "v1" if agent_name else None, # Placeholder for when versioning exists
@@ -43,7 +43,7 @@ def build_postgres_payloads(result: SimulationResult, config) -> dict[str, Any]:
                 "player_id_in_game": move["player_id"],
                 "row": move["action"]["row"] if move["action"] else None,
                 "col": move["action"]["col"] if move["action"] else None,
-                "reward": move["reward"],
+                "reward": move["reward"] if move["reward"] else None,
                 "board_state": move["board_state"]
             })
 

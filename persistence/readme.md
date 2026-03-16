@@ -14,20 +14,47 @@ To perform end to end testing, it is recommended to use a docker instance of the
 
 Ex. Mongo
 ```bash
-sudo docker run -d --name mongo_tic_tac_ai_db -p 27017:27017 mongo:latest
+sudo docker run -d --name mongo_tic_tac_db -p 27017:27017 mongo:latest
 ```
-and verify that your .env lists mongo_tic_tac_ai_db as the MONGO_DB and the URI points to localhost 27017
+and verify that your .env lists mongo_tic_tac_db as the MONGO_DB and the URI points to localhost 27017
 
 You can then use the following commands to verify the structure and insertion of a collection by entering the Mongo Shell.
 ```bash
-sudo docker exec -it mongo_tic_tac_ai_db mongosh
+sudo docker exec -it mongo_tic_tac_db mongosh
 ```
 ```javascript
 show dbs
-use mongo_tic_tac_ai_db
+use mongo_tic_tac_db
 show collections
 db.simulation_experiences.find().pretty()
 ```
+
+Ex. Postgress
+
+Build a postgress container and verify that the port, user, password and DB are matching your env. 
+```bash
+sudo docker run -d \
+  --name postgres_tic_tac \
+  -e POSTGRES_USER=postgres_tic_tac_user \
+  -e POSTGRES_PASSWORD=postgres_tic_tac_password \
+  -e POSTGRES_DB=postgres_tic_tac_db \
+  -p 5433:5432 \
+  postgres:latest
+```
+
+Verify that the container exists, although it will be empty.
+```bash
+sudo docker exec -it postgres_tic_tac psql -U postgres_tic_tac_user -d postgres_tic_tac_db
+```
+```javascript
+\dt
+```
+Build the tables from project root in terminal using init.sql
+```bash
+sudo docker exec -i postgres_tic_tac \
+psql -U postgres_tic_tac_user -d postgres_tic_tac_db < persistence/postgres/initialization/init.sql
+```
+
 
 ### 2. Pickle-Based Persistence (Simple Alternative)
 
@@ -292,7 +319,7 @@ Conceptual schemas:
 | Value          | SQL Type           | Python Type                  |
 | -------------- | ------------------ | ---------------------------- |
 | id             | Serial Primary Key | int                          |
-| user           | Text               | str                          |
+| account_user   | Text               | str                          |
 | player_type    | Text               | Literal["human", "computer"] |
 | agent_name     | Text               | str / None                   |
 | agent_version  | Text               | str / None                   |
