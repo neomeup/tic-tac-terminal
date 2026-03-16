@@ -136,25 +136,6 @@ This design allows:
 
 ---
 
-# Folder Structure
-
-```
-persistence
-│
-├── mongo
-│   ├── experience_repo.py
-│   ├── base_collection.py
-│   └── mongo_connection.py
-│
-├── postgres
-│   ├── game_repo.py
-│   ├── postgres_connection.py
-│   └── simulation_repo.py
-│
-└── readme.md
-```
-
----
 
 # PostgreSQL Layer
 
@@ -188,70 +169,10 @@ All repository classes should obtain their database connection through this modu
 
 ---
 
-## simulation_repo.py
-
-Handles storage and retrieval of **simulation runs**.
-
-A simulation run represents a batch of games executed together.
-
-This repository is responsible for:
-
-* inserting new simulation runs
-* retrieving simulation metadata
-* linking simulation runs to the games produced during the run
-
-Data originates from:
-
-```
-simulation/sim_engine.py
-simulation/result.py
-```
-
----
-
-## game_repo.py
-
-Handles persistence of individual games and their moves.
-
-The repository receives data derived from:
-
-```
-core/run_context.py
-```
-
-A `GameRunContext` contains:
-
-* ordered list of moves
-* final winner
-* draw state
-* metadata about the game
-
-The repository decomposes this object into relational tables such as:
-
-* `games`
-* `moves`
-
-This allows:
-
-* game replay
-* statistical queries
-* analytics dashboards in the future
-
----
 
 # MongoDB Layer
 
 MongoDB stores **reinforcement learning experience data**.
-
-This data is generated when simulations are converted into training datasets.
-
-Example sources include:
-
-```
-simulation/training/experience.py
-simulation/training/dataset.py
-simulation/training/buffer.py
-```
 
 These datasets can grow extremely large and often contain nested structures such as tensors or vectors.
 
@@ -266,42 +187,6 @@ The MongoDB layer is implemented in:
 ```
 persistence/mongo
 ```
-
----
-
-## mongo_connection.py
-
-Responsible for:
-
-* creating a connection to MongoDB
-* configuring the database client
-* exposing reusable collection access
-
-This module acts as the connection entry point for Mongo persistence.
-
----
-
-## experience_repo.py
-
-Handles storage of reinforcement learning experiences.
-
-An experience corresponds to a transition in the RL environment:
-
-```
-(state, action, reward, next_state, done)
-```
-
-These experiences are generated during dataset creation and training.
-
-Typical sources include:
-
-```
-ExperienceDatasetBuilder
-ReplayBuffer
-SimulationResult
-```
-
-The repository inserts these experiences into MongoDB collections for later training or analysis.
 
 ---
 

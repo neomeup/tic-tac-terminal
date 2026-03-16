@@ -62,7 +62,7 @@ def run_headless(config):
             documents.append(document)
         
         try:
-            logger = RunLogger()
+            logger = RunLogger(config)
             logger.exp_repo.insert_many(documents)
         except Exception as e:
             print("-----mongo to storage-----")
@@ -78,14 +78,14 @@ def run_headless(config):
         payload = build_postgres_payloads(result, config)
 
         try:
-            logger = RunLogger()
+            logger = RunLogger(config)
 
             sim_id = logger.sim_repo.create_simulation_run(**payload["simulation"])
 
             player_map = logger.player_repo.get_or_create_players(payload["players"])
 
             logger.game_repo.save_games_with_moves(sim_id, payload["games"], player_map)
-        except OperationalError or Exception as e:
+        except (OperationalError, Exception) as e:
             import pprint 
             print("-----Postgres connection failed-----")
             print("\nPayloads that would have been inserted:\n")
