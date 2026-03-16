@@ -14,6 +14,26 @@ def build_experience_document(context, simulation_run_id: int, game_id: int, con
         next_move = moves[i + 1]
 
         if current_move["player_id"] is None:
+            experiences.append({
+                "turn": current_move["turn_number"],
+
+                "state": current_move["board_state"],
+                "action": None,
+                "reward": None,
+                "next_state": next_move["board_state"],
+                "done": next_move["done"],
+
+                "player_id": None,
+
+                "policy": None,
+                "policy_version": None,
+
+                "agent": None,
+                "agent_version": None,
+                
+                "exploration_rate": None,
+                "action_source": None
+            })
             continue
 
         experiences.append({
@@ -25,6 +45,8 @@ def build_experience_document(context, simulation_run_id: int, game_id: int, con
             "next_state": next_move["board_state"],
             "done": next_move["done"],
 
+            "player_id": current_move["player_id"],
+
             "policy": config.policy_type[current_move["player_id"]],
             "policy_version": "v1", # Placeholder for future versioning
 
@@ -32,13 +54,16 @@ def build_experience_document(context, simulation_run_id: int, game_id: int, con
             "agent_version": "v1", # Placeholder for future versioning
 
             "exploration_rate": .5,  ## Placeholder for a future config.exploration_rate variable
-            "action_source": "policy"
+            "action_source": "policy" ## Also placeholder
         })
 
     return {
         "simulation_run_id": simulation_run_id,
         "game_id": game_id,
         "player_ids": list(context.players.keys()),
+
+        "winning_player": context.winner,
+        "drawn_game": context.draw,
 
         "encoder": config.state_encoding_dim_type,
         "flat_encoding": config.state_encoding_flattened,

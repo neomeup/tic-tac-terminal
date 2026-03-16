@@ -53,17 +53,23 @@ def run_headless(config):
 
         from persistence.mongo.document_builder import build_experience_document
         from persistence.run_logger import RunLogger
-
-
-        sim_id = 1 # Placeholder
-        documents = []
-        for game_index, game in enumerate(result.runs):
-            document = build_experience_document(game, sim_id, game_index, config)
-            documents.append(document)
         
         try:
             logger = RunLogger(config)
+
+            last_doc = logger.exp_repo.collection.find_one(
+                sort=[("simulation_run_id", -1)]
+                )
+            sim_id = last_doc["simulation_run_id"]+ 1 if last_doc else 1
+
+
+            documents = []
+            for game_index, game in enumerate(result.runs):
+                document = build_experience_document(game, sim_id, game_index, config)
+                documents.append(document)
+
             logger.exp_repo.insert_many(documents)
+
         except Exception as e:
             print("-----mongo to storage-----")
             print(documents,"\n")

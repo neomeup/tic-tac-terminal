@@ -290,6 +290,9 @@ Example document:
   "game_id": 123,
   "player_ids": [0,1],
 
+  "winning_player": 0,
+  "drawn_game": false,
+
   "encoder": "vector",
   "flat_encoding": true,
 
@@ -301,6 +304,8 @@ Example document:
         "reward": 1,
         "next_state": [...], (Possible nested structure)
         "done": false,
+
+        "player_id": 0,
 
         "policy": "rl_dumb_policy",
         "policy_version": "v3",
