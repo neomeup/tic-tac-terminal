@@ -37,13 +37,14 @@ class GameRunContext:
             "model_version": model_version
         }
 
-    def log_move(self, turn_number, player_id, board_state, action, reward=None):
+    def log_move(self, turn_number, player_id, board_state, action, reward=None, done=False):
         self.moves.append({
             "turn_number": turn_number,
             "player_id": player_id,
             "board_state": board_state,
             "action": action,
-            "reward": reward
+            "reward": reward,
+            "done": done
         })
 
     def finalize(self, winner, draw):

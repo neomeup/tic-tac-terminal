@@ -78,7 +78,8 @@ class SimulationEngine:
             player_id=None,
             board_state=serialize_board(state.board),
             action=None,
-            reward=None
+            reward=None,
+            done=False
         )
 
         # Debug random_seed
@@ -212,7 +213,8 @@ class SimulationEngine:
                     "row": move.target_row,
                     "col": move.target_col
                 },
-                reward=reward
+                reward=reward,
+                done=state.is_finished
             )
 
             if won:
@@ -237,6 +239,7 @@ class SimulationEngine:
                             done=True,
                             player_id=player_id
                         )
+                state.is_finished = True
                 context.finalize(winner=winner, draw=False)
 
             elif draw:

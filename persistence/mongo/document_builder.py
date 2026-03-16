@@ -23,7 +23,7 @@ def build_experience_document(context, simulation_run_id: int, game_id: int, con
             "action": current_move["action"],
             "reward": current_move["reward"],
             "next_state": next_move["board_state"],
-            "done": next_move.get("done", False),
+            "done": next_move["done"],
 
             "policy": config.policy_type[current_move["player_id"]],
             "policy_version": "v1", # Placeholder for future versioning

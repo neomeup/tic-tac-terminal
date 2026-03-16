@@ -37,7 +37,7 @@ class GameConfig:
     ## again, render_type is tied to movement for human players as well though
 
     # Persistence
-    mongo_logging_enabled: bool = False
+    mongo_logging_enabled: bool = True
     postgres_logging_enabled: bool = True
 
 
