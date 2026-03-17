@@ -50,7 +50,7 @@ class GameRepository:
         now = datetime.utcnow()
 
         # Debug forced break to test rollback
-        player_one_id = 9999999999999
+        #player_one_id = 9999999999999
 
         with self.connection.cursor() as cur:
 
