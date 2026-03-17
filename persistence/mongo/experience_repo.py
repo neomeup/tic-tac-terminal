@@ -13,15 +13,14 @@ from pymongo.collection import Collection
 
 from datetime import datetime
 
-from persistence.mongo.mongo_connection import MongoConnection
 from persistence.mongo.base_collection import SimulationExperienceDocument
 
 
 class ExperienceRepository:
 
-    def __init__(self, connection: MongoConnection | None = None):
+    def __init__(self, conn):
 
-        self.connection = connection or MongoConnection()
+        self.connection = conn
         self.collection: Collection = self.connection.get_simulation_experiences()
 
     def insert_game_experience(self, document: SimulationExperienceDocument) -> str:

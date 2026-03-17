@@ -6,12 +6,18 @@ class RunLogger:
 
         self.config = passed_config
 
-        # Mongo
-        if self.config.mongo_logging_enabled:
+    def log_mongo(self, documents):
+            from persistence.mongo.mongo_connection import MongoConnection
+
+
             from persistence.mongo.experience_repo import ExperienceRepository
 
+            mongo_conn = MongoConnection()
 
-            self.exp_repo = ExperienceRepository()
+            exp_repo = ExperienceRepository(mongo_conn)
+
+            exp_repo.insert_many(documents)
+
 
     def log_postgres(self, sim_uuid, payload):
         from persistence.postgres.postgres_connection import PostgresConnection

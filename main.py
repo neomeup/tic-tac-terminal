@@ -51,22 +51,20 @@ def run_headless(config):
 
     import uuid
     sim_id = str(uuid.uuid4())
-    
+
     if config.mongo_logging_enabled:
 
         from persistence.mongo.document_builder import build_experience_document
         from persistence.run_logger import RunLogger
         
+        documents = []
+        for game_index, game in enumerate(result.runs):
+            document = build_experience_document(game, sim_id, game_index, config)
+            documents.append(document)
+
         try:
             logger = RunLogger(config)
-
-            documents = []
-            for game_index, game in enumerate(result.runs):
-                document = build_experience_document(game, sim_id, game_index, config)
-                documents.append(document)
-
-            logger.exp_repo.insert_many(documents)
-
+            logger.log_mongo(documents)
         except Exception as e:
             print("-----mongo to storage-----")
             print(documents,"\n")
