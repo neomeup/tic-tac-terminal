@@ -3,12 +3,11 @@ Handles retreiving of an existing player if it exists, otherwise creates one.
 '''
 
 from datetime import datetime
-from .postgres_connection import PostgresConnection
 
 class PlayersRepository:
 
-    def __init__(self, connection: PostgresConnection | None = None):
-        self.connection = connection or PostgresConnection()
+    def __init__(self, conn):
+        self.connection = conn
 
 
     # Helper to be used with get_or_create_players()
@@ -76,7 +75,6 @@ class PlayersRepository:
 
             player_id = cur.fetchone()[0]
 
-        self.connection.commit()
 
         return player_id
     

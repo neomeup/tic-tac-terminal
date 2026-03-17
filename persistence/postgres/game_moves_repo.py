@@ -4,14 +4,13 @@ Handles storage of data into games table and the moves table.
 
 from datetime import datetime
 from psycopg.types.json import Json
-from .postgres_connection import PostgresConnection
 
 
 class GameRepository:
 
-    def __init__(self, connection: PostgresConnection | None = None):
+    def __init__(self, conn):
 
-        self.connection = connection or PostgresConnection()
+        self.connection = conn
 
 
     def save_game_with_moves(
@@ -50,6 +49,9 @@ class GameRepository:
         total_moves = len(moves)
         now = datetime.utcnow()
 
+        # Debug forced break to test rollback
+        player_one_id = 9999999999999
+
         with self.connection.cursor() as cur:
 
             # Insert game
@@ -86,8 +88,6 @@ class GameRepository:
                         Json(move["board_state"])
                     )
                 )
-
-        self.connection.commit()
 
         return game_id
     

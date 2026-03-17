@@ -79,21 +79,14 @@ def run_headless(config):
         from persistence.postgres.table_builder import build_postgres_payloads
         from persistence.run_logger import RunLogger
 
-        from psycopg import OperationalError
-
         payload = build_postgres_payloads(result, config)
 
         try:
             logger = RunLogger(config)
-
-            sim_id = logger.sim_repo.create_simulation_run(**payload["simulation"])
-
-            player_map = logger.player_repo.get_or_create_players(payload["players"])
-
-            logger.game_repo.save_games_with_moves(sim_id, payload["games"], player_map)
-        except (OperationalError, Exception) as e:
+            logger.log_postgres(payload)
+        except Exception as e:
             import pprint 
-            print("-----Postgres connection failed-----")
+            print("-----Postgres connection/transaction failed-----")
             print("\nPayloads that would have been inserted:\n")
             pprint.pprint(payload)
             print("\nError details:\n", e)

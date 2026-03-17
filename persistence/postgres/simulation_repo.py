@@ -4,14 +4,13 @@ Handles storage of data into simulation runs table
 
 from datetime import datetime
 from psycopg.types.json import Json
-from .postgres_connection import PostgresConnection
 
 
 class SimulationRepository:
 
-    def __init__(self, connection: PostgresConnection | None = None):
+    def __init__(self, conn):
 
-        self.connection = connection or PostgresConnection()
+        self.connection = conn
 
     def create_simulation_run(self, rule_set: str, encoder: str, reward_system: str, num_games: int, config_json: dict) -> int:
 
@@ -37,7 +36,5 @@ class SimulationRepository:
             )
 
             simulation_id = cur.fetchone()[0]
-
-        self.connection.commit()
 
         return simulation_id
