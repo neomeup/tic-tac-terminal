@@ -12,12 +12,12 @@ class SimulationRepository:
 
         self.connection = conn
 
-    def create_simulation_run(self, rule_set: str, encoder: str, reward_system: str, num_games: int, config_json: dict) -> int:
+    def create_simulation_run(self, sim_uuid: str, rule_set: str, encoder: str, reward_system: str, num_games: int, config_json: dict) -> int:
 
         query = """
         INSERT INTO simulation_runs
-        (rule_set, encoder, reward_system, num_games, created_at, config_json)
-        VALUES (%s, %s, %s, %s, %s, %s)
+        (sim_uuid, rule_set, encoder, reward_system, num_games, created_at, config_json)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """
 
@@ -26,6 +26,7 @@ class SimulationRepository:
             cur.execute(
                 query,
                 (
+                    sim_uuid,
                     rule_set,
                     encoder,
                     reward_system,

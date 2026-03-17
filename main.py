@@ -49,6 +49,9 @@ def run_headless(config):
 
         print("Total Experiences:", len(experiences))
 
+    import uuid
+    sim_id = str(uuid.uuid4())
+    
     if config.mongo_logging_enabled:
 
         from persistence.mongo.document_builder import build_experience_document
@@ -56,12 +59,6 @@ def run_headless(config):
         
         try:
             logger = RunLogger(config)
-
-            last_doc = logger.exp_repo.collection.find_one(
-                sort=[("simulation_run_id", -1)]
-                )
-            sim_id = last_doc["simulation_run_id"]+ 1 if last_doc else 1
-
 
             documents = []
             for game_index, game in enumerate(result.runs):
@@ -83,7 +80,7 @@ def run_headless(config):
 
         try:
             logger = RunLogger(config)
-            logger.log_postgres(payload)
+            logger.log_postgres(sim_uuid=sim_id, payload=payload)
         except Exception as e:
             import pprint 
             print("-----Postgres connection/transaction failed-----")

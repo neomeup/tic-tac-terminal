@@ -11,6 +11,7 @@ CREATE TABLE players (
 
 CREATE TABLE simulation_runs (
     id SERIAL PRIMARY KEY,
+    sim_uuid TEXT NOT NULL,
     rule_set TEXT NOT NULL,
     encoder TEXT NOT NULL,
     reward_system TEXT NOT NULL,

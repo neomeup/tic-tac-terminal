@@ -219,6 +219,7 @@ Conceptual schemas:
 | Value          | SQL Type           | Python Type    |
 | -------------- | ------------------ | -------------- |
 | id             | Serial Primary Key | int            |
+| sim_uuid       | Text               | str            |
 | rule_set       | Text               | str            |
 | encoder        | Text               | str            |
 | reward_system  | Text               | str            |
@@ -226,6 +227,7 @@ Conceptual schemas:
 | created_at     | Timestamp          | datetime       |
 | config_json    | JSONB              | dict[str, Any] |
 
+* Sim_UUID is generated in main and used as sim_id in Mongo, this allows a connection to Mongo
 
 ### Games
 
@@ -286,7 +288,7 @@ Example document:
 
 ```
 {
-  "simulation_run_id": 56, 
+  "simulation_run_id": generated UUID, (Ties to the Postgres DB)
   "game_id": 123,
   "player_ids": [0,1],
 
