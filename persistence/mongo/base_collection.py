@@ -24,7 +24,7 @@ class ExperienceStep(TypedDict):
 
 class SimulationExperienceDocument(TypedDict):
   
-    simulation_run_id: int
+    simulation_run_id: str
     game_id: int
     player_ids: list[int]
 
