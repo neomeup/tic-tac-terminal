@@ -71,7 +71,7 @@ pip install -r requirements.txt
 
 ### Persistence
 
-You can experiment locally with the core of the system without any additional work and the only true requirement is numpy.
+You can experiment locally with the core of the system without any additional work and the only true requirement is numpy if you don't need any persistence.
 The engine itself does not require a database connection but you will not have any persistent data. 
 
 Please see the persistence directory readme for information about persistence.
