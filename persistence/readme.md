@@ -57,12 +57,13 @@ psql -U postgres_tic_tac_user -d postgres_tic_tac_db < persistence/postgres/init
 
 
 ### 2. Pickle-Based Persistence (Simple Alternative)
+***If not using the database methods, verify that the config variables for database logging are False.***
 
 For quick experimentation or local development, simulation data can also be stored using Python's `pickle` module.
 
 Pickle allows Python objects to be serialized directly to disk without requiring a database.
 
-Example:
+Example: (Simplified)
 
 ```python
 import pickle
@@ -85,7 +86,10 @@ This approach is useful for:
 * storing small datasets
 
 However, pickle files are not suitable for large-scale datasets or analytics queries. 
-For production-style workflows the database-backed persistence layer described below is recommended.  
+For production-style workflows the database-backed persistence layer described below is recommended.
+
+This also relates to the model storage section where we use PyTorch .pt files in combination with .json files.  For a more in depth
+explanation, see the model storage readme in players/computer_players/model_storage/
 
 ## Overview
 

@@ -11,16 +11,54 @@ import numpy as np
 from players.computer_players.model_policy_registry import model_policy_registry
 from simulation.training.buffer import ReplayBuffer
 
+from players.computer_players.model_storage.infra.model_storage_factory import ModelStorageFactory
+from players.computer_players.model_storage.infra.path_builder import ModelPathBuilder
+
 class RLDumbAgent:
 
-    def __init__(self, policy_name=None, capacity=10000):
+    def __init__(self, config, player_id, policy_name=None, capacity=10000):
 
         if policy_name is None:
             policy_name = "rl_dumb_policy"
+
+        self.config = config
+        self.player_id = player_id
         
         policy_class = model_policy_registry[policy_name]
         self.policy = policy_class()
         self.buffer = ReplayBuffer(capacity)
+
+        self.storage = ModelStorageFactory.create(self.config)
+        self.path_builder = ModelPathBuilder
+
+
+    def _get_paths(self, checkpoint=None): # Placeholder checkpoint
+        return self.path_builder.build_paths(config=self.config, player_id=self.player_id, checkpoint=checkpoint)
+    
+    def save(self, checkpoint=None):
+
+        if self.storage is None:
+            return
+        
+        paths = self._get_paths(checkpoint)
+        
+        model_bytes = self._serialize_model()
+        metadata = self._build_metadata()
+
+        self.storage.save_model(paths["model"], model_bytes)
+        self.storage.save_metadata(paths["metadata"], metadata)
+
+    def load(self, checkpoint=None):
+        if self.storage is None:
+            return
+        
+        paths = self._get_paths(checkpoint)
+
+        model_bytes = self.storage.load_model(paths["model"])
+        metadata = self.storage.load_metadata(paths["metadata"])
+
+        self._serialize_model(model_bytes)
+        self._load_metadata(metadata)
 
     def select_action(self, player_id, board, config, rng):
         return self.policy.select_action(

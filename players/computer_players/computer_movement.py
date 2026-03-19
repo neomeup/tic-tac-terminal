@@ -20,7 +20,11 @@ def get_agent(player_id, config):
 
         # support for both agents with and without policy args
         try:
-            _agents[player_id] = agent_class(policy_name)
+            _agents[player_id] = agent_class(
+                config=config,
+                player_id=player_id,
+                policy_name=policy_name
+            )
         except TypeError:
             _agents[player_id] = agent_class()
 
@@ -43,4 +47,4 @@ def offline_agent(config):
 
     agent_class = agent_registry[agent_name]
 
-    return agent_class()
+    return agent_class(config=config, player_id=0)

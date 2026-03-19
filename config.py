@@ -4,6 +4,7 @@ Defines global configuration for the Tic-Tac-Toe game.
 '''
 
 from dataclasses import dataclass
+from typing import Literal
 
 @dataclass
 class GameConfig:
@@ -40,6 +41,7 @@ class GameConfig:
     mongo_logging_enabled: bool = True
     postgres_logging_enabled: bool = True
 
+    model_storage_backend: Literal["local", "s3", None] = "local"
 
     # Training Enablement
     online_training_enabled: bool = False
@@ -58,8 +60,9 @@ class GameConfig:
     # Online training and player type list - player types must be config'd for all games even without training
     online_reward_type: str = "standard" # registerized in simulation/rewards/reward_registry
     def __post_init__(self):
-        self.player_types: list = ["computer", "computer"] # Options human or computer
+        self.player_types: list[Literal["human", "computer"]] = ["computer", "computer"]
 
         # If computer player type please input policy and agent type
         self.policy_type: list = ["rl_dumb_policy", "random_policy"] #registerized in players/computer_players/model_policy_registry
         self.agent_type: list = ["rl_dumb_agent", "random_agent"] # registerized in players/computer_players/agent_registry
+        self.model_version: list = ["v1", "v1"]
