@@ -3,7 +3,7 @@ Handles PostgreSQL connections.
 '''
 
 import psycopg
-from dotenv import load_dotenv
+
 import os
 
 
@@ -11,7 +11,6 @@ class PostgresConnection:
 
     def __init__(self):
 
-        load_dotenv()
         self.conn = psycopg.connect(
             host=os.getenv("POSTGRES_HOST"),
             port=os.getenv("POSTGRES_PORT"),

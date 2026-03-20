@@ -12,7 +12,10 @@ from config import GameConfig
 from simulation.sim_engine import SimulationEngine
 from runtime.cli_runtime import CLIRuntime
 
+from dotenv import load_dotenv
+
 config = GameConfig()
+load_dotenv()
 
 def run_cli(config):
     import curses
