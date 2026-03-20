@@ -6,7 +6,7 @@ from players.computer_players.model_storage.infra.base_model_storage import Base
 class LocalModelStorage(BaseModelStorage):
 
     def save_model(self, path: str, data: bytes) -> None:
-        os.makedirs(path, exist_ok=True)
+        os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "wb") as f:
             f.write(data)
 
