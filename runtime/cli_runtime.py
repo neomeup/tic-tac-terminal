@@ -20,7 +20,7 @@ from renderers.cli_renderer import render_board, render_game_draw, render_game_w
 from game_types.used_rules import game_finished
 
 from players.human_players.human_movement import get_player_move
-from players.computer_players.computer_movement import get_computer_move
+from players.computer_players.computer_player_runtime import get_computer_move
 
 
 class CLIRuntime:

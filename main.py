@@ -41,7 +41,7 @@ def run_headless(config):
     # For offline observe experiences
     #### To be changed/modified once trainer is introduced for offline so that you have a single agent persistance
     if config.offline_training_enabled:
-        from players.computer_players.computer_movement import offline_agent
+        from players.computer_players.computer_player_runtime import offline_agent
 
         agent = offline_agent(config)
              

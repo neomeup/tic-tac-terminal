@@ -15,7 +15,7 @@ from game_types.used_rules import game_finished
 from simulation.result import SimulationResult
 
 
-from players.computer_players.computer_movement import get_computer_move, get_agent
+from players.computer_players.computer_player_runtime import get_computer_move, get_agent
 from simulation.rewards.reward_registry import reward_registry
 
 
