@@ -1,7 +1,11 @@
+# Engine requirements
 numpy==2.4.2
 
+# Database data storage requirements
 python-dotenv==1.2.2
 pymongo==4.16.0
 psycopg[binary]==3.3.3
 
+# Model storage requirements
 boto3==1.42.71
+torch==2.10.0
