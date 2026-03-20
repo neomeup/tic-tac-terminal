@@ -1,5 +1,4 @@
 import os
-from dotenv import load_dotenv
 
 import boto3
 import json
@@ -9,7 +8,6 @@ from players.computer_players.model_storage.infra.base_model_storage import Base
 class S3ModelStorage(BaseModelStorage):
 
     def __init__(self):
-        load_dotenv()
         s3_bucket = os.getenv("S3_BUCKET")
         s3_endpoint = os.getenv("S3_ENDPOINT")
         s3_access_key = os.getenv("S3_ACCESS_KEY")
