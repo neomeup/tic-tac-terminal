@@ -3,6 +3,8 @@ import os
 import boto3
 import json
 
+from botocore.exceptions import ClientError
+
 from players.computer_players.model_storage.infra.base_model_storage import BaseModelStorage
 
 class S3ModelStorage(BaseModelStorage):
@@ -40,8 +42,14 @@ class S3ModelStorage(BaseModelStorage):
         )
 
     def load_model(self, path: str) -> bytes:
-        obj = self.client.get_object(Bucket=self.bucket, Key=path)
-        return obj["Body"].read()
+        try:
+            obj = self.client.get_object(Bucket=self.bucket, Key=path)
+            return obj["Body"].read()
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "NoSuchKey":
+                return None
+            else:
+                raise e
 
     def save_metadata(self, path: str, metadata: dict) -> None:
         self.client.put_object(
@@ -51,5 +59,11 @@ class S3ModelStorage(BaseModelStorage):
         )
 
     def load_metadata(self, path: str) -> dict:
-        obj = self.client.get_object(Bucket=self.bucket, Key=path)
-        return json.loads(obj["Body"].read().decode("utf-8"))
+        try:
+            obj = self.client.get_object(Bucket=self.bucket, Key=path)
+            return json.loads(obj["Body"].read().decode("utf-8"))
+        except ClientError as e:
+            if e.response["Error"]["Code"] == "NoSuchKey":
+                return None
+            else:
+                raise e

@@ -34,7 +34,20 @@ class RLDumbAgent:
 
     def _get_paths(self, checkpoint=None): # Placeholder checkpoint
         return self.path_builder.build_paths(config=self.config, player_id=self.player_id, checkpoint=checkpoint)
-    
+
+    def _serialize_model(self):
+        pass
+
+    def _build_metadata(self):
+        pass
+
+    def _deserialize_model(self, bytes):
+        pass
+
+    def _load_metadata(self, metadata):
+        pass
+
+
     def save(self, checkpoint=None):
 
         if self.storage is None:
@@ -57,8 +70,13 @@ class RLDumbAgent:
         model_bytes = self.storage.load_model(paths["model"])
         metadata = self.storage.load_metadata(paths["metadata"])
 
-        self._serialize_model(model_bytes)
-        self._load_metadata(metadata)
+        if model_bytes is not None:
+            self._deserialize_model(model_bytes)
+        
+        if metadata is not None:
+            self._load_metadata(metadata)
+
+
 
     def select_action(self, player_id, board, config, rng):
         return self.policy.select_action(

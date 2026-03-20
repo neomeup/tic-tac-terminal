@@ -11,6 +11,8 @@ class LocalModelStorage(BaseModelStorage):
             f.write(data)
 
     def load_model(self, path: str) -> bytes:
+        if not os.path.exists(path):
+            return None
         with open(path, "rb") as f:
             return f.read()
 
@@ -19,5 +21,7 @@ class LocalModelStorage(BaseModelStorage):
             json.dump(metadata, f, indent=2)
 
     def load_metadata(self, path: str) -> dict:
+        if not os.path.exists(path):
+            return None
         with open(path, "r") as f:
             return json.load(f)
