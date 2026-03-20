@@ -12,7 +12,7 @@ class ModelPathBuilder:
         base = f"{agent_name}/{version}"
 
         if checkpoint:
-            base = f"{base}/{checkpoint}"
+            base = f"{base}/checkpoints/{checkpoint}"
 
         return {
             "model": f"{base}/model.pt",
