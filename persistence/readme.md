@@ -14,13 +14,13 @@ To perform end to end testing, it is recommended to use a docker instance of the
 
 Ex. Mongo
 ```bash
-sudo docker run -d --name mongo_tic_tac_db -p 27017:27017 mongo:latest
+sudo docker run -d --name mongo_tic_tac -p 27017:27017 mongo:latest
 ```
 and verify that your .env lists mongo_tic_tac_db as the MONGO_DB and the URI points to localhost 27017
 
 You can then use the following commands to verify the structure and insertion of a collection by entering the Mongo Shell.
 ```bash
-sudo docker exec -it mongo_tic_tac_db mongosh
+sudo docker exec -it mongo_tic_tac mongosh
 ```
 ```javascript
 show dbs
