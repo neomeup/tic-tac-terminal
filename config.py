@@ -42,7 +42,7 @@ class GameConfig:
     postgres_logging_enabled: bool = True
 
     model_storage_local_pre_base_path = "players/computer_players/model_storage/data"
-    model_storage_backend: Literal["local", "s3", None] = "local"
+    model_storage_backend: Literal["local", "s3", None] = "s3"
 
     # Training Enablement
     online_training_enabled: bool = False

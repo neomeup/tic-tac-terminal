@@ -1,4 +1,8 @@
+If using s3 storage our recommendation is to use MinIO
 
+Please note that MinIO has a AGPL v3 License.
+All source for minio can be found:
+https://github.com/minio/minio
 
 Use to initialize minio container during testing
 
@@ -11,3 +15,5 @@ sudo docker run -d \
   minio/minio server /data --console-address ":9001"
 ```
 
+Log into your minio console at 
+http:localhost:9001 using the user and password that you set.

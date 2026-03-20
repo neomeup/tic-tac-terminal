@@ -55,7 +55,10 @@ class RLDumbAgent:
 
         return buffer.getvalue()
 
-    def _build_metadata(self):
+    def _build_metadata(self, checkpoint=None):
+
+        checkpoint = checkpoint if checkpoint is not None else "latest"
+        
         return {
             "board_size": self.config.board_size,
             "rule_set": self.config.rule_set,
@@ -68,6 +71,8 @@ class RLDumbAgent:
 
             "policy": self.config.policy_type[self.player_id],
             "policy_version": "v1", # Placeholder
+
+            "checkpoint": checkpoint,
 
             "player_id": self.player_id,
 
@@ -119,7 +124,7 @@ class RLDumbAgent:
         paths = self._get_paths(checkpoint)
         
         model_bytes = self._serialize_model()
-        metadata = self._build_metadata()
+        metadata = self._build_metadata(checkpoint)
 
         self.storage.save_model(paths["model_path"], model_bytes)
         self.storage.save_metadata(paths["metadata_path"], metadata)
