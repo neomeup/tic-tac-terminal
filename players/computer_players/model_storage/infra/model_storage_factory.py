@@ -10,9 +10,10 @@ class ModelStorageFactory:
     def create(config):
 
         model_storage_type = config.model_storage_backend
+        pre_base_local_path = config.model_storage_local_pre_base_path
 
         if model_storage_type == "local":
-            return LocalModelStorage()
+            return LocalModelStorage(path=pre_base_local_path)
 
         elif model_storage_type == "s3":
             return S3ModelStorage()

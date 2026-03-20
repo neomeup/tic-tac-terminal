@@ -1,6 +1,4 @@
 
-
-
 class ModelPathBuilder:
 
     @staticmethod
@@ -15,6 +13,6 @@ class ModelPathBuilder:
             base = f"{base}/checkpoints/{checkpoint}"
 
         return {
-            "model": f"{base}/model.pt",
-            "metadata": f"{base}/metadata.json"
+            "model_path": f"{base}/model.pt",
+            "metadata_path": f"{base}/metadata.json"
         }

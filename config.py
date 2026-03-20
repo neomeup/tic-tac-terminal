@@ -41,6 +41,7 @@ class GameConfig:
     mongo_logging_enabled: bool = True
     postgres_logging_enabled: bool = True
 
+    model_storage_local_pre_base_path = "players/computer_players/model_storage/data"
     model_storage_backend: Literal["local", "s3", None] = "local"
 
     # Training Enablement

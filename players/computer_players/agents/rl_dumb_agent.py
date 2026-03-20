@@ -8,6 +8,11 @@ Can be used as a template for more advanced learning and contains debugs for pip
 
 import numpy as np
 
+import io
+import torch
+from datetime import datetime
+
+
 from players.computer_players.model_policy_registry import model_policy_registry
 from simulation.training.buffer import ReplayBuffer
 
@@ -28,27 +33,85 @@ class RLDumbAgent:
         self.policy = policy_class()
         self.buffer = ReplayBuffer(capacity)
 
+        self.training_step = 0 # Placeholder
+
         self.storage = ModelStorageFactory.create(self.config)
-        self.path_builder = ModelPathBuilder
+        self.path_builder = ModelPathBuilder()
 
 
     def _get_paths(self, checkpoint=None): # Placeholder checkpoint
         return self.path_builder.build_paths(config=self.config, player_id=self.player_id, checkpoint=checkpoint)
 
     def _serialize_model(self):
-        pass
+        buffer = io.BytesIO()
+
+        state_dict = None
+        if hasattr(self.policy, "state_dict"):
+            state_dict = self.policy.state_dict()
+
+        torch.save({
+            "policy_state": state_dict,
+        }, buffer)
+
+        return buffer.getvalue()
 
     def _build_metadata(self):
-        pass
+        return {
+            "board_size": self.config.board_size,
+            "rule_set": self.config.rule_set,
 
-    def _deserialize_model(self, bytes):
-        pass
+            "win_length": self.config.win_length,
+            "piece_type": self.config.piece_type,
+
+            "agent": self.config.agent_type[self.player_id],
+            "agent_version": self.config.model_version[self.player_id],
+
+            "policy": self.config.policy_type[self.player_id],
+            "policy_version": "v1", # Placeholder
+
+            "player_id": self.player_id,
+
+            "created_at": datetime.utcnow().isoformat(),
+
+            # Placeholder training info
+            "buffer_size": len(self.buffer),
+            "training_step": self.training_step,
+
+            # Snapshot
+            "training_config": {
+                "encoding": self.config.state_encoding_dim_type,
+                "encoding_flattened": self.config.state_encoding_flattened,
+                "reward": self.config.online_reward_type, # Placeholder / which online vs offline do you want
+            }
+        }
+
+    def _deserialize_model(self, data: bytes):
+        buffer = io.BytesIO(data)
+        checkpoint = torch.load(buffer)
+
+        state_dict = checkpoint.get("policy_state")
+
+        if state_dict is not None and hasattr(self.policy, "load_state_dict"):
+            self.policy.load_state_dict(state_dict)
+
 
     def _load_metadata(self, metadata):
-        pass
+        if metadata is None:
+            return
+
+        # Sanity check for dumb agent / dumb training
+        expected_agent = self.config.agent_type[self.player_id]
+
+        if metadata.get("agent") != expected_agent:
+            print("Warning: loading model from different agent type")
+        else:
+            print("Success: loading model from correct agent type")
+        
+
+        self.training_step = metadata.get("training_step", 0)
 
 
-    def save(self, checkpoint=None):
+    def save(self, checkpoint=None): # Placeholder All checkpoint=None
 
         if self.storage is None:
             return
@@ -58,8 +121,8 @@ class RLDumbAgent:
         model_bytes = self._serialize_model()
         metadata = self._build_metadata()
 
-        self.storage.save_model(paths["model"], model_bytes)
-        self.storage.save_metadata(paths["metadata"], metadata)
+        self.storage.save_model(paths["model_path"], model_bytes)
+        self.storage.save_metadata(paths["metadata_path"], metadata)
 
     def load(self, checkpoint=None):
         if self.storage is None:
@@ -67,8 +130,8 @@ class RLDumbAgent:
         
         paths = self._get_paths(checkpoint)
 
-        model_bytes = self.storage.load_model(paths["model"])
-        metadata = self.storage.load_metadata(paths["metadata"])
+        model_bytes = self.storage.load_model(paths["model_path"])
+        metadata = self.storage.load_metadata(paths["metadata_path"])
 
         if model_bytes is not None:
             self._deserialize_model(model_bytes)
