@@ -50,10 +50,10 @@ def run_headless(config):
         
         agent.observe(experiences)
 
-
-        print("----------")
-        print("Offline")
-        print("Total Experiences:", len(experiences))
+        if config.debug_prints_enabled:
+            print("----------")
+            print("Offline")
+            print("Total Experiences:", len(experiences))
 
     import uuid
     sim_id = str(uuid.uuid4())

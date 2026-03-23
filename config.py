@@ -38,7 +38,7 @@ class GameConfig:
     ## again, render_type is tied to movement for human players as well though
 
     # Debugging
-    debug_prints_enabled: bool = True
+    debug_prints_enabled: bool = False
     debug_print_frequency_offline_batch: int = 5
     debug_print_frequency_TransitionsSteps: int = 5
 
