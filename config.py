@@ -38,22 +38,30 @@ class GameConfig:
     ## again, render_type is tied to movement for human players as well though
 
     # Persistence
-    mongo_logging_enabled: bool = False
-    postgres_logging_enabled: bool = False
+    mongo_logging_enabled: bool = True
+    postgres_logging_enabled: bool = True
 
-    model_storage_enabled: bool = False
+    model_storage_enabled: bool = True
     model_storage_local_pre_base_path = "players/computer_players/model_storage/data"
     if model_storage_enabled:
         model_storage_backend: Literal["local", "s3", None] = "s3"
     else:
         model_storage_backend = None
 
+
+    model_checkpoint_enabled = True 
+    model_checkpoint_interval = 5 # steps 
+    model_autosave_on_exit = True  
+
     # Training Enablement
-    online_training_enabled: bool = False
-    offline_training_enabled: bool = False
+    online_training_enabled: bool = True
+    offline_training_enabled: bool = True
+
+    training_batch_size: int = 5
+    training_step_frequency: int = 5 # Int in steps
 
     # Games to be played in simulation mode
-    how_many_games: int = 1
+    how_many_games: int = 12
     
     state_encoding_dim_type: str = "tensor_with_empty" # registerized in simulation/training/encoding/encoder_registry
     state_encoding_flattened: bool = True # interacts with dim type to provide a flat version of the selected type

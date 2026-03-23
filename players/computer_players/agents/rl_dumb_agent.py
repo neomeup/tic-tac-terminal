@@ -33,11 +33,11 @@ class RLDumbAgent:
         self.policy = policy_class()
         self.buffer = ReplayBuffer(capacity)
 
-        self.training_step = 0 # Placeholder
+        self.training_step = 0 # Initialization
+        self.training_batch_size = config.training_batch_size
 
         self.storage = ModelStorageFactory.create(self.config)
-        self.path_builder = ModelPathBuilder()
-
+        self.path_builder = ModelPathBuilder() #static method so instantiation not neccessary but possible necessity in future
 
     def _get_paths(self, checkpoint=None): # Placeholder checkpoint
         return self.path_builder.build_paths(config=self.config, player_id=self.player_id, checkpoint=checkpoint)
@@ -211,10 +211,14 @@ class RLDumbAgent:
 
     def train_step(self):
         # Debug for active pipes
-        if len(self.buffer) < 1:
+        if len(self.buffer) < self.training_batch_size:
             return
 
-        batch = self.buffer.sample(1)
+        if self.training_step % self.config.training_step_frequency != 0:
+            self. training_step += 1
+            return
+
+        batch = self.buffer.sample(self.training_batch_size)
 
         states = np.array([e["state"] for e in batch])
         rewards = np.array([e["reward"] for e in batch])
@@ -222,8 +226,13 @@ class RLDumbAgent:
         action = np.array([e["action"] for e in batch])
 
         # Print for debug of encoding
-        print("Train Step")
-        print("Training batch:", batch)
+        if self.training_step % 5 == 0:
+            print(f"[TRAIN] step={self.training_step} buffer={len(self.buffer)}")
 
-        print("Training batch shape:", states.shape)
-        print("Training action:", action)
+        # Placeholder for real 'training'
+        # ex. loss = model(states) vs target
+
+        self.training_step += 1
+
+        if self.config.model_checkpoint_enabled and self.training_step % self.config.model_checkpoint_interval == 0:
+            self.save(checkpoint=f"step_{self.training_step}")

@@ -64,6 +64,16 @@ class SimulationEngine:
             
             game_history.append(context)
 
+        if self.config.model_autosave_on_exit:
+            for i in range(self.total_players):
+                agent = get_agent(player_id=i, config=self.config)
+                if agent is not None:
+                    try:
+                        agent.save(checkpoint="latest")
+                    except AttributeError as e:
+                        print(e)
+
+
         return SimulationResult(game_history)
 
 
