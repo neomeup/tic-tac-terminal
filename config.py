@@ -47,13 +47,13 @@ class GameConfig:
     mongo_logging_enabled: bool = True
     postgres_logging_enabled: bool = True
 
-    model_storage_local_pre_base_path = "players/computer_players/model_storage/data"
+    model_storage_local_pre_base_path: str = "players/computer_players/model_storage/data"
     model_storage_backend: Literal["local", "s3", None] = "s3"
 
 
-    model_checkpoint_enabled = True 
-    model_checkpoint_interval = 5 # steps 
-    model_autosave_on_exit = True  
+    model_checkpoint_enabled: bool = True 
+    model_checkpoint_interval: int = 5 # steps 
+    model_autosave_on_exit: bool = True  
 
     # Training Enablement
     online_training_enabled: bool = True
@@ -80,4 +80,4 @@ class GameConfig:
         # If computer player type please input policy and agent type
         self.policy_type: list = ["rl_dumb_policy", "sequence_policy"] #registerized in players/computer_players/model_policy_registry
         self.agent_type: list = ["rl_dumb_agent", "non_agent"] # registerized in players/computer_players/agent_registry
-        self.model_version: list = ["v1", "v1"]
+        self.model_version: list = ["v1", "v1"] # Placeholder for - possibly when versions are dyamically built
