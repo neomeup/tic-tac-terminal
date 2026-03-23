@@ -38,11 +38,15 @@ class GameConfig:
     ## again, render_type is tied to movement for human players as well though
 
     # Persistence
-    mongo_logging_enabled: bool = True
-    postgres_logging_enabled: bool = True
+    mongo_logging_enabled: bool = False
+    postgres_logging_enabled: bool = False
 
+    model_storage_enabled: bool = False
     model_storage_local_pre_base_path = "players/computer_players/model_storage/data"
-    model_storage_backend: Literal["local", "s3", None] = "s3"
+    if model_storage_enabled:
+        model_storage_backend: Literal["local", "s3", None] = "s3"
+    else:
+        model_storage_backend = None
 
     # Training Enablement
     online_training_enabled: bool = False
@@ -64,6 +68,6 @@ class GameConfig:
         self.player_types: list[Literal["human", "computer"]] = ["computer", "computer"]
 
         # If computer player type please input policy and agent type
-        self.policy_type: list = ["rl_dumb_policy", "random_policy"] #registerized in players/computer_players/model_policy_registry
-        self.agent_type: list = ["rl_dumb_agent", "random_agent"] # registerized in players/computer_players/agent_registry
+        self.policy_type: list = ["rl_dumb_policy", "sequence_policy"] #registerized in players/computer_players/model_policy_registry
+        self.agent_type: list = ["rl_dumb_agent", "non_agent"] # registerized in players/computer_players/agent_registry
         self.model_version: list = ["v1", "v1"]
