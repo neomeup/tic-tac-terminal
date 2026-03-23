@@ -13,7 +13,7 @@ from players.computer_players.policies.base_policy import BasePolicy
 class RLDumbPolicy(BasePolicy):
 
     def __init__(self):
-        self.q_table = {}
+        self.q_table = {} # example - unused
 
     def _board_to_key(self, board):
         return str([[None if c is None else c.owner_id for c in row] for row in board])
@@ -23,7 +23,7 @@ class RLDumbPolicy(BasePolicy):
         board_key = self._board_to_key(board)
 
         # Exploration vs exploitation
-        if rng.random() < 0.3 or board_key not in self.q_table:
+        if rng.random() < 0.3 or board_key not in self.q_table: # example - unused
             return self._random_move(player_id, board, rng)
 
         return self._best_known_move(player_id, board, board_key, rng)
