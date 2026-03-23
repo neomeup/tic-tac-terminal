@@ -186,7 +186,7 @@ class RLDumbAgent:
 
             # Debug pipeline
             if len(self.buffer) >= self.training_batch_size:
-                batch = self.buffer.sample(self.config.how_many_games) # Workaround - not great - known
+                batch = self.buffer.sample(self.config.how_many_games) # Workaround - not great - known - only use this structure for debug prints
 
                 
                 print("Sample batch:")
@@ -226,8 +226,9 @@ class RLDumbAgent:
         if len(self.buffer) < self.training_batch_size:
             return
 
+        self.training_step += 1
+
         if self.training_step % self.config.training_step_frequency != 0:
-            self. training_step += 1
             return
 
         batch = self.buffer.sample(self.training_batch_size)
@@ -239,12 +240,11 @@ class RLDumbAgent:
 
         # Print for debug of encoding
         if self.config.debug_prints_enabled:
-            print(f"[TRAIN] step={self.training_step} buffer={len(self.buffer)}")
+            avg_reward = rewards.mean()
+            print(f"[TRAIN] step={self.training_step} buffer={len(self.buffer)} avg_reward={avg_reward}")
 
         # Placeholder for real 'training'
         # ex. loss = model(states) vs target
-
-        self.training_step += 1
 
         if self.config.model_checkpoint_enabled and self.training_step % self.config.model_checkpoint_interval == 0:
             self.save(checkpoint=f"step_{self.training_step}")

@@ -58,9 +58,6 @@ class SimulationEngine:
 
         for _game_index in range(self.config.how_many_games):
             
-            # debug counter
-            self.debug_counter = 0
-            
             context = self._run_single_game()
 
             # debug spacing for games in a sim
@@ -74,11 +71,8 @@ class SimulationEngine:
         if self.config.model_autosave_on_exit:
             for i in range(self.total_players):
                 agent = get_agent(player_id=i, config=self.config)
-                if agent is not None:
-                    try:
-                        agent.save(checkpoint="latest")
-                    except AttributeError as e:
-                        print(f"Autosave failed for player {i} due to:", e)
+                if agent is not None and hasattr(agent, "save"):
+                    agent.save(checkpoint="latest")
 
 
         return SimulationResult(game_history)
@@ -191,17 +185,6 @@ class SimulationEngine:
 
             if self.config.online_training_enabled:
                 agent = get_agent(move.player_id, self.config)
-
-                # debug online training
-                if self.config.debug_prints_enabled:
-                    self.debug_counter += 1
-                    if self.debug_counter % self.config.debug_print_frequency_TransitionsSteps == 0:
-                        print(
-                            "RL TRANSITION:",
-                            "Player:", move.player_id,
-                            "Reward:", reward,
-                            "Done:", state.is_finished
-                            )
                         
                 board_size = len(previous_state)
 
@@ -259,11 +242,9 @@ class SimulationEngine:
                             done=True,
                             player_id=player_id
                         )
-                state.is_finished = True
                 context.finalize(winner=winner, draw=False)
 
             elif draw:
-                state.is_finished = True
                 context.finalize(winner=None, draw=True)
 
 
