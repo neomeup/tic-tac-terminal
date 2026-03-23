@@ -169,15 +169,18 @@ class RLDumbAgent:
         if not isinstance(experiences, list):
             experiences = [experiences]
 
-        for exp in experiences:
-            if getattr(exp, "player_id") is None:
+        for experience in experiences:
+            if experience.player_id is None:
                 continue
-            if hasattr(exp, "player_id"):
-                exp = {
-                    "player_id": exp.player_id,
-                    "reward": exp.reward,
-                    "done": exp.done 
-                }
+
+            exp = {
+                "state": experience.state,
+                "action": experience.action,
+                "reward": experience.reward,
+                "next_state": experience.next_state,
+                "done": experience.done,
+                "player_id": experience.player_id
+            }
             self.buffer.push(exp)
 
         # Debug buffer size
@@ -196,7 +199,7 @@ class RLDumbAgent:
                             "Player:", exp["player_id"],
                             "Reward:", exp["reward"],
                             "Done:", exp["done"]
-                        )
+                        ) # Simplified print for debug, not all experience traits passed through
     
     def observe_transition(self, state, action, reward, next_state, done, player_id):
         
