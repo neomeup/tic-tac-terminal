@@ -47,12 +47,8 @@ class GameConfig:
     mongo_logging_enabled: bool = True
     postgres_logging_enabled: bool = True
 
-    model_storage_enabled: bool = True
     model_storage_local_pre_base_path = "players/computer_players/model_storage/data"
-    if model_storage_enabled:
-        model_storage_backend: Literal["local", "s3", None] = "s3"
-    else:
-        model_storage_backend = None
+    model_storage_backend: Literal["local", "s3", None] = "s3"
 
 
     model_checkpoint_enabled = True 
