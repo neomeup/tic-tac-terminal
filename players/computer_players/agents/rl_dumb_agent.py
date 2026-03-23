@@ -39,6 +39,9 @@ class RLDumbAgent:
         self.storage = ModelStorageFactory.create(self.config)
         self.path_builder = ModelPathBuilder() #static method so instantiation not neccessary but possible necessity in future
 
+        # Debug counter for transitions and train steps
+        self.debug_TransitionsSteps_count = 0 
+
     def _get_paths(self, checkpoint=None): # Placeholder checkpoint
         return self.path_builder.build_paths(config=self.config, player_id=self.player_id, checkpoint=checkpoint)
 
@@ -159,6 +162,8 @@ class RLDumbAgent:
         Accepts either:
         - single experience
         - list of experiences
+
+        Called offline in main
         """
 
         if not isinstance(experiences, list):
@@ -176,19 +181,22 @@ class RLDumbAgent:
             self.buffer.push(exp)
 
         # Debug buffer size
-        print("Buffer size:", len(self.buffer))
+        if self.config.debug_prints_enabled:
+            print("Buffer size:", len(self.buffer))
 
-        # Debug pipeline
-        if len(self.buffer) >= 10:
-            batch = self.buffer.sample(10)
+            # Debug pipeline
+            if len(self.buffer) >= self.training_batch_size:
+                batch = self.buffer.sample(self.config.how_many_games) # Workaround - not great - known
 
-            print("Sample batch:")
-            for exp in batch:
-                print(
-                    "Player:", exp["player_id"],
-                    "Reward:", exp["reward"],
-                    "Done:", exp["done"]
-                )
+                
+                print("Sample batch:")
+                for index, exp in enumerate(batch):
+                    if index % self.config.debug_print_frequency_offline_batch == 0:
+                        print(
+                            "Player:", exp["player_id"],
+                            "Reward:", exp["reward"],
+                            "Done:", exp["done"]
+                        )
     
     def observe_transition(self, state, action, reward, next_state, done, player_id):
         
@@ -206,11 +214,15 @@ class RLDumbAgent:
 
         self.buffer.push(experience)
 
-        print(f"Stored experience for player {player_id} | reward={reward} | done={done}")
-        print("Buffer size:", len(self.buffer))
+        if self.config.debug_prints_enabled:
+            self.debug_TransitionsSteps_count += 1
+            if self.debug_TransitionsSteps_count % self.config.debug_print_frequency_TransitionsSteps == 0:
+                print("----------------------")
+                print(f"Stored experience during transition for player {player_id}")
+                print(f"[Buffer] size={len(self.buffer)} last_reward={reward} done={done}")
+                
 
     def train_step(self):
-        # Debug for active pipes
         if len(self.buffer) < self.training_batch_size:
             return
 
@@ -226,7 +238,7 @@ class RLDumbAgent:
         action = np.array([e["action"] for e in batch])
 
         # Print for debug of encoding
-        if self.training_step % 5 == 0:
+        if self.config.debug_prints_enabled:
             print(f"[TRAIN] step={self.training_step} buffer={len(self.buffer)}")
 
         # Placeholder for real 'training'

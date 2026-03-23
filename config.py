@@ -37,6 +37,12 @@ class GameConfig:
     ## render_type is hardcoded for renderring in main.  If additional render types are built, this should be changed
     ## again, render_type is tied to movement for human players as well though
 
+    # Debugging
+    debug_prints_enabled: bool = True
+    debug_print_frequency_offline_batch: int = 5
+    debug_print_frequency_TransitionsSteps: int = 5
+
+
     # Persistence
     mongo_logging_enabled: bool = True
     postgres_logging_enabled: bool = True
@@ -57,8 +63,8 @@ class GameConfig:
     online_training_enabled: bool = True
     offline_training_enabled: bool = True
 
-    training_batch_size: int = 5
-    training_step_frequency: int = 5 # Int in steps
+    training_batch_size: int = 5 # How large do you want the training set to grow to until it starts training
+    training_step_frequency: int = 5 # How often do you want to train i.e. every x steps
 
     # Games to be played in simulation mode
     how_many_games: int = 12

@@ -27,14 +27,17 @@ def run_headless(config):
     result = engine.run()
 
     # To view basic results in terminal output
-    print(result)
-    for game in result.runs:
-        print("GameRunContext Object:", game)
-        print("Game ID:", game.game_id)
-        print("Winner:", game.winner)
-        print("Moves:", len(game.moves))
-        print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
-        print("--------")
+    if config.debug_prints_enabled:
+
+        print("\n", result)
+        for index, game in enumerate(result.runs):
+            if index % config.debug_print_frequency_offline_batch == 0:
+                print("GameRunContext Object:", game)
+                print("Game ID:", game.game_id)
+                print("Winner:", game.winner)
+                print("Moves:", len(game.moves))
+                print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
+                print("--------\n")
     
     experiences = result.to_experiences(config)
 
@@ -44,12 +47,12 @@ def run_headless(config):
         from players.computer_players.computer_player_runtime import offline_agent
 
         agent = offline_agent(config)
-             
-        print("----------")
-        print("Offline")
         
         agent.observe(experiences)
 
+
+        print("----------")
+        print("Offline")
         print("Total Experiences:", len(experiences))
 
     import uuid

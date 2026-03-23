@@ -57,13 +57,20 @@ class SimulationEngine:
         game_history = []
 
         for _game_index in range(self.config.how_many_games):
+            
+            # debug counter
+            self.debug_counter = 0
+            
             context = self._run_single_game()
 
             # debug spacing for games in a sim
-            print("-----online game finished-----")
+            if self.config.debug_prints_enabled:
+                print("-----online game finished-----")
             
             game_history.append(context)
 
+        if self.config.debug_prints_enabled:
+            print("-----run session - simulation batch finished-----")
         if self.config.model_autosave_on_exit:
             for i in range(self.total_players):
                 agent = get_agent(player_id=i, config=self.config)
@@ -71,7 +78,7 @@ class SimulationEngine:
                     try:
                         agent.save(checkpoint="latest")
                     except AttributeError as e:
-                        print(e)
+                        print(f"Autosave failed for player {i} due to:", e)
 
 
         return SimulationResult(game_history)
@@ -93,7 +100,8 @@ class SimulationEngine:
         )
 
         # Debug random_seed
-        print("Starting player:", state.current_player_id)
+        if self.config.debug_prints_enabled:
+            print("Starting player:", state.current_player_id)
 
         while not state.is_finished:
             self._step(state, context)
@@ -185,14 +193,16 @@ class SimulationEngine:
                 agent = get_agent(move.player_id, self.config)
 
                 # debug online training
-                print(
-                    "RL TRANSITION:",
-                    "Player:", move.player_id,
-                    "Reward:", reward,
-                    "Done:", state.is_finished
-                )
-
-
+                if self.config.debug_prints_enabled:
+                    self.debug_counter += 1
+                    if self.debug_counter % self.config.debug_print_frequency_TransitionsSteps == 0:
+                        print(
+                            "RL TRANSITION:",
+                            "Player:", move.player_id,
+                            "Reward:", reward,
+                            "Done:", state.is_finished
+                            )
+                        
                 board_size = len(previous_state)
 
                 encoded_state = self._encode_board(previous_state, move.player_id)
