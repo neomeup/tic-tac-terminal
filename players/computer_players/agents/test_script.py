@@ -1,4 +1,4 @@
-from config import GameConfig
+from configs.base_config import GameConfig
 from players.computer_players.agents.rl_dumb_agent import RLDumbAgent
 
 from dotenv import load_dotenv

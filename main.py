@@ -8,14 +8,36 @@ Supports both CLI and headless modes. Handles:
 - Integration with agents, rules, and rewards
 '''
 
-from config import GameConfig
+import importlib
+import importlib.util
+import argparse
+import os
+import sys
+
 from simulation.sim_engine import SimulationEngine
 from runtime.cli_runtime import CLIRuntime
 
 from dotenv import load_dotenv
 
-config = GameConfig()
-load_dotenv()
+def load_config(config_path: str):
+    # File system path load
+    if config_path.endswith(".py") or "/" in config_path:
+        config_path = os.path.abspath(config_path)
+
+        module_name = os.path.splitext(os.path.basename(config_path))[0]
+
+        spec = importlib.util.spec_from_file_location(module_name, config_path)
+        module = importlib.util.module_from_spec(spec)
+
+        sys.modules[module_name] = module
+        spec.loader.exec_module(module)
+
+        return module.get_config()
+
+    # Module style load
+    else:
+        module = importlib.import_module(config_path)
+        return module.get_config()
 
 def run_cli(config):
     import curses
@@ -95,12 +117,25 @@ def run_headless(config):
     return result
 
 
-# Easy setup and tear down
-if config.render and config.render_type == "cli":
+if __name__ == "__main__":
+    load_dotenv()
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--config",
+        type=str,
+        required=True,
+        help="Config module path (e.g. configs.full_persistence_3x3_sim)"
+    )
+
+    args = parser.parse_args()
+
+    config = load_config(args.config)
+
+    if config.render and config.render_type == "cli":
         try:
             run_cli(config)
         except KeyboardInterrupt:
-            print("Exiting through KeyboardInterrupt by user")
-            exit()
-else:
-    run_headless(config)
+            print("Exited by user")
+    else:
+        run_headless(config)
