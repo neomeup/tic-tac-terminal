@@ -51,7 +51,8 @@ def run_headless(config):
     # To view basic results in terminal output
     if config.debug_prints_enabled:
 
-        print("\n", result)
+        print("\n----- SimResults / Game Context -----")
+        print(result)
         for index, game in enumerate(result.runs):
             if index % config.debug_print_frequency_offline_batch == 0:
                 print("GameRunContext Object:", game)
@@ -69,13 +70,12 @@ def run_headless(config):
         from players.computer_players.computer_player_runtime import offline_agent
 
         agent = offline_agent(config)
-        
-        agent.observe(experiences)
 
         if config.debug_prints_enabled:
-            print("----------")
-            print("Offline")
+            print("----- Offline -----")
             print("Total Experiences:", len(experiences))
+        
+        agent.observe(experiences)
 
     import uuid
     sim_id = str(uuid.uuid4())
