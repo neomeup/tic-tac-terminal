@@ -20,7 +20,11 @@ from renderers.cli_renderer import render_board, render_game_draw, render_game_w
 from game_types.used_rules import game_finished
 
 from players.human_players.human_movement import get_player_move
+
 from players.computer_players.computer_player_runtime import get_computer_move
+from simulation.training.encoding.encoder_registry import encoder_registry
+from core.serialization import serialize_board
+
 
 
 class CLIRuntime:
@@ -30,6 +34,9 @@ class CLIRuntime:
         self.config = config
         self.total_players = len(config.player_types)
         self.is_all_computer = all(player == "computer" for player in self.config.player_types)
+
+        encoder_class = encoder_registry[self.config.state_encoding_dim_type]
+        self.encoder = encoder_class(self.config)
         
         if self.config.random_seed is not None:
             self.rng = random.Random(self.config.random_seed)
@@ -95,11 +102,17 @@ class CLIRuntime:
 
                 time.sleep(1)
 
+                matrix = self.encoder.compute_encode(serialize_board(board_lst), current_player_index)
+
+                if self.config.state_encoding_flattened:
+                    matrix = matrix.ravel()       
+                
                 move = get_computer_move(
                     current_player_index,
                     board_lst,
                     self.config,
-                    self.rng
+                    self.rng,
+                    matrix
                 )
 
                 board_lst, changed_flag = apply_move(move, board_lst, self.config)
