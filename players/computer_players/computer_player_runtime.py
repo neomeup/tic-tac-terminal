@@ -31,7 +31,7 @@ def get_agent(player_id, config):
     return _agents[player_id]
 
 
-def get_computer_move(current_player_index, board_lst, config, rng):
+def get_computer_move(current_player_index, board_lst, config, rng, encoded_state=None):
 
     agent = get_agent(current_player_index, config)
 
@@ -39,7 +39,7 @@ def get_computer_move(current_player_index, board_lst, config, rng):
         current_player_index,
         board_lst,
         config,
-        rng
+        rng,
     )
 
 def offline_agent(config):

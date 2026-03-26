@@ -138,12 +138,13 @@ class SimulationEngine:
 
     ## Core loop logic called by and controlled by run single game - performs a single turn
     # Allow separation of action/policy choice 
-    def _choose_action(self, state: GameState):
+    def _choose_action(self, state: GameState, encoded_state):
         return get_computer_move(
             state.current_player_id,
             state.board,
             self.config,
-            self.rng
+            self.rng,
+            encoded_state
         )
     
     # Perform the step based on current action/policy
@@ -152,7 +153,9 @@ class SimulationEngine:
         # Capture state before action
         previous_state = serialize_board(state.board)
 
-        move = self._choose_action(state)
+        encoded_state = self._encode_board(previous_state, state.current_player_id)
+
+        move = self._choose_action(state, encoded_state)
 
         new_board, valid_move = apply_move(move, state.board, self.config)
 
@@ -188,7 +191,6 @@ class SimulationEngine:
                         
                 board_size = len(previous_state)
 
-                encoded_state = self._encode_board(previous_state, move.player_id)
                 encoded_next_state = self._encode_board(next_state, move.player_id)
 
                 encoded_action = encode_action(

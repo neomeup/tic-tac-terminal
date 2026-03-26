@@ -6,5 +6,5 @@ Defines choose_move(board_state, player_id).
 
 class BasePolicy:
 
-    def select_action(self, player_id, board, config, rng):
+    def select_action(self, player_id, board, config, rng, encoded_state=None):
         raise NotImplementedError

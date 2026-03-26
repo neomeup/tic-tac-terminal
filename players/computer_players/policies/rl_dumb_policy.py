@@ -18,7 +18,7 @@ class RLDumbPolicy(BasePolicy):
     def _board_to_key(self, board):
         return str([[None if c is None else c.owner_id for c in row] for row in board])
 
-    def select_action(self, player_id, board, config, rng):
+    def select_action(self, player_id, board, config, rng, encoded_state=None):
 
         board_key = self._board_to_key(board)
 

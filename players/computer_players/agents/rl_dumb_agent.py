@@ -150,7 +150,7 @@ class RLDumbAgent:
 
 
 
-    def select_action(self, player_id, board, config, rng):
+    def select_action(self, player_id, board, config, rng, encoded_state=None):
         return self.policy.select_action(
             player_id,
             board,

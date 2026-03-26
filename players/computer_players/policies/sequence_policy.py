@@ -8,7 +8,7 @@ from players.computer_players.policies.base_policy import BasePolicy
 
 
 class SequencePolicy(BasePolicy):
-    def select_action(self, current_player_index: int, board_lst: list[list], config, rng) -> list:
+    def select_action(self, current_player_index: int, board_lst: list[list], config, rng, encoded_state=None) -> list:
         
         id = current_player_index
 
