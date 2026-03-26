@@ -3,7 +3,7 @@ Simple encoder to turn move objects into integers actions
 '''
 
 def encode_action(move, board_size, row=None, col=None):
-    if row and col:
+    if row is not None and col is not None:
         action_encoded = (row * board_size) + col
         return action_encoded
     if move is None:
