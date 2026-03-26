@@ -48,6 +48,7 @@ class RLDumbAgent:
     def _serialize_model(self):
         buffer = io.BytesIO()
 
+        ## For this example file, state dict is used as a generic py torch neural network this should be changed to match the style of the policy used
         state_dict = None
         if hasattr(self.policy, "state_dict"):
             state_dict = self.policy.state_dict()
