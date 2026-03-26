@@ -40,6 +40,7 @@ def get_computer_move(current_player_index, board_lst, config, rng, encoded_stat
         board_lst,
         config,
         rng,
+        encoded_state
     )
 
 def offline_agent(config):
