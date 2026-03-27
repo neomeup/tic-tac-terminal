@@ -11,7 +11,8 @@ def build_postgres_payloads(result: SimulationResult, config) -> dict[str, Any]:
     simulation_payload = {
         "rule_set": config.rule_set,
         "encoder": config.state_encoding_dim_type,
-        "reward_system": config.online_reward_type,
+        "reward_system_player_1": config.policy_type[0],
+        "reward_system_player_2": config.policy_type[1],
         "num_games": len(result.runs),
         "config_json": vars(config),
     }
@@ -43,7 +44,7 @@ def build_postgres_payloads(result: SimulationResult, config) -> dict[str, Any]:
                 "player_id_in_game": move["player_id"],
                 "row": move["action"]["row"] if move["action"] else None,
                 "col": move["action"]["col"] if move["action"] else None,
-                "reward": move["reward"] if move["reward"] else None,
+                "reward": move["reward"] if move["reward"] is not None else None,
                 "board_state": move["board_state"]
             })
 

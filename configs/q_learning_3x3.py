@@ -47,7 +47,7 @@ def get_config() -> GameConfig:
         #----------------------------------#
         # Persistence
         mongo_logging_enabled = False,
-        postgres_logging_enabled = False,
+        postgres_logging_enabled = True,
 
         model_storage_local_pre_base_path = "players/computer_players/model_storage/data",
         model_storage_backend = None,

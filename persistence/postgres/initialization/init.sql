@@ -14,7 +14,8 @@ CREATE TABLE simulation_runs (
     sim_uuid TEXT NOT NULL,
     rule_set TEXT NOT NULL,
     encoder TEXT NOT NULL,
-    reward_system TEXT NOT NULL,
+    reward_system_player_1 TEXT NOT NULL,
+    reward_system_player_2 TEXT NOT NULL,
     num_games INTEGER NOT NULL,
     created_at TIMESTAMP DEFAULT NOW(),
     config_json JSONB
