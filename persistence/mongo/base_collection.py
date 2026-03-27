@@ -19,6 +19,8 @@ class ExperienceStep(TypedDict):
     agent: str | None
     agent_version: str | None
 
+    reward_type: str | None
+
     exploration_rate: float | None
     action_source: Literal["exploration", "policy"] | None
 
