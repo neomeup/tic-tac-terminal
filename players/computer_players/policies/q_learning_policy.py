@@ -21,7 +21,7 @@ class QLearningPolicy(BasePolicy):
         self.epsilon = epsilon
 
 
-        debug_print = True
+        debug_print = False
         self.dbprint = lambda *args, **kwargs: dbprint(debug_print, *args, **kwargs)
 
     def _get_q(self, state_key, action):

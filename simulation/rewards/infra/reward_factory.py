@@ -14,10 +14,10 @@ def get_reward_class(player_id, config):
     return reward_class
 
 
-def get_reward(player_id, winner, draw, config, board_state=None, move=None):
+def get_reward(player_id, winner, draw, config, board_state, move):
 
     reward_class = get_reward_class(player_id, config)
 
     reward_instance = reward_class()
 
-    return reward_class.compute_reward(player_id, winner, draw, board_state, move)
+    return reward_instance.compute_reward(player_id, winner, draw, board_state, move)
