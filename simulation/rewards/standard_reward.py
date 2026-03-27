@@ -7,7 +7,7 @@ Basic reward function.
 '''
 
 
-from simulation.rewards.base_reward import BaseReward
+from simulation.rewards.infra.base_reward import BaseReward
 
 class StandardReward(BaseReward):
 

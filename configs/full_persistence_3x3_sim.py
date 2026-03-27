@@ -84,10 +84,6 @@ def get_config() -> GameConfig:
 
 
         #----------------------------------#
-        # Online Reward
-        online_reward_type = "standard", # registerized in simulation/rewards/reward_registry
-
-        #----------------------------------#
         # Players
         player_types = ["computer", "computer"],
 
@@ -95,5 +91,7 @@ def get_config() -> GameConfig:
         ### Policy / Agent
         policy_type = ["rl_dumb_policy", "sequence_policy"], #registerized in players/computer_players/model_policy_registry
         agent_type = ["rl_dumb_agent", "non_agent"], # registerized in players/computer_players/agent_registry
-        model_version = ["v1", "v1"] # Placeholder for - possibly when versions are dyamically built
+        reward_type = ["standard", "standard"], # registerized in simulation/rewards/reward_registry
+
+        model_version = ["v1", "v1"], # Placeholder for - possibly when versions are dyamically built
         )

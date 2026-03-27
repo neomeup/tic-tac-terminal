@@ -7,7 +7,7 @@ and Experience object creation for offline training.
 
 
 from simulation.training.experience import Experience
-from simulation.rewards.reward_registry import reward_registry
+from simulation.rewards.infra.reward_registry import reward_registry
 
 from simulation.training.encoding.encoders.action_encoder import encode_action
 from simulation.training.encoding.encoder_registry import encoder_registry

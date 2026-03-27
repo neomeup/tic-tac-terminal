@@ -84,10 +84,6 @@ class GameConfig:
 
 
     '''----------------------------------'''
-    # Online Reward
-    online_reward_type: str # registerized in simulation/rewards/reward_registry
-
-    '''----------------------------------'''
     # Players
     player_types: list[Literal["human", "computer"]]
 
@@ -95,4 +91,7 @@ class GameConfig:
     ### Policy / Agent
     policy_type: list[str] #registerized in players/computer_players/model_policy_registry
     agent_type: list[str] # registerized in players/computer_players/agent_registry
+    reward_type: list[str] # registerized in simulation/rewards/reward_registry
+
+
     model_version: list[str] # Placeholder for - possibly when versions are dyamically built

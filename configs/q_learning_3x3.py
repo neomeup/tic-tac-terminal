@@ -84,10 +84,6 @@ def get_config() -> GameConfig:
 
 
         #----------------------------------#
-        # Online Reward
-        online_reward_type = "standard", # registerized in simulation/rewards/reward_registry
-
-        #----------------------------------#
         # Players
         player_types = ["computer", "computer"],
 
@@ -95,6 +91,7 @@ def get_config() -> GameConfig:
         ### Policy / Agent
         policy_type = ["sequence_policy", "q_learning_policy"], #registerized in players/computer_players/model_policy_registry
         agent_type = ["non_agent", "q_learning_agent"], # registerized in players/computer_players/agent_registry
+        reward_type = ["standard", "qlearn_tic_tac"], # registerized in simulation/rewards/reward_registry
 
         #policy_type = ["rl_dumb_policy", "sequence_policy"], #registerized in players/computer_players/model_policy_registry
         #agent_type = ["rl_dumb_agent", "non_agent"], # registerized in players/computer_players/agent_registry

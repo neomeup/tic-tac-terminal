@@ -16,8 +16,7 @@ from simulation.result import SimulationResult
 
 
 from players.computer_players.computer_player_runtime import get_computer_move, get_agent
-from simulation.rewards.reward_registry import reward_registry
-
+from simulation.rewards.infra.reward_factory import get_reward
 
 from simulation.training.encoding.encoder_registry import encoder_registry
 # Probably leave unregisterized - if you need better action encoding, just change encode action
@@ -36,8 +35,6 @@ class SimulationEngine:
         else:
             self.rng = random.Random()
 
-        reward_class = reward_registry[self.config.online_reward_type]
-        self.reward_engine = reward_class()
 
         encoder_class = encoder_registry[self.config.state_encoding_dim_type]
         self.encoder = encoder_class(self.config)
@@ -176,10 +173,11 @@ class SimulationEngine:
             elif draw:
                 state.is_finished = True
 
-            reward = self.reward_engine.compute_reward(
+            reward = get_reward(
                 player_id=move.player_id,
                 winner=winner,
                 draw=draw,
+                config=self.config,
                 board_state=state.board,
                 move=move
             )
