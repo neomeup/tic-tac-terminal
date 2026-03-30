@@ -95,6 +95,8 @@ class QLearnTicTac(BaseReward):
 
         return all_lines
 
+
+    ## First move advantage 
     def is_first_move(self, board_state):
         filled = sum(
             1 for row in board_state for col in row if col is not None
@@ -103,6 +105,8 @@ class QLearnTicTac(BaseReward):
             return True
         return False
     
+
+    ## Board Control
     def center_available(self, board):
         size = len(board)
         center = size // 2
@@ -116,6 +120,8 @@ class QLearnTicTac(BaseReward):
         size = len(board)
         center = size // 2
 
+
+        ## Central move
         if move.target_row == center and move.target_col == center:
             reward += 0.3
             if not first_move:
@@ -128,9 +134,11 @@ class QLearnTicTac(BaseReward):
         return reward
 
 
-    def one_away_from_win(self, board_state, player_id, all_lines, move, win_length):
+    ## Strategic moves
+    def one_away_from_win(self, player_id, all_lines, move, win_length):
         all_lines
         reward = 0
+        fork_count = 0
 
         one_away = win_length - 1
 
@@ -140,24 +148,33 @@ class QLearnTicTac(BaseReward):
 
             if player_count == one_away and empty_count == 1:
                 if any(r == move.target_row and c == move.target_col for (r, c, _) in line):
-                    reward += 0.4
+                    reward += 0.3
+                    for _ in range(fork_count):
+                        reward += 0.1
+                    fork_count += 1
 
         return reward    
 
-    def block_win(self, board_state, player_id, all_lines, move):
+    def block_win(self, player_id, all_lines, move, win_length):
         all_lines
         reward = 0
 
-        one_away = len(board_state) - 1
+        one_away = win_length - 1
 
         for line in all_lines:
             oppenent_count = sum(1 for cell in line if cell[2] is not None and cell[2].owner_id != player_id)
             
-            blocked = sum(1 for cell in line if cell[2].owner_id != player_id)
+            blocked = sum(1 for cell in line if cell[2] is not None and cell[2].owner_id == player_id)
 
             if oppenent_count == one_away and blocked:
-                pass
+                if any(r == move.target_row and c == move.target_col for (r, c, _) in line):
+                    reward += 0.7
+            
+            if oppenent_count == one_away and not blocked:
+                reward -= 0.8
 
+        return reward 
+    
     def possible_win_line():
         pass
 
@@ -169,6 +186,7 @@ class QLearnTicTac(BaseReward):
 
 
 
+    ## Compute function
     def compute_reward(self, player_id, winner, draw, board_state, move, config):
         self.dbprint("start reward computation")
         self.dbprint("Player turn: ", player_id)
@@ -183,13 +201,15 @@ class QLearnTicTac(BaseReward):
 
         if self.is_first_move(board_state):
             first_move = True
-            reward = self.center_move(board_state, move, reward, first_move)
+            reward += self.center_move(board_state, move, reward, first_move)
         elif self.center_available(board_state):
             first_move = False
-            reward = self.center_move(board_state, move, reward, first_move)
+            reward += self.center_move(board_state, move, reward, first_move)
 
 
-        reward += self.one_away_from_win(board_state, player_id, all_lines, move, win_length)
+        reward += self.one_away_from_win(player_id, all_lines, move, win_length)
+
+        reward += self.block_win(player_id, all_lines, move, win_length)
 
         # Game over conditions
         if (draw and winner is not None) or (not draw and winner):
