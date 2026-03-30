@@ -158,22 +158,31 @@ class QLearnTicTac(BaseReward):
     def block_win(self, player_id, all_lines, move, win_length):
         all_lines
         reward = 0
+        forked = False
+        opponent_fork_blocked = False
+        opponent_fork_unblocked = False
 
         one_away = win_length - 1
 
         for line in all_lines:
-            oppenent_count = sum(1 for cell in line if cell[2] is not None and cell[2].owner_id != player_id)
+            opponent_count = sum(1 for cell in line if cell[2] is not None and cell[2].owner_id != player_id)
             
             blocked = sum(1 for cell in line if cell[2] is not None and cell[2].owner_id == player_id)
 
-            if oppenent_count == one_away and blocked:
+            if opponent_count == one_away and blocked == 1:
                 if any(r == move.target_row and c == move.target_col for (r, c, _) in line):
+                    opponent_fork_blocked = True
                     reward += 0.7
-            
-            if oppenent_count == one_away and not blocked:
+            if opponent_count == one_away and blocked == 0:
+                opponent_fork_unblocked = True
                 reward -= 0.8
 
-        return reward 
+
+        if opponent_fork_blocked and opponent_fork_unblocked:
+            forked = True
+            reward = -1
+
+        return reward, forked
     
     def possible_win_line():
         pass
@@ -209,7 +218,18 @@ class QLearnTicTac(BaseReward):
 
         reward += self.one_away_from_win(player_id, all_lines, move, win_length)
 
-        reward += self.block_win(player_id, all_lines, move, win_length)
+        temp_reward, forked = self.block_win(player_id, all_lines, move, win_length)
+
+        if forked:
+            reward = temp_reward
+        else:
+            reward += temp_reward
+
+        # Normalize reward extremes
+        if reward >= 1:
+            reward = 0.95
+        if reward <= -1:
+            reward = -0.95
 
         # Game over conditions
         if (draw and winner is not None) or (not draw and winner):
