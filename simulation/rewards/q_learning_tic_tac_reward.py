@@ -148,9 +148,9 @@ class QLearnTicTac(BaseReward):
 
             if player_count == one_away and empty_count == 1:
                 if any(r == move.target_row and c == move.target_col for (r, c, _) in line):
-                    reward += 0.3
+                    reward += 0.2
                     for _ in range(fork_count):
-                        reward += 0.1
+                        reward += 0.3
                     fork_count += 1
 
         return reward    
