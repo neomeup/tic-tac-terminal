@@ -116,7 +116,8 @@ class QLearnTicTac(BaseReward):
         
         return False
     
-    def center_move(self, board, move, reward, first_move):
+    def center_move(self, board, move, first_move):
+        reward = 0
         size = len(board)
         center = size // 2
 
@@ -167,6 +168,7 @@ class QLearnTicTac(BaseReward):
             
             blocked = sum(1 for cell in line if cell[2] is not None and cell[2].owner_id == player_id)
 
+            ## Might need adjustment for larger boards
             if opponent_count == one_away and blocked == 1:
                 if any(r == move.target_row and c == move.target_col for (r, c, _) in line):
                     opponent_fork_blocked = True
@@ -233,10 +235,10 @@ class QLearnTicTac(BaseReward):
 
         first_move = self.is_first_move(board_state)
 
-        if self.is_first_move(board_state):
-            reward += self.center_move(board_state, move, reward, first_move)
+        if first_move:
+            reward += self.center_move(board_state, move, first_move)
         elif self.center_available(board_state):
-            reward += self.center_move(board_state, move, reward, first_move)
+            reward += self.center_move(board_state, move, first_move)
 
         if not first_move:
             reward += self.possible_win_lines(player_id, all_lines, move, win_length)
@@ -257,12 +259,12 @@ class QLearnTicTac(BaseReward):
             reward = 0.99
 
         # Step penalty
-        reward -= 0.1
+        reward -= 0.02
 
         if reward <= -1:
             reward = -0.99
 
-            
+
         # Game over conditions
         if (draw and winner is None) or (not draw and winner):
             if draw:
