@@ -43,8 +43,8 @@ class PlannedGameTwo(BasePolicy):
                 return Move (player_id=player_id, target_row=r, target_col=c)
 
         if fourth_move:
-            r = 1
-            c = 0
+            r = 0
+            c = 1
             if board_lst[r][c] is None:
                 return Move (player_id=player_id, target_row=r, target_col=c)
 
@@ -55,8 +55,8 @@ class PlannedGameTwo(BasePolicy):
                 return Move (player_id=player_id, target_row=r, target_col=c)
 
         if eigth_move:
-            r = 0
-            c = 1
+            r = 1
+            c = 0
             if board_lst[r][c] is None:
                 return Move (player_id=player_id, target_row=r, target_col=c)
         

@@ -43,8 +43,8 @@ class PlannedGame(BasePolicy):
                 return Move (player_id=player_id, target_row=r, target_col=c)
             
         if third_move:
-            r = 1
-            c = 2
+            r = 2
+            c = 1
             if board_lst[r][c] is None:
                 return Move (player_id=player_id, target_row=r, target_col=c)
 
@@ -55,8 +55,8 @@ class PlannedGame(BasePolicy):
                 return Move (player_id=player_id, target_row=r, target_col=c)
 
         if seventh_move:
-            r = 2
-            c = 1
+            r = 1
+            c = 2
             if board_lst[r][c] is None:
                 return Move (player_id=player_id, target_row=r, target_col=c)
 
