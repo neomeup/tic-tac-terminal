@@ -89,7 +89,9 @@ def get_config() -> GameConfig:
 
         ## If computer player
         ### Policy / Agent
-        policy_type = ["sequence_policy", "reverse_sequence_policy"], #registerized in players/computer_players/model_policy_registry
+        #policy_type = ["sequence_policy", "reverse_sequence_policy"], #registerized in players/computer_players/model_policy_registry
+
+        policy_type = ["planned_game_policy", "planned_game_policy2"], #registerized in players/computer_players/model_policy_registry
         agent_type = ["non_agent", "non_agent"], # registerized in players/computer_players/agent_registry
         reward_type = ["qlearn_tic_tac", "qlearn_tic_tac"], # registerized in simulation/rewards/reward_registry
 
