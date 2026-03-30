@@ -10,7 +10,7 @@ class QLearnTicTac(BaseReward):
     
     def __init__(self):
 
-        debug_print = True
+        debug_print = False
         self.dbprint = lambda *args, **kwargs: dbprint(debug_print, *args, **kwargs)
 
     def build_all_lines_with_coordinates(self, board_lst, win_length):
@@ -241,7 +241,7 @@ class QLearnTicTac(BaseReward):
             reward = -0.99
 
         # Game over conditions
-        if (draw and winner is not None) or (not draw and winner):
+        if (draw and winner is None) or (not draw and winner):
             if draw:
                 reward = 0.2
                 return reward
