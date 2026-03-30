@@ -20,4 +20,4 @@ def get_reward(player_id, winner, draw, config, board_state, move):
 
     reward_instance = reward_class()
 
-    return reward_instance.compute_reward(player_id, winner, draw, board_state, move)
+    return reward_instance.compute_reward(player_id, winner, draw, board_state, move, config)
