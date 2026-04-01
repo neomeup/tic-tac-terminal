@@ -29,13 +29,14 @@ class QLearningPolicy(BasePolicy):
 
     def select_action(self, player_id, board, config, rng, encoded_state=None):
 
-        self.dbprint("start select action")
+        self.dbprint("------start select action------")
         # encode for q table
         if encoded_state is None:
             raise ValueError("QLearningPolicy requires encoded state")
 
         # change to str for hashing
-        state_key = str(encoded_state)
+        self.dbprint("pre-string state: ", encoded_state)
+        state_key = tuple(encoded_state.tolist())
 
         self.dbprint("state key: ", state_key)
         
@@ -76,7 +77,7 @@ class QLearningPolicy(BasePolicy):
 
     def update(self, state, action, reward, next_state, done):
         self.dbprint("start update")
-        state_key = str(state)
+        state_key = tuple(state.tolist())
         self.dbprint("state key: ", state_key)
 
         self.dbprint("reward: ", reward)
@@ -100,8 +101,8 @@ class QLearningPolicy(BasePolicy):
         target = reward if done else reward + self.gamma * max_future_q
         self.dbprint("target: ", target)
 
-        new_q = current_q + self.alpha * (target - current_q)
+        new_q = round(current_q + self.alpha * (target - current_q), 6)
         self.dbprint("new q: ", new_q)
         self.q_table[(state_key, action)] = new_q
         
-        self.dbprint("end update")
+        self.dbprint("------end update------\n")
