@@ -25,6 +25,8 @@ class QLearningAgent:
         debug_print = False
         self.dbprint = lambda *args, **kwargs: dbprint(debug_print, *args, **kwargs)
 
+        self.board_size = config.board_size
+
         if policy_name is None:
             policy_name = "q_learning_policy"
 
@@ -73,7 +75,7 @@ class QLearningAgent:
 
         
         return {
-            "board_size": self.config.board_size,
+            "board_size": self.board_size,
             "rule_set": self.config.rule_set,
 
             "win_length": self.config.win_length,
@@ -224,7 +226,8 @@ class QLearningAgent:
                 action=e["action"],
                 reward=e["reward"],
                 next_state=e["next_state"],
-                done=e["done"]
+                done=e["done"],
+                size=self.board_size,
             )
 
 
