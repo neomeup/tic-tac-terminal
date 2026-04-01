@@ -17,7 +17,8 @@ class NonAgent:
             player_id,
             board,
             config,
-            rng
+            rng,
+            encoded_state
         )
 
     def observe(self, *args, **kwargs):
