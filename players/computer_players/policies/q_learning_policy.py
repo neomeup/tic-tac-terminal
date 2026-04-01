@@ -83,9 +83,8 @@ class QLearningPolicy(BasePolicy):
         self.dbprint("reward: ", reward)
         self.dbprint("done: ", done)
         
-
-        next_state_key = str(next_state)
-
+        next_state_key = tuple(next_state.tolist())
+        
         current_q = self._get_q(state_key, action)
         self.dbprint("current q: ", current_q)
 
