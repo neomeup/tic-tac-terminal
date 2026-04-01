@@ -4,6 +4,8 @@ Main simulation entry point.
 Simulation engine to run multiple Tic-Tac-Toe games programmatically.
 '''
 
+import time
+
 import random
 
 from core.game_state import GameState
@@ -53,9 +55,18 @@ class SimulationEngine:
     def run(self) -> SimulationResult:
         game_history = []
 
+        timing = True
+        if timing:
+            start_time = time.perf_counter() if timing else None
+
         for _game_index in range(self.config.how_many_games):
-            
+            if timing:
+                game_start = time.perf_counter()
+
             context = self._run_single_game()
+
+            if timing:
+                game_start = time.perf_counter()
 
             # debug spacing for games in a sim
             if self.config.debug_prints_enabled:
@@ -70,7 +81,13 @@ class SimulationEngine:
                 agent = get_agent(player_id=i, config=self.config)
                 if agent is not None and hasattr(agent, "save"):
                     agent.save(checkpoint="latest")
+        # print("final Q-table size:", len(agent.policy.q_table))
 
+        if timing:
+            total_time = time.perf_counter() - start_time
+            avg_time = total_time / self.config.how_many_games
+            print(f"Total simulation time: {total_time:.2f}s")
+            print(f"Average per game: {avg_time:.4f}s")
 
         return SimulationResult(game_history)
 

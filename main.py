@@ -8,6 +8,8 @@ Supports both CLI and headless modes. Handles:
 - Integration with agents, rules, and rewards
 '''
 
+import time
+
 import importlib
 import importlib.util
 import argparse
@@ -138,4 +140,13 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("Exited by user")
     else:
+        timing = True
+
+        if timing:
+            start_total = time.perf_counter()
+
         run_headless(config)
+        
+        if timing:
+            total_elapsed = time.perf_counter() - start_total
+            print(f"[Timing] Headless run completed in {total_elapsed:.2f}s")
