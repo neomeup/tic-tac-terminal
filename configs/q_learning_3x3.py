@@ -39,7 +39,7 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Debugging
-        debug_prints_enabled = True,
+        debug_prints_enabled = False,
         debug_print_frequency_offline_batch = 1,
         debug_print_frequency_TransitionsSteps = 1,
 
@@ -50,16 +50,16 @@ def get_config() -> GameConfig:
         postgres_logging_enabled = True,
 
         model_storage_local_pre_base_path = "players/computer_players/model_storage/data",
-        model_storage_backend = None,
+        model_storage_backend = "s3",
 
-        model_checkpoint_enabled = False,
+        model_checkpoint_enabled = True,
         model_checkpoint_interval = 5, # In training steps 
         model_autosave_on_exit = True,
 
 
         #----------------------------------#
         # Simulation
-        how_many_games = 1,
+        how_many_games = 12,
 
 
         #----------------------------------#
