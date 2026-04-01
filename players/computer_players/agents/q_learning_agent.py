@@ -16,9 +16,14 @@ from players.computer_players.model_storage.infra.model_storage_factory import M
 from players.computer_players.model_storage.infra.path_builder import ModelPathBuilder
 
 
+from debugging_testing.printing_debug import dbprint
+
 class QLearningAgent:
 
     def __init__(self, config, player_id, policy_name=None, capacity=10000):
+
+        debug_print = False
+        self.dbprint = lambda *args, **kwargs: dbprint(debug_print, *args, **kwargs)
 
         if policy_name is None:
             policy_name = "q_learning_policy"
@@ -29,6 +34,9 @@ class QLearningAgent:
         policy_class = model_policy_registry[policy_name]
         self.policy = policy_class()
 
+        self.dbprint("\n------ init prints start -------")
+        self.dbprint("Initial Q-table size:", len(self.policy.q_table))
+
         self.buffer = ReplayBuffer(capacity)
 
         self.training_step = 0
@@ -36,6 +44,11 @@ class QLearningAgent:
 
         self.storage = ModelStorageFactory.create(self.config)
         self.path_builder = ModelPathBuilder()
+
+        self.load(checkpoint="latest")
+
+        self.dbprint("Loaded Q-table size:", len(self.policy.q_table))
+        self.dbprint("------ init prints end -------\n")
 
     def _get_paths(self, checkpoint=None):
         return self.path_builder.build_paths(
@@ -57,6 +70,7 @@ class QLearningAgent:
     def _build_metadata(self, checkpoint=None):
 
         checkpoint = checkpoint if checkpoint is not None else "latest"
+
         
         return {
             "board_size": self.config.board_size,
@@ -85,7 +99,7 @@ class QLearningAgent:
             "training_config": {
                 "encoding": self.config.state_encoding_dim_type,
                 "encoding_flattened": self.config.state_encoding_flattened,
-                "reward": self.config.online_reward_type, # Placeholder / which online vs offline do you want
+                "reward": self.config.reward_type[self.player_id], # Placeholder / which online vs offline do you want. Currently online only - come back to for offline
             }
         }
 
@@ -105,9 +119,9 @@ class QLearningAgent:
         expected_agent = self.config.agent_type[self.player_id]
 
         if metadata.get("agent") != expected_agent:
-            print("Warning: loading model from different agent type")
+            self.dbprint("Warning: loading model from different agent type")
         else:
-            print("Success: loading model from correct agent type")
+            self.dbprint("Success: loading model from correct agent type")
         
 
         self.training_step = metadata.get("training_step", 0)
@@ -124,6 +138,9 @@ class QLearningAgent:
 
         self.storage.save_model(paths["model_path"], model_bytes)
         self.storage.save_metadata(paths["metadata_path"], metadata)
+        self.dbprint("\n------ save print start -------")
+        self.dbprint("Q-table size:", len(self.policy.q_table))
+        self.dbprint("------ save print end -------\n")
 
     def load(self, checkpoint=None):
         if self.storage is None:
@@ -133,6 +150,9 @@ class QLearningAgent:
 
         model_bytes = self.storage.load_model(paths["model_path"])
         metadata = self.storage.load_metadata(paths["metadata_path"])
+
+        self.dbprint("Loading from path: ", paths["model_path"])
+        self.dbprint("Model bytes: ", model_bytes is not None)
 
         if model_bytes is not None:
             self._deserialize_model(model_bytes)
