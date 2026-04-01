@@ -62,6 +62,7 @@ class QLearningPolicy(BasePolicy):
                     best_value = q
                     action = a
             self.dbprint("Get q > action, action: ", action)
+            self.dbprint("Best value: ", best_value)
             if action is None:
                 action = rng.choice(possible_actions)
                 self.dbprint("None action, action: ", action)
@@ -70,12 +71,12 @@ class QLearningPolicy(BasePolicy):
         row, col = decode_action(action, config.board_size)
 
         self.dbprint("q: ", q)
-        self.dbprint("q table: ", self.q_table)
+        #self.dbprint("q table: ", self.q_table)
         self.dbprint("end select action")
 
         return Move(player_id=player_id, target_row=row, target_col=col)
 
-    def update(self, state, action, reward, next_state, done):
+    def update(self, state, action, reward, next_state, done, size):
         self.dbprint("start update")
         state_key = tuple(state.tolist())
         self.dbprint("state key: ", state_key)
@@ -84,15 +85,21 @@ class QLearningPolicy(BasePolicy):
         self.dbprint("done: ", done)
         
         next_state_key = tuple(next_state.tolist())
+        self.dbprint("next state key: ", next_state_key)
         
         current_q = self._get_q(state_key, action)
         self.dbprint("current q: ", current_q)
 
         # Estimate future value
+        possible_actions = []
+
+        for i in range(size * size):
+            if next_state[i] == 0:  # empty cell
+                possible_actions.append(i)
+
         future_qs = [
-            self.q_table.get((next_state_key, a), 0.0)
-            for (_, a) in self.q_table.keys()
-            if _ == next_state_key
+            self._get_q(next_state_key, a)
+            for a in possible_actions
         ]
 
         max_future_q = max(future_qs) if future_qs else 0.0
