@@ -14,7 +14,7 @@ class StandardReward(BaseReward):
     def compute_reward(self, player_id, winner, draw, board_state=None, move=None, config=None):
 
         if draw:
-            return 0.0
+            return 0.2
         
         if winner is None:
             return 0.0

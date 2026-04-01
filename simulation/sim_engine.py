@@ -262,6 +262,27 @@ class SimulationEngine:
                 context.finalize(winner=winner, draw=False)
 
             elif draw:
+                if self.config.online_training_enabled:
+                    for player_id in range(self.total_players):
+
+                        if player_id == move.player_id:
+                            continue
+
+                        opponent_agent = get_agent(player_id, self.config)
+
+                        if opponent_agent is None:
+                            continue
+
+                        opponent_state = self._encode_board(next_state, player_id)
+
+                        opponent_agent.observe_transition(
+                            state=opponent_state,
+                            action=None,
+                            reward=0.2,
+                            next_state=opponent_state,
+                            done=True,
+                            player_id=player_id
+                        )                
                 context.finalize(winner=None, draw=True)
 
 
