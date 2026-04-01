@@ -89,9 +89,23 @@ class GameConfig:
 
     ## If computer player
     ### Policy / Agent
-    policy_type: list[str] #registerized in players/computer_players/model_policy_registry
-    agent_type: list[str] # registerized in players/computer_players/agent_registry
-    reward_type: list[str] # registerized in simulation/rewards/reward_registry
+    policy_type: list[Literal[
+        "sequence_policy",
+        "rl_dumb_policy",
+        "q_learning_policy",
+        "reverse_sequence_policy,"
+        "planned_game_policy",
+        "planned_game_policy2"
+    ]] #registerized in players/computer_players/model_policy_registry
+    agent_type: list[Literal[
+        "rl_dumb_agent",
+        "non_agent",
+        "q_learning_agent"
+    ]] # registerized in players/computer_players/agent_registry
+    reward_type: list[Literal[
+        "standard",
+        "qlearn_tic_tac"
+    ]] # registerized in simulation/rewards/reward_registry
 
 
     model_version: list[str] # Placeholder for - possibly when versions are dyamically built

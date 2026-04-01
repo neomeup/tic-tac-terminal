@@ -64,7 +64,7 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Encoding
-        state_encoding_dim_type = "tensor_with_empty", # registerized in simulation/training/encoding/encoder_registry
+        state_encoding_dim_type = "vector", # registerized in simulation/training/encoding/encoder_registry
         state_encoding_flattened = True, # interacts with dim type to provide a flat version of the selected type
 
 
@@ -89,14 +89,10 @@ def get_config() -> GameConfig:
 
         ## If computer player
         ### Policy / Agent
-        #policy_type = ["sequence_policy", "reverse_sequence_policy"], #registerized in players/computer_players/model_policy_registry
-
-        policy_type = ["planned_game_policy", "planned_game_policy2"], #registerized in players/computer_players/model_policy_registry
-        agent_type = ["non_agent", "non_agent"], # registerized in players/computer_players/agent_registry
+        policy_type = ["q_learning_policy", "q_learning_policy"], #registerized in players/computer_players/model_policy_registry
+        agent_type = ["q_learning_agent", "q_learning_agent"], # registerized in players/computer_players/agent_registry
         reward_type = ["qlearn_tic_tac", "qlearn_tic_tac"], # registerized in simulation/rewards/reward_registry
 
-        #policy_type = ["rl_dumb_policy", "sequence_policy"], #registerized in players/computer_players/model_policy_registry
-        #agent_type = ["rl_dumb_agent", "non_agent"], # registerized in players/computer_players/agent_registry
 
         model_version = ["v1", "v1"] # Placeholder for - possibly when versions are dyamically built
         )
