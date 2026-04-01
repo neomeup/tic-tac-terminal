@@ -1,4 +1,4 @@
-from configs.q_learning_3x3 import get_config
+from configs.q_learning_training import get_config
 from simulation.sim_engine import SimulationEngine
 
 config = get_config()

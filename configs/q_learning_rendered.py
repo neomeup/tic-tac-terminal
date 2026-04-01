@@ -25,12 +25,12 @@ def get_config() -> GameConfig:
         #----------------------------------#
         # Random runtime 
         random_start = False, # Start conditions for movement
-        random_seed = 15, # Random Seed Config
+        random_seed = 0, # Random Seed Config
         # for a single game, random seed 1 produces 0 winner, 37 for player 1 and 15 for draw
 
         #----------------------------------#        
         # Rendered runtime
-        render = False,
+        render = True,
 
         ## render_type is hardcoded for renderring in main.  If additional render types are built, this should be changed
         ## render_type is tied to movement for human players as well thus is changed this should change as well
@@ -47,19 +47,20 @@ def get_config() -> GameConfig:
         #----------------------------------#
         # Persistence
         mongo_logging_enabled = False,
-        postgres_logging_enabled = True,
+        postgres_logging_enabled = False,
 
         model_storage_local_pre_base_path = "players/computer_players/model_storage/data",
-        model_storage_backend = "s3",
+        model_storage_backend = None,
 
-        model_checkpoint_enabled = True,
-        model_checkpoint_interval = 5, # In training steps 
-        model_autosave_on_exit = True,
+        model_checkpoint_enabled = False,
+        model_checkpoint_interval = 100, # In training steps 
+        model_autosave_on_exit = False, # Should always be true to save the 'latest' 
 
+        #restart from here
 
         #----------------------------------#
         # Simulation
-        how_many_games = 12,
+        how_many_games = 1,
 
 
         #----------------------------------#
@@ -70,7 +71,7 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Training
-        online_training_enabled = True,
+        online_training_enabled = False,
         offline_training_enabled = False,
 
         training_batch_size = 1, # How large do you want the training set to grow to until it starts training
@@ -85,7 +86,7 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Players
-        player_types = ["computer", "computer"],
+        player_types = ["human", "computer"],
 
         ## If computer player
         ### Policy / Agent
