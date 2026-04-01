@@ -90,7 +90,7 @@ class RLDumbAgent:
             "training_config": {
                 "encoding": self.config.state_encoding_dim_type,
                 "encoding_flattened": self.config.state_encoding_flattened,
-                "reward": self.config.online_reward_type, # Placeholder / which online vs offline do you want
+                "reward": self.config.reward_type[self.player_id], # Placeholder / which online vs offline do you want. Currently online only - come back to for offline
             }
         }
 
