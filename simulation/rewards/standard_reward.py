@@ -14,15 +14,18 @@ class StandardReward(BaseReward):
     def compute_reward(self, player_id, winner, draw, board_state=None, move=None, config=None):
 
         if draw:
-            return 0.2
-        
-        if winner is None:
-            return 0.0
+            draw_reward = 0.2
+            reward = draw_reward
+            return reward
         
         if winner == player_id:
-            return 1.0
+            winner_reward = 1
+            reward = winner_reward
+            return reward
         
         if winner != player_id:
-            return -1.0
+            loser_reward = -1
+            reward = loser_reward
+            return reward
         
         return ValueError("Reward miscalculation")

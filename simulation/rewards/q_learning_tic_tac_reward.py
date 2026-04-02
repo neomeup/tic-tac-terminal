@@ -147,9 +147,9 @@ class QLearnTicTac(BaseReward):
 
             if player_count == one_away and empty_count == 1:
                 if any(r == move.target_row and c == move.target_col for (r, c, _) in line):
-                    reward += 0.1
+                    reward += 0.15
                     for _ in range(fork_count):
-                        reward += 1.5
+                        reward += .2
                     fork_count += 1
 
         return reward    
@@ -255,29 +255,32 @@ class QLearnTicTac(BaseReward):
             reward += temp_reward
 
         # Normalize reward extremes
-        if reward >= 1:
-            reward = 0.99
+        if reward >= 2:
+            reward = 1.99
 
         # Step penalty
         reward -= 0.02
 
-        if reward <= -1:
-            reward = -0.99
+        if reward <= -2:
+            reward = -1.99
 
 
         # Game over conditions
         if (draw and winner is None) or (not draw and winner):
             if draw:
-                reward = 0.2
+                draw_reward = 1
+                reward = draw_reward
                 return reward
                     
             if winner == player_id:
-                reward = 1
+                winner_reward = 2
+                reward = winner_reward
                 return reward
             
             # Should be set retroactively by sim engine as this case should never exist within reward engine
             if winner != player_id:
-                reward = -1
+                loser_reward = -2
+                reward = loser_reward
                 return reward
         
         self.dbprint("end reward computation")
