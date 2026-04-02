@@ -43,7 +43,10 @@ def get_config() -> GameConfig:
         debug_print_frequency_offline_batch = 5,
         debug_print_frequency_TransitionsSteps = 5,
 
+        # Timing
+        timing = False,
 
+        
         #----------------------------------#
         # Persistence
         mongo_logging_enabled = True,
