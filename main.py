@@ -48,6 +48,9 @@ def run_cli(config):
 
 def run_headless(config):
 
+    import uuid
+    sim_id = str(uuid.uuid4())
+
     for batch in range(config.runs_batch_count):
         engine = SimulationEngine(config)
         result = engine.run()
@@ -81,8 +84,7 @@ def run_headless(config):
             
             agent.observe(experiences)
 
-        import uuid
-        sim_id = str(uuid.uuid4())
+        batch_id = batch + 1
 
         if config.mongo_logging_enabled:
 
@@ -91,7 +93,7 @@ def run_headless(config):
             
             documents = []
             for game_index, game in enumerate(result.runs):
-                document = build_experience_document(game, sim_id, game_index, config)
+                document = build_experience_document(game, sim_id, game_index, batch_id, config)
                 documents.append(document)
 
             try:
@@ -117,9 +119,6 @@ def run_headless(config):
                 print("\nPayloads that would have been inserted:\n")
                 pprint.pprint(payload)
                 print("\nError details:\n", e)
-
-    # return result
-
 
 if __name__ == "__main__":
     load_dotenv()

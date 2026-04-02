@@ -2,7 +2,7 @@ from persistence.mongo.base_collection import SimulationExperienceDocument
 from persistence.mongo.base_collection import ExperienceStep
 
 
-def build_experience_document(context, simulation_run_id: int, game_id: int, config) -> SimulationExperienceDocument:
+def build_experience_document(context, simulation_run_id: int, game_id: int, batch_id: int, config) -> SimulationExperienceDocument:
 
     experiences: list[ExperienceStep] = []
 
@@ -63,6 +63,7 @@ def build_experience_document(context, simulation_run_id: int, game_id: int, con
 
     return {
         "simulation_run_id": simulation_run_id,
+        "batch_id": batch_id,
         "game_id": game_id,
         "player_ids": list(context.players.keys()),
 

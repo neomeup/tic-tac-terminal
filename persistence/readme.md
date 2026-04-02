@@ -293,6 +293,7 @@ Example document:
 ```
 {
   "simulation_run_id": generated UUID, (Ties to the Postgres DB)
+  "batch_id": 1,
   "game_id": 123,
   "player_ids": [0,1],
 
