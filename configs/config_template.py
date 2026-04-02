@@ -62,7 +62,11 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Simulation
+        ## Note these are multiplied together for a total count on a simulation run
+        ## i.e. hmg = 100 with rbc = 10 produces 1000 games
+        ## Batching should specifically be used when db persistence is enabled
         how_many_games = int,
+        runs_batch_count = int,
 
 
         #----------------------------------#

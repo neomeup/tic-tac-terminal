@@ -49,11 +49,11 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Persistence
-        mongo_logging_enabled = False,
-        postgres_logging_enabled = False,
+        mongo_logging_enabled = True,
+        postgres_logging_enabled = True,
 
         model_storage_local_pre_base_path = "players/computer_players/model_storage/data",
-        model_storage_backend = "s3",
+        model_storage_backend = None,
 
         model_checkpoint_enabled = True,
         model_checkpoint_interval = 1000, # In training steps 
@@ -62,7 +62,11 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Simulation
-        how_many_games = 100000,
+        ## Note these are multiplied together for a total count on a simulation run
+        ## i.e. hmg = 100 with rbc = 10 produces 1000 games
+        ## Batching should specifically be used when db persistence is enabled
+        how_many_games = 2,
+        runs_batch_count = 2,
 
 
         #----------------------------------#
