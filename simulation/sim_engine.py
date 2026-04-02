@@ -41,6 +41,8 @@ class SimulationEngine:
         encoder_class = encoder_registry[self.config.state_encoding_dim_type]
         self.encoder = encoder_class(self.config)
 
+        self.timing = self.config.timing
+
     # Helper function for encoding
     def _encode_board(self, board_state, player_id):
 
@@ -55,7 +57,7 @@ class SimulationEngine:
     def run(self) -> SimulationResult:
         game_history = []
 
-        timing = True
+        timing = self.timing
         if timing:
             start_time = time.perf_counter() if timing else None
 
@@ -86,8 +88,8 @@ class SimulationEngine:
         if timing:
             total_time = time.perf_counter() - start_time
             avg_time = total_time / self.config.how_many_games
-            print(f"Total simulation time: {total_time:.2f}s")
-            print(f"Average per game: {avg_time:.4f}s")
+            print(f"[Timing] Total simulation time: {total_time:.2f}s")
+            print(f"[Timing] Average per game: {avg_time:.4f}s")
 
         return SimulationResult(game_history)
 
@@ -251,10 +253,19 @@ class SimulationEngine:
 
                         loser_state = self._encode_board(next_state, player_id)
 
+                        loser_reward = get_reward(
+                            player_id=player_id,
+                            winner=winner,
+                            draw=False,
+                            config=self.config,
+                            board_state=state.board,
+                            move=move
+                        )
+
                         loser_agent.observe_transition(
                             state=loser_state,
                             action=None,
-                            reward=-1.0,
+                            reward=loser_reward,
                             next_state=loser_state,
                             done=True,
                             player_id=player_id
@@ -275,10 +286,19 @@ class SimulationEngine:
 
                         opponent_state = self._encode_board(next_state, player_id)
 
+                        draw_reward = get_reward(
+                            player_id=player_id,
+                            winner=None,
+                            draw=True,
+                            config=self.config,
+                            board_state=state.board,
+                            move=move
+                        )
+
                         opponent_agent.observe_transition(
                             state=opponent_state,
                             action=None,
-                            reward=0.2,
+                            reward=draw_reward,
                             next_state=opponent_state,
                             done=True,
                             player_id=player_id

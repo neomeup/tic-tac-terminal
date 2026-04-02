@@ -24,8 +24,8 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Random runtime 
-        random_start = False, # Start conditions for movement
-        random_seed = 15, # Random Seed Config
+        random_start = True, # Start conditions for movement
+        random_seed = None, # Random Seed Config
         # for a single game, random seed 1 produces 0 winner, 37 for player 1 and 15 for draw
 
         #----------------------------------#        
@@ -43,6 +43,9 @@ def get_config() -> GameConfig:
         debug_print_frequency_offline_batch = 1,
         debug_print_frequency_TransitionsSteps = 1,
 
+        # Timing
+        timing = False,
+
 
         #----------------------------------#
         # Persistence
@@ -53,13 +56,13 @@ def get_config() -> GameConfig:
         model_storage_backend = "s3",
 
         model_checkpoint_enabled = True,
-        model_checkpoint_interval = 100, # In training steps 
+        model_checkpoint_interval = 1000, # In training steps 
         model_autosave_on_exit = True, # Should always be true to save the 'latest' 
 
 
         #----------------------------------#
         # Simulation
-        how_many_games = 10000,
+        how_many_games = 100000,
 
 
         #----------------------------------#
@@ -94,5 +97,5 @@ def get_config() -> GameConfig:
         reward_type = ["qlearn_tic_tac", "qlearn_tic_tac"], # registerized in simulation/rewards/reward_registry
 
 
-        model_version = ["v1", "v1"] # Placeholder for - possibly when versions are dyamically built
+        model_version = ["q_learn_reward_v1", "q_learn_reward_v1"] # Placeholder for - possibly when versions are dyamically built
         )

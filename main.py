@@ -140,7 +140,7 @@ if __name__ == "__main__":
         except KeyboardInterrupt:
             print("Exited by user")
     else:
-        timing = True
+        timing = config.timing
 
         if timing:
             start_total = time.perf_counter()

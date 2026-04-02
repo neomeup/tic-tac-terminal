@@ -43,6 +43,9 @@ def get_config() -> GameConfig:
         debug_print_frequency_offline_batch = int,
         debug_print_frequency_TransitionsSteps = int,
 
+        # Timing
+        timing = bool,
+
 
         #----------------------------------#
         # Persistence

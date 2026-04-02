@@ -24,7 +24,7 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Random runtime 
-        random_start = False, # Start conditions for movement
+        random_start = True, # Start conditions for movement
         random_seed = 0, # Random Seed Config
         # for a single game, random seed 1 produces 0 winner, 37 for player 1 and 15 for draw
 
@@ -43,14 +43,17 @@ def get_config() -> GameConfig:
         debug_print_frequency_offline_batch = 1,
         debug_print_frequency_TransitionsSteps = 1,
 
+        # Timing
+        timing = False,
 
+        
         #----------------------------------#
         # Persistence
         mongo_logging_enabled = False,
         postgres_logging_enabled = False,
 
         model_storage_local_pre_base_path = "players/computer_players/model_storage/data",
-        model_storage_backend = None,
+        model_storage_backend = "s3",
 
         model_checkpoint_enabled = False,
         model_checkpoint_interval = 100, # In training steps 
@@ -86,14 +89,14 @@ def get_config() -> GameConfig:
 
         #----------------------------------#
         # Players
-        player_types = ["human", "computer"],
+        player_types = ["computer", "human"],
 
         ## If computer player
         ### Policy / Agent
         policy_type = ["q_learning_policy", "q_learning_policy"], #registerized in players/computer_players/model_policy_registry
         agent_type = ["q_learning_agent", "q_learning_agent"], # registerized in players/computer_players/agent_registry
-        reward_type = ["qlearn_tic_tac", "qlearn_tic_tac"], # registerized in simulation/rewards/reward_registry
+        reward_type = ["standard", "standard"], # registerized in simulation/rewards/reward_registry
 
 
-        model_version = ["v1", "v1"] # Placeholder for - possibly when versions are dyamically built
+        model_version = ["q_learn_reward_v1", "q_learn_reward_v1"] # Placeholder for - possibly when versions are dyamically built
         )
