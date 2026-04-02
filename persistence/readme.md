@@ -224,6 +224,7 @@ Conceptual schemas:
 | -------------- | ------------------ | -------------- |
 | id             | Serial Primary Key | int            |
 | sim_uuid       | Text               | str            |
+| batch_id       | Integer            | int            |
 | rule_set       | Text               | str            |
 | encoder        | Text               | str            |
 | reward_system  | Text               | str            |
@@ -235,17 +236,18 @@ Conceptual schemas:
 
 ### Games
 
-| Value             | SQL Type                 | Python Type |
-| ----------------- | ------------------------ | ----------- |
-| id                | Serial Primary Key       | int         |
-| simulation_run_id | Integer (FK sim_runs.id) | int         |
-| player_one_id     | Integer (FK players.id)  | int         |
-| player_two_id     | Integer (FK players.id)  | int         |
-| winner_player_id  | Integer (FK players.id)  | int / None  |
-| winner_in_game_id | Integer                  | int / None  |
-| is_draw           | Boolean                  | bool        |
-| total_moves       | Integer                  | int         |
-| created_at        | Timestamp                | datetime    |
+| Value             | SQL Type                       | Python Type |
+| ----------------- | ------------------------------ | ----------- |
+| id                | Serial Primary Key             | int         |
+| simulation_run_id | Integer (FK sim_runs.id)       | int         |
+| batch_id          | Integer (FK sim_runs.batch_id) | int         |
+| player_one_id     | Integer (FK players.id)        | int         |
+| player_two_id     | Integer (FK players.id)        | int         |
+| winner_player_id  | Integer (FK players.id)        | int / None  |
+| winner_in_game_id | Integer                        | int / None  |
+| is_draw           | Boolean                        | bool        |
+| total_moves       | Integer                        | int         |
+| created_at        | Timestamp                      | datetime    |
 
 
 * If is_draw is true, winner_player_id = None
@@ -253,18 +255,19 @@ Conceptual schemas:
 
 ### Moves 
 
-| Value             | SQL Type                | Python Type    |
-| ----------------- | ----------------------- | -------------- |
-| id                | Serial Primary Key      | int            |
-| simulation_run_id | Integer (FK sim_runs.id)| int            |
-| game_id           | Integer (FK games.id)   | int            |
-| player_id         | Integer (FK players.id) | int            |
-| player_id_in_game | Integer                 | int            |
-| turn_number       | Integer                 | int            |
-| row               | Integer                 | int            |
-| col               | Integer                 | int            |
-| reward            | Float                   | float          |
-| board_state_json  | JSONB                   | list[list[]]   |
+| Value             | SQL Type                       | Python Type    |
+| ----------------- | ------------------------------ | -------------- |
+| id                | Serial Primary Key             | int            |
+| simulation_run_id | Integer (FK sim_runs.id)       | int            |
+| batch_id          | Integer (FK sim_runs.batch_id) | int            |
+| game_id           | Integer (FK games.id)          | int            |
+| player_id         | Integer (FK players.id)        | int            |
+| player_id_in_game | Integer                        | int            |
+| turn_number       | Integer                        | int            |
+| row               | Integer                        | int            |
+| col               | Integer                        | int            |
+| reward            | Float                          | float          |
+| board_state_json  | JSONB                          | list[list[]]   |
 
 
 

@@ -16,6 +16,7 @@ class GameRepository:
     def save_game_with_moves(
         self,
         simulation_run_id: int,
+        batch_id: int,
         player_one_id: int,
         player_two_id: int,
         winner_player_id: int | None,
@@ -28,6 +29,7 @@ class GameRepository:
         INSERT INTO games
         (
             simulation_run_id,
+            batch_id,
             player_one_id,
             player_two_id,
             winner_player_id,
@@ -36,14 +38,14 @@ class GameRepository:
             total_moves,
             created_at
         )
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
         RETURNING id
         """
 
         move_query = """
         INSERT INTO moves
-        (simulation_run_id, game_id, player_id, player_id_in_game, turn_number, row_index, col_index, reward, board_state_json)
-        VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s)
+        (simulation_run_id, batch_id, game_id, player_id, player_id_in_game, turn_number, row_index, col_index, reward, board_state_json)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
 
         total_moves = len(moves)
@@ -59,6 +61,7 @@ class GameRepository:
                 game_query,
                 (
                     simulation_run_id,
+                    batch_id,
                     player_one_id,
                     player_two_id,
                     winner_player_id,
@@ -78,6 +81,7 @@ class GameRepository:
                     move_query,
                     (
                         simulation_run_id,
+                        batch_id,
                         game_id,
                         move["player_id"],
                         move["player_id_in_game"],
@@ -94,6 +98,7 @@ class GameRepository:
     def save_games_with_moves(
         self,
         simulation_run_id: int,
+        batch_id: int,
         games: list[dict],
         player_map: dict[int, int]
         ) -> None:
@@ -129,6 +134,7 @@ class GameRepository:
 
             self.save_game_with_moves(
                 simulation_run_id=simulation_run_id,
+                batch_id=batch_id,
                 player_one_id=player_one_id,
                 player_two_id=player_two_id,
                 winner_player_id=winner_player_id,

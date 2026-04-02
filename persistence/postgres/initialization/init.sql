@@ -12,6 +12,7 @@ CREATE TABLE players (
 CREATE TABLE simulation_runs (
     id SERIAL PRIMARY KEY,
     sim_uuid TEXT NOT NULL,
+    batch_id INTEGER NOT NULL,
     rule_set TEXT NOT NULL,
     encoder TEXT NOT NULL,
     reward_system_player_1 TEXT NOT NULL,
@@ -24,6 +25,7 @@ CREATE TABLE simulation_runs (
 CREATE TABLE games (
     id SERIAL PRIMARY KEY,
     simulation_run_id INTEGER REFERENCES simulation_runs(id),
+    batch_id INTEGER NOT NULL,
     player_one_id INTEGER REFERENCES players(id),
     player_two_id INTEGER REFERENCES players(id),
     winner_player_id INTEGER REFERENCES players(id),
@@ -36,6 +38,7 @@ CREATE TABLE games (
 CREATE TABLE moves (
     id SERIAL PRIMARY KEY,
     simulation_run_id INTEGER REFERENCES simulation_runs(id),
+    batch_id INTEGER NOT NULL,
     game_id INTEGER REFERENCES games(id),
     player_id INTEGER REFERENCES players(id) NULL,
     player_id_in_game INTEGER,

@@ -112,7 +112,7 @@ def run_headless(config):
 
             try:
                 logger = RunLogger(config)
-                logger.log_postgres(sim_uuid=sim_id, payload=payload)
+                logger.log_postgres(sim_uuid=sim_id, batch_id=batch_id, payload=payload)
             except Exception as e:
                 import pprint 
                 print("-----Postgres connection/transaction failed-----")

@@ -19,7 +19,7 @@ class RunLogger:
             exp_repo.insert_many(documents)
 
 
-    def log_postgres(self, sim_uuid, payload):
+    def log_postgres(self, sim_uuid, batch_id, payload):
         from persistence.postgres.postgres_connection import PostgresConnection
 
         from persistence.postgres.simulation_repo import SimulationRepository
@@ -35,11 +35,11 @@ class RunLogger:
             player_repo = PlayersRepository(postgres_conn)
             game_repo = GameRepository(postgres_conn)
 
-            sim_id = sim_repo.create_simulation_run(sim_uuid, **payload["simulation"])
+            sim_id = sim_repo.create_simulation_run(sim_uuid, batch_id, **payload["simulation"])
 
             player_map = player_repo.get_or_create_players(payload["players"])
 
-            game_repo.save_games_with_moves(sim_id, payload["games"], player_map)
+            game_repo.save_games_with_moves(sim_id, batch_id, payload["games"], player_map)
 
             postgres_conn.commit()
         
