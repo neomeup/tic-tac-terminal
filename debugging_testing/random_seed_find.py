@@ -1,3 +1,12 @@
+'''
+Debug to find specfic condition with a first player win/draw/second player win
+
+can be called as a module with
+
+python3 -m debugging_testing.random_seed_find
+'''
+
+
 from configs.q_learning_training import get_config
 from simulation.sim_engine import SimulationEngine
 
@@ -11,7 +20,7 @@ def run_single_game(seed):
     config.how_many_games = 1
 
     # Safe guarding data stream
-    config.debug_prints_enabled = False
+    config.debug_prints_enabled = True
     config.model_storage_backend = None
     config.model_checkpoint_enabled = False
     config.model_autosave_on_exit = False
@@ -73,4 +82,4 @@ for seed in range(1000):
             break
 
 
-print(results)
+print(results["draw"])
