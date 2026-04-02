@@ -52,6 +52,9 @@ def run_headless(config):
     sim_id = str(uuid.uuid4())
 
     for batch in range(config.runs_batch_count):
+        batch_id = batch + 1
+        print(f"[Batch {batch_id}/{config.runs_batch_count}] Running simulation...")
+
         engine = SimulationEngine(config)
         result = engine.run()
 
@@ -83,8 +86,6 @@ def run_headless(config):
                 print("Total Experiences:", len(experiences))
             
             agent.observe(experiences)
-
-        batch_id = batch + 1
 
         if config.mongo_logging_enabled:
 
