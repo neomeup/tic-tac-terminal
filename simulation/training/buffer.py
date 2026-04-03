@@ -11,6 +11,9 @@ class ReplayBuffer:
         self.buffer = []
         self.position = 0
 
+        print("Buffer init")
+        print(len(self.buffer))
+
     def push(self, experience):
 
         if len(self.buffer) < self.capacity:

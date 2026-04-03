@@ -20,7 +20,7 @@ from debugging_testing.printing_debug import dbprint
 
 class QLearningAgent:
 
-    def __init__(self, config, player_id, policy_name=None, capacity=10000):
+    def __init__(self, config, player_id, policy_name=None, capacity=10000, offline=False):
 
         debug_print = False
         self.dbprint = lambda *args, **kwargs: dbprint(debug_print, *args, **kwargs)
@@ -29,6 +29,16 @@ class QLearningAgent:
 
         if policy_name is None:
             policy_name = "q_learning_policy"
+
+        # Offline agent path
+        if offline:
+            print("offline in agent")
+            print("offline policy: ", policy_name)
+
+        # Online agent path
+        if not offline:
+            print("Online in agent")
+            print("online policy: ", policy_name)
 
         self.config = config
         self.player_id = player_id
@@ -191,6 +201,7 @@ class QLearningAgent:
                 "player_id": experience.player_id
             }
             self.buffer.push(exp)
+            print("observe buffer: ", len(self.buffer))
 
     # Online observe
     def observe_transition(self, state, action, reward, next_state, done, player_id):
@@ -208,6 +219,8 @@ class QLearningAgent:
         }
 
         self.buffer.push(experience)
+
+        print("observe transition buffer: ", player_id, len(self.buffer))
 
     def train_step(self):
         if len(self.buffer) < self.training_batch_size:

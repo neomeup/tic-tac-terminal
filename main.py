@@ -140,6 +140,7 @@ def run_headless(config):
         if config.hybrid_runtime_offline_train:
 
             agent = offline_agent(config)
+            print("loaded offline agent")
 
             for result_batch in results_list:
 
@@ -149,7 +150,9 @@ def run_headless(config):
                     print("----- Offline -----")
                     print("Total Experiences:", len(experiences))
                 
+                print("calling observe")
                 agent.observe(experiences)
+                #agent.train()
 
         if config.offline_train_only:
 

@@ -47,5 +47,5 @@ def offline_agent(config):
     agent_name = config.offline_agent
 
     agent_class = agent_registry[agent_name]
-
-    return agent_class(config=config, player_id=0)
+    print(agent_class)
+    return agent_class(config=config, player_id=0, offline=True)
