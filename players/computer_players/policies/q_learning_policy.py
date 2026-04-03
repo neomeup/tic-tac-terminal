@@ -12,13 +12,13 @@ from simulation.training.encoding.encoders.action_encoder import encode_action, 
 from debugging_testing.printing_debug import dbprint
 
 class QLearningPolicy(BasePolicy):
-
-    def __init__(self, alpha=0.1, gamma=0.99, epsilon=0.1):
+    # alpha = learning rate, gamma = discount factor, epsilon = exploration vs exploitation
+    def __init__(self, alpha=0.1, gamma=0.99, epsilon=0.005):
         self.q_table = {}
 
         self.alpha = alpha
         self.gamma = gamma
-        self.epsilon = epsilon
+        self.epsilon = epsilon # decay epsilon automatically after
 
 
         debug_print = False
@@ -30,6 +30,7 @@ class QLearningPolicy(BasePolicy):
     def select_action(self, player_id, board, config, rng, encoded_state=None):
 
         self.dbprint("------start select action------")
+        self.dbprint("Player id of turn: ", player_id)
         # encode for q table
         if encoded_state is None:
             raise ValueError("QLearningPolicy requires encoded state")
@@ -84,16 +85,17 @@ class QLearningPolicy(BasePolicy):
         self.dbprint("reward: ", reward)
         self.dbprint("done: ", done)
         
-        next_state_key = tuple(next_state.tolist())
+        next_state_inverted = - next_state
+
+        next_state_key = tuple(next_state_inverted.tolist())
         self.dbprint("next state key: ", next_state_key)
         
         current_q = self._get_q(state_key, action)
         self.dbprint("current q: ", current_q)
 
-        # Estimate future value
         possible_actions = []
 
-        for i in range(size * size):
+        for i in range(size * size): # works because action is encoded as an index - if changed to encompass multiple piece types for example, this needs to change
             if next_state[i] == 0:  # empty cell
                 possible_actions.append(i)
 
@@ -104,10 +106,10 @@ class QLearningPolicy(BasePolicy):
 
         max_future_q = max(future_qs) if future_qs else 0.0
         self.dbprint("max future: ", max_future_q)
-        target = reward if done else reward + self.gamma * max_future_q
+        target = reward if done else reward - (self.gamma * max_future_q)
         self.dbprint("target: ", target)
 
-        new_q = round(current_q + self.alpha * (target - current_q), 6)
+        new_q = round( ((1 - self.alpha) * current_q) + (self.alpha * target), 6)
         self.dbprint("new q: ", new_q)
         self.q_table[(state_key, action)] = new_q
         
