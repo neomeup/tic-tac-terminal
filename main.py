@@ -48,67 +48,69 @@ def run_cli(config):
 
 def run_headless(config):
 
-    import uuid
-    sim_id = str(uuid.uuid4())
+    if config.runtime_sim_games:
 
-    results_list = []
+        import uuid
+        sim_id = str(uuid.uuid4())
 
-    for batch in range(config.runs_batch_count):
-        batch_id = batch + 1
-        print(f"[Batch {batch_id}/{config.runs_batch_count}] Running simulation...")
+        results_list = []
 
-        engine = SimulationEngine(config)
-        result = engine.run()
+        for batch in range(config.runs_batch_count):
+            batch_id = batch + 1
+            print(f"[Batch {batch_id}/{config.runs_batch_count}] Running simulation...")
 
-        results_list.append(result)
+            engine = SimulationEngine(config)
+            result = engine.run()
 
-        # To view basic results in terminal output
-        if config.debug_prints_enabled:
+            results_list.append(result)
 
-            print("\n----- SimResults / Game Context -----")
-            print(result)
-            for index, game in enumerate(result.runs):
-                if index % config.debug_print_frequency_offline_batch == 0:
-                    print("GameRunContext Object:", game)
-                    print("Game ID:", game.game_id)
-                    print("Winner:", game.winner)
-                    print("Moves:", len(game.moves))
-                    print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
-                    print("--------\n")
+            # To view basic results in terminal output
+            if config.debug_prints_enabled:
 
-        if config.mongo_logging_enabled:
+                print("\n----- SimResults / Game Context -----")
+                print(result)
+                for index, game in enumerate(result.runs):
+                    if index % config.debug_print_frequency_offline_batch == 0:
+                        print("GameRunContext Object:", game)
+                        print("Game ID:", game.game_id)
+                        print("Winner:", game.winner)
+                        print("Moves:", len(game.moves))
+                        print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
+                        print("--------\n")
 
-            from persistence.mongo.document_builder import build_experience_document
-            from persistence.run_logger import RunLogger
-            
-            documents = []
-            for game_index, game in enumerate(result.runs):
-                document = build_experience_document(game, sim_id, game_index, batch_id, config)
-                documents.append(document)
+            if config.mongo_logging_enabled:
 
-            try:
-                logger = RunLogger(config)
-                logger.log_mongo(documents)
-            except Exception as e:
-                print("-----mongo to storage-----")
-                print(documents,"\n")
-                print("\nMongo logging failed:", e)
+                from persistence.mongo.document_builder import build_experience_document
+                from persistence.run_logger import RunLogger
+                
+                documents = []
+                for game_index, game in enumerate(result.runs):
+                    document = build_experience_document(game, sim_id, game_index, batch_id, config)
+                    documents.append(document)
 
-        if config.postgres_logging_enabled:
-            from persistence.postgres.table_builder import build_postgres_payloads
-            from persistence.run_logger import RunLogger
+                try:
+                    logger = RunLogger(config)
+                    logger.log_mongo(documents)
+                except Exception as e:
+                    print("-----mongo to storage-----")
+                    print(documents,"\n")
+                    print("\nMongo logging failed:", e)
 
-            payload = build_postgres_payloads(result, config)
+            if config.postgres_logging_enabled:
+                from persistence.postgres.table_builder import build_postgres_payloads
+                from persistence.run_logger import RunLogger
 
-            try:
-                logger = RunLogger(config)
-                logger.log_postgres(sim_uuid=sim_id, batch_id=batch_id, payload=payload)
-            except Exception as e:
-                import pprint 
-                print("-----Postgres connection/transaction failed-----")
-                print("\nPayloads that would have been inserted:\n")
-                pprint.pprint(payload)
-                print("\nError details:\n", e)
+                payload = build_postgres_payloads(result, config)
+
+                try:
+                    logger = RunLogger(config)
+                    logger.log_postgres(sim_uuid=sim_id, batch_id=batch_id, payload=payload)
+                except Exception as e:
+                    import pprint 
+                    print("-----Postgres connection/transaction failed-----")
+                    print("\nPayloads that would have been inserted:\n")
+                    pprint.pprint(payload)
+                    print("\nError details:\n", e)
 
     # For offline observe experiences
     #### To be changed/modified once trainer is introduced for offline so that you have a single agent persistance
@@ -137,6 +139,8 @@ def run_headless(config):
             # load experiences from db
             # agent observe experiences
             # agent learn
+
+            print("Offline only placeholder")
 
 if __name__ == "__main__":
     load_dotenv()
