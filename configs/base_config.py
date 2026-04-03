@@ -97,8 +97,18 @@ class GameConfig:
 
     '''----------------------------------'''    
     # Offline Agent / Reward
-    offline_agent: str # registerized in players/computer_players/agent_registry
-    offline_reward_type: str # registerized in simulation/rewards/reward_registry
+    offline_agent: Literal[
+        "rl_dumb_agent",
+        "non_agent",
+        "q_learning_agent"
+    ] # registerized in players/computer_players/agent_registry
+
+    offline_reward_type: Literal[
+        "standard",
+        "qlearn_tic_tac"
+    ] # registerized in simulation/rewards/reward_registry
+
+    offline_model_version: str
 
 
     '''----------------------------------'''

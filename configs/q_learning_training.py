@@ -27,7 +27,7 @@ def get_config() -> GameConfig:
 
         ## Note: If hrof, rsg must be true and dbs must be online.  If rsg, all runtime configs must be set
         runtime_sim_games = True, # Run simulation games
-        hybrid_runtime_offline_train = False, # Train offline after running games
+        hybrid_runtime_offline_train = True, # Train offline after running games
 
         ## Note: If oto, dbs must be online
         offline_train_only = False, # Train offline only
@@ -64,7 +64,7 @@ def get_config() -> GameConfig:
         postgres_logging_enabled = True,
 
         model_storage_local_pre_base_path = "players/computer_players/model_storage/data",
-        model_storage_backend = None,
+        model_storage_backend = "s3",
 
         model_checkpoint_enabled = True,
         model_checkpoint_interval = 1000, # In training steps 
@@ -97,8 +97,9 @@ def get_config() -> GameConfig:
 
         #----------------------------------#    
         # Offline Agent / Reward
-        offline_agent = "rl_dumb_agent", # registerized in players/computer_players/agent_registry
+        offline_agent = "q_learning_agent", # registerized in players/computer_players/agent_registry
         offline_reward_type = "standard", # registerized in simulation/rewards/reward_registry
+        offline_model_version = "q_learn_reward_off_v1",
 
 
         #----------------------------------#
