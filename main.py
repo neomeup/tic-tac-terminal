@@ -164,12 +164,18 @@ def run_headless(config):
 if __name__ == "__main__":
     load_dotenv()
 
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawTextHelpFormatter
+    )
+
     parser.add_argument(
         "--config",
         type=str,
         required=True,
-        help="Config module path (e.g. configs.full_persistence_3x3_sim)"
+        help=(
+            "Config module path (e.g. configs.full_persistence_3x3_sim)\n"
+            "Config file path (e.g. configs/full_persistence_3x3_sim.py)"
+        )
     )
 
     args = parser.parse_args()
