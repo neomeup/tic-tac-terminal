@@ -50,6 +50,14 @@ def run_headless(config):
 
     if config.runtime_sim_games:
 
+        if config.mongo_logging_enabled:
+            from persistence.mongo.document_builder import build_experience_document
+            from persistence.run_logger import RunLogger
+
+        if config.postgres_logging_enabled:
+            from persistence.postgres.table_builder import build_postgres_payloads
+            from persistence.run_logger import RunLogger
+
         import uuid
         sim_id = str(uuid.uuid4())
 
@@ -80,9 +88,9 @@ def run_headless(config):
 
             if config.mongo_logging_enabled:
 
-                from persistence.mongo.document_builder import build_experience_document
-                from persistence.run_logger import RunLogger
-                
+                if timing:
+                    mongo_log_start_time = time.perf_counter()
+
                 documents = []
                 for game_index, game in enumerate(result.runs):
                     document = build_experience_document(game, sim_id, game_index, batch_id, config)
@@ -96,9 +104,15 @@ def run_headless(config):
                     print(documents,"\n")
                     print("\nMongo logging failed:", e)
 
+                if timing:
+                    mongo_log_end_time = time.perf_counter()
+                    total_elapsed_mongo_time = mongo_log_end_time - mongo_log_start_time
+                    print(f"[Batch Logging Timing] Mongo storage completed in {total_elapsed_mongo_time:.4f}s")
+
             if config.postgres_logging_enabled:
-                from persistence.postgres.table_builder import build_postgres_payloads
-                from persistence.run_logger import RunLogger
+
+                if timing:
+                    postgres_log_start_time = time.perf_counter()
 
                 payload = build_postgres_payloads(result, config)
 
@@ -111,6 +125,11 @@ def run_headless(config):
                     print("\nPayloads that would have been inserted:\n")
                     pprint.pprint(payload)
                     print("\nError details:\n", e)
+
+                if timing:
+                    postgres_log_end_time = time.perf_counter()
+                    total_elapsed_postgres_time = postgres_log_end_time - postgres_log_start_time
+                    print(f"[Batch Logging Timing] Postgres storage completed in {total_elapsed_postgres_time:.4f}s\n")
 
     # For offline observe experiences
     #### To be changed/modified once trainer is introduced for offline so that you have a single agent persistance
@@ -171,5 +190,6 @@ if __name__ == "__main__":
         run_headless(config)
         
         if timing:
-            total_elapsed = time.perf_counter() - start_total
-            print(f"[Timing] Headless run completed in {total_elapsed:.2f}s")
+            end_total = time.perf_counter()
+            total_elapsed = end_total - start_total
+            print(f"\n[Total Timing] Headless run completed in {total_elapsed:.2f}s")

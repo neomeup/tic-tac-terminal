@@ -26,11 +26,11 @@ def get_config() -> GameConfig:
         # Flow Control
 
         ## Note: If hrof, rsg must be true and dbs must be online.  If rsg, all runtime configs must be set
-        runtime_sim_games = False, # Run simulation games
+        runtime_sim_games = True, # Run simulation games
         hybrid_runtime_offline_train = False, # Train offline after running games
 
         ## Note: If oto, dbs must be online
-        offline_train_only = True, # Train offline only
+        offline_train_only = False, # Train offline only
 
 
         #----------------------------------#
@@ -55,7 +55,7 @@ def get_config() -> GameConfig:
         debug_print_frequency_TransitionsSteps = 1,
 
         # Timing
-        timing = False,
+        timing = True,
 
 
         #----------------------------------#
@@ -76,8 +76,8 @@ def get_config() -> GameConfig:
         ## Note these are multiplied together for a total count on a simulation run
         ## i.e. hmg = 100 with rbc = 10 produces 1000 games
         ## Batching should specifically be used when db persistence is enabled
-        how_many_games = 2,
-        runs_batch_count = 2,
+        how_many_games = 5,
+        runs_batch_count = 5,
 
 
         #----------------------------------#
