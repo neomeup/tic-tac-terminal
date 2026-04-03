@@ -23,6 +23,17 @@ def get_config() -> GameConfig:
 
 
         #----------------------------------#
+        # Flow Control
+
+        ## Note: If hrof, rsg must be true and dbs must be online.  If rsg, all runtime configs must be set
+        runtime_sim_games = bool, # Run simulation games
+        hybrid_runtime_offline_train = bool, # Train offline after running games
+
+        ## Note: If oto, dbs must be online
+        offline_train_only = bool, # Train offline only
+
+
+        #----------------------------------#
         # Random runtime 
         random_start = bool, # Start conditions for movement
         random_seed = int | None, # Random Seed Config

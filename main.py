@@ -51,12 +51,16 @@ def run_headless(config):
     import uuid
     sim_id = str(uuid.uuid4())
 
+    results_list = []
+
     for batch in range(config.runs_batch_count):
         batch_id = batch + 1
         print(f"[Batch {batch_id}/{config.runs_batch_count}] Running simulation...")
 
         engine = SimulationEngine(config)
         result = engine.run()
+
+        results_list.append(result)
 
         # To view basic results in terminal output
         if config.debug_prints_enabled:
@@ -71,21 +75,6 @@ def run_headless(config):
                     print("Moves:", len(game.moves))
                     print("Final Board:", game.moves[len(game.moves)-1]["board_state"])
                     print("--------\n")
-        
-        experiences = result.to_experiences(config)
-
-        # For offline observe experiences
-        #### To be changed/modified once trainer is introduced for offline so that you have a single agent persistance
-        if config.offline_training_enabled:
-            from players.computer_players.computer_player_runtime import offline_agent
-
-            agent = offline_agent(config)
-
-            if config.debug_prints_enabled:
-                print("----- Offline -----")
-                print("Total Experiences:", len(experiences))
-            
-            agent.observe(experiences)
 
         if config.mongo_logging_enabled:
 
@@ -120,6 +109,34 @@ def run_headless(config):
                 print("\nPayloads that would have been inserted:\n")
                 pprint.pprint(payload)
                 print("\nError details:\n", e)
+
+    # For offline observe experiences
+    #### To be changed/modified once trainer is introduced for offline so that you have a single agent persistance
+    if config.offline_training_enabled:
+
+        from players.computer_players.computer_player_runtime import offline_agent
+
+        if config.hybrid_runtime_offline_train:
+
+            agent = offline_agent(config)
+
+            for result_batch in results_list:
+
+                experiences = result_batch.to_experiences(config)
+
+                if config.debug_prints_enabled:
+                    print("----- Offline -----")
+                    print("Total Experiences:", len(experiences))
+                
+                agent.observe(experiences)
+
+        if config.offline_train_only:
+
+            agent = offline_agent(config)
+
+            # load experiences from db
+            # agent observe experiences
+            # agent learn
 
 if __name__ == "__main__":
     load_dotenv()
